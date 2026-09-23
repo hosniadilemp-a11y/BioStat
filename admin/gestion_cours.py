@@ -83,6 +83,16 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=BASE_DIR, **kwargs)
 
+    def do_HEAD(self):
+        if self.path in ["/", "/index.html", "/gestion_cours.html"]:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            html_path = os.path.join(ADMIN_DIR, "gestion_cours.html")
+            self.send_header("Content-Length", str(os.path.getsize(html_path)))
+            self.end_headers()
+            return
+        return super().do_HEAD()
+
     def do_GET(self):
         if self.path in ["/", "/index.html", "/gestion_cours.html"]:
             self.send_response(200)
