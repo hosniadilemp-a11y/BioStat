@@ -566,3 +566,45 @@ function initSmoothScroll() {
     });
   }, { passive: true });
 }
+
+// ==========================================================================
+// Rendu Typographique Mathématique Global KaTeX (Auto-Render)
+// ==========================================================================
+function initKatexAutoRender() {
+  function tryRender() {
+    if (typeof window.renderMathInElement === "function") {
+      window.renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+        throwOnError: false
+      });
+    } else {
+      setTimeout(tryRender, 150);
+    }
+  }
+
+  window.renderAllLatex = function(element) {
+    if (typeof window.renderMathInElement === "function") {
+      window.renderMathInElement(element || document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
+        throwOnError: false
+      });
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", tryRender);
+  } else {
+    tryRender();
+  }
+}
+
+initKatexAutoRender();
+

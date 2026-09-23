@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratoire Virtuel & Simulateurs par Chapitre — Biostatistiques M2 UMBB</title>
+  <meta name="description" content="Plateforme interactive de simulation biostatistique pour le Master 2 Biochimie. Manipulez les lois de probabilités, tests diagnostiques ELISA, théorèmes limites et modèles ANOVA factoriels.">
+  
+  <!-- Polices Google Fonts Modernes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- KaTeX pour le Rendu Mathématique Typographique Haute Définition -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  
+  <!-- Feuille de Style Principale -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .sim-hub-header {
+      padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: var(--glass-blur);
+    }
+    .sim-hub-nav-top {
+      max-width: 1280px;
+      margin: 0 auto 1.25rem auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .back-home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .back-home-btn:hover {
+      background: var(--accent-teal);
+      color: #ffffff;
+      border-color: var(--accent-teal);
+      transform: translateX(-3px);
+    }
+    .sim-chapter-section {
+      display: none;
+      padding: 2rem 1.5rem 5rem 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .sim-chapter-section.active {
+      display: block;
+      animation: simFadeIn 0.35s ease;
+    }
+    .sim-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .sim-preview-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      opacity: 0.75;
+      transition: var(--transition);
+    }
+    .sim-preview-card:hover {
+      opacity: 1;
+      border-color: var(--accent-teal);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- En-Tête du Hub des Simulateurs -->
+  <header class="sim-hub-header">
+    <div class="sim-hub-nav-top">
+      <a href="index.html" class="back-home-btn">
+        <i class="fas fa-arrow-left"></i> Retour au Portail Principal
+      </a>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Dr. Sarra BENMOUMOU-HOSNI • UMBB</span>
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Changer de thème">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+
+    <div style="max-width: 1280px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+        <div>
+          <span class="section-tag" style="margin-bottom: 0.25rem;"><i class="fas fa-flask"></i> Laboratoire Virtuel Dédié</span>
+          <h1 style="font-size: 1.85rem; font-weight: 800; color: var(--text-main); margin: 0;">Centre Interactif de Simulation Biostatistique</h1>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 580px; margin: 0;">
+          Sélectionnez un chapitre pour accéder à ses simulateurs dédiés. Manipulez les paramètres en direct et observez les visualisations graphiques conformes aux standards internationaux.
+        </p>
+      </div>
+
+      <!-- Barre de Sélection des Chapitres -->
+      <nav class="chapter-nav-hub" aria-label="Sélection des Chapitres de Simulation">
+        <button class="chapter-hub-btn active" data-chapter="ch0">
+          <i class="fas fa-chart-line"></i> Chapitre 0 : Fondamentaux & Probabilités
+          <span class="badge-status">8 Simulateurs</span>
+        </button>
+        <button class="chapter-hub-btn" data-chapter="ch1">
+          <i class="fas fa-cubes"></i> Chapitre 1 : ANOVA à Deux Facteurs Croisés
+          <span class="badge-status">Interactif</span>
+        </button>
+        <button class="chapter-hub-btn" data-chapter="ch-more">
+          <i class="fas fa-layer-group"></i> Autres Chapitres (Catalogue)
+          <span class="badge-status">À Venir</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ====================================================================
+       CONTENU DU CHAPITRE 0 : LES 8 MODULES FONDAMENTAUX
+       ==================================================================== -->
+  <main id="section-ch0" class="sim-chapter-section active">
+    <!-- Barre de Navigation des 8 Onglets Interactifs du Chapitre 0 -->
+    <div class="sim-tabs-nav">
+      <button class="sim-tab-btn active" data-tab="sim-skew">
+        <i class="fas fa-chart-area"></i> 1. Moyenne vs Médiane
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-sd-sem">
+        <i class="fas fa-arrows-alt-h"></i> 2. SD vs SEM
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-boxplot">
+        <i class="fas fa-box-open"></i> 3. Boxplot & Outliers
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-bayes">
+        <i class="fas fa-vial"></i> 4. Bayes & Test ELISA
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-normale">
+        <i class="fas fa-bell"></i> 5. Loi Normale (Taille & Biomarqueurs)
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-tcl">
+        <i class="fas fa-compress-arrows-alt"></i> 6. Théorème Central Limite (Animé)
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-ci">
+        <i class="fas fa-tasks"></i> 7. Intervalles de Confiance
+      </button>
+      <button class="sim-tab-btn" data-tab="sim-hypo">
+        <i class="fas fa-balance-scale"></i> 8. Tests d'Hypothèses
+      </button>
+    </div>
+
+    <!-- Onglet 1 : Moyenne vs Médiane -->
+    <div id="sim-skew" class="sim-tab-panel active">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres & Échantillonnage</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-skewness">
+              <span>Asymétrie Positive (Skewness)</span>
+              <span class="sim-value-badge" id="val-skewness">0.8</span>
+            </label>
+            <input type="range" id="slider-skewness" class="sim-slider" min="0" max="2.5" step="0.1" value="0.8">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-sample-n">
+              <span>Taille Échantillon ($N$) — Loi des Grands Nombres</span>
+              <span class="sim-value-badge" id="val-sample-n">30</span>
+            </label>
+            <input type="range" id="slider-sample-n" class="sim-slider" min="5" max="500" step="5" value="30">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-outlier">
+              <span>Injection d'Outlier Extrême</span>
+              <span class="sim-value-badge" id="val-outlier">+0 pg/mL</span>
+            </label>
+            <input type="range" id="slider-outlier" class="sim-slider" min="0" max="80" step="5" value="0">
+          </div>
+          <button id="btn-resample-skew" class="sim-action-btn">
+            <i class="fas fa-dice"></i> Prélever un Nouvel Échantillon
+          </button>
+          <div class="sim-presets-group">
+            <span class="sim-presets-title">Scénarios Biologiques Types</span>
+            <div class="sim-presets-buttons">
+              <button class="sim-preset-btn" data-preset-skew="norm"><i class="fas fa-check-circle"></i> Symétrique</button>
+              <button class="sim-preset-btn" data-preset-skew="skew"><i class="fas fa-fire"></i> Dosage Cytokines</button>
+              <button class="sim-preset-btn" data-preset-skew="outlier"><i class="fas fa-exclamation-triangle"></i> Hémolyse Accidentelle</button>
+            </div>
+          </div>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper">
+            <canvas id="canvas-skew" class="sim-canvas"></canvas>
+          </div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-pop-mean" style="color: #f59e0b;">--</div>
+              <div class="sim-metric-lbl">Vraie Moyenne Pop. ($\mu$)</div>
+            </div>
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-mean" style="color: #e11d48;">--</div>
+              <div class="sim-metric-lbl">Moyenne Échantillon ($\bar{x}$)</div>
+            </div>
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-median" style="color: #10b981;">--</div>
+              <div class="sim-metric-lbl">Médiane Échantillon (Robuste)</div>
+            </div>
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-sample-err" style="color: #38bdf8;">--</div>
+              <div class="sim-metric-lbl">Erreur $|\bar{x} - \mu|$ (Convergence)</div>
+            </div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Interprétation : Loi des Grands Nombres & Résistance aux Outliers</h5>
+            <p class="sim-insight-desc">La <strong>Vraie Moyenne biologique ($\mu$)</strong> en or est fixe. Pour un petit effectif ($N=5$), la moyenne de l'échantillon ($\bar{x}$, en rouge) fluctue fortement. À mesure que vous augmentez $N$ vers $100$ ou $500$, <strong>$\bar{x}$ converge infailliblement vers $\mu$</strong> (Loi des Grands Nombres). Observez aussi l'impact d'un outlier : la moyenne $\bar{x}$ est immédiatement aspirée vers la droite, tandis que la médiane reste impassible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 2 : SD vs SEM -->
+    <div id="sim-sd-sem" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Échantillonnage & Variabilité</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-n">
+              <span>Taille de l'Échantillon ($N$)</span>
+              <span class="sim-value-badge" id="val-n">16</span>
+            </label>
+            <input type="range" id="slider-n" class="sim-slider" min="3" max="100" step="1" value="16">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-sigma">
+              <span>Écart-Type Biologique ($SD = \sigma$)</span>
+              <span class="sim-value-badge" id="val-sigma">8.0 g/L</span>
+            </label>
+            <input type="range" id="slider-sigma" class="sim-slider" min="2" max="20" step="0.5" value="8">
+          </div>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper">
+            <canvas id="canvas-sd-sem" class="sim-canvas"></canvas>
+          </div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-sd" style="color: #0d9488;">--</div>
+              <div class="sim-metric-lbl">Écart-Type ($SD$)</div>
+            </div>
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-sem" style="color: #e11d48;">--</div>
+              <div class="sim-metric-lbl">Erreur Standard ($SEM$)</div>
+            </div>
+            <div class="sim-metric-card">
+              <div class="sim-metric-val" id="metric-shrink" style="color: #1a365d;">--</div>
+              <div class="sim-metric-lbl">Facteur de Réduction ($1/\sqrt{N}$)</div>
+            </div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Interprétation Fondamentale : Ne Jamais Confondre !</h5>
+            <p class="sim-insight-desc"><strong>L'écart-type ($SD$)</strong> quantifie la dispersion biologique intrinsèque entre les individus ; il ne diminue pas lorsque $N$ augmente. <strong>L'erreur standard ($SEM = SD/\sqrt{N}$)</strong> quantifie l'incertitude sur l'estimation de la moyenne.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 3 : Boxplot -->
+    <div id="sim-boxplot" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres du Boxplot</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-iqr"><span>Dispersion Interquartile ($IQR$)</span></label>
+            <input type="range" id="slider-iqr" class="sim-slider" min="5" max="35" step="1" value="15">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-box-n"><span>Nombre de Mesures ($N$)</span></label>
+            <input type="range" id="slider-box-n" class="sim-slider" min="20" max="200" step="10" value="60">
+          </div>
+          <div class="sim-control-group" style="flex-direction: row; align-items: center; justify-content: space-between; padding-top: 0.5rem;">
+            <span class="sim-control-label" style="margin: 0;">Ajouter Valeurs Aberrantes</span>
+            <input type="checkbox" id="check-outlier" checked style="width: 18px; height: 18px; cursor: pointer;">
+          </div>
+          <button id="btn-regen-box" class="sim-action-btn"><i class="fas fa-sync-alt"></i> Regénérer l'Échantillon</button>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper"><canvas id="canvas-boxplot" class="sim-canvas"></canvas></div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-q1">--</div><div class="sim-metric-lbl">Premier Quartile ($Q_1$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-med" style="color: #e11d48;">--</div><div class="sim-metric-lbl">Médiane ($Q_2$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-q3">--</div><div class="sim-metric-lbl">Troisième Quartile ($Q_3$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-iqr" style="color: #0d9488;">--</div><div class="sim-metric-lbl">Écart Interquartile ($IQR$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-outliers-count" style="color: #e11d48;">--</div><div class="sim-metric-lbl">Outliers Détectés</div></div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Détection Rigoureuse des Outliers selon John Tukey</h5>
+            <p class="sim-insight-desc">Les moustaches s'étendent au maximum jusqu'à $[Q1 - 1.5 \times IQR]$ et $[Q3 + 1.5 \times IQR]$. Tout point au-delà est un outlier formel.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 4 : Bayes -->
+    <div id="sim-bayes" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Épidémiologie & Performance</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-prev"><span>Prévalence de la Pathologie ($P(M)$)</span><span class="sim-value-badge" id="val-prev">1.0 %</span></label>
+            <input type="range" id="slider-prev" class="sim-slider" min="0.1" max="50" step="0.1" value="1.0">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-se"><span>Sensibilité du Test ELISA ($Se$)</span><span class="sim-value-badge" id="val-se">99.0 %</span></label>
+            <input type="range" id="slider-se" class="sim-slider" min="80" max="100" step="0.5" value="99.0">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-sp"><span>Spécificité du Test ELISA ($Sp$)</span><span class="sim-value-badge" id="val-sp">95.0 %</span></label>
+            <input type="range" id="slider-sp" class="sim-slider" min="80" max="100" step="0.5" value="95.0">
+          </div>
+          <div class="sim-presets-group">
+            <span class="sim-presets-title">Situations Cliniques Réelles</span>
+            <div class="sim-presets-buttons">
+              <button class="sim-preset-btn" data-preset-bayes="rare"><i class="fas fa-search"></i> Maladie Rare (1%)</button>
+              <button class="sim-preset-btn" data-preset-bayes="epidemic"><i class="fas fa-biohazard"></i> Épidémie (15%)</button>
+              <button class="sim-preset-btn" data-preset-bayes="hifi"><i class="fas fa-award"></i> Haute Spécificité (99.5%)</button>
+            </div>
+          </div>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper"><canvas id="canvas-bayes" class="sim-canvas"></canvas></div>
+          <div id="bayes-calc-breakdown" class="sim-bayes-formula-card"></div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-vpp" style="color: #0d9488;">--</div><div class="sim-metric-lbl">Valeur Prédictive Positive ($VPP$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-vpn" style="color: #10b981;">--</div><div class="sim-metric-lbl">Valeur Prédictive Négative ($VPN$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-fp-ratio" style="color: #e11d48;">--</div><div class="sim-metric-lbl">Faux Positifs Générés</div></div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Le Paradoxe des Faux Positifs en Dépistage de Masse</h5>
+            <p class="sim-insight-desc">Même avec $Se=99\%$ et $Sp=95\%$, si la prévalence est faible ($1\%$), la majorité des positifs sont des faux positifs !</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 5 : Loi Normale -->
+    <div id="sim-normale" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres de Gauss</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="select-norm-biomarker">Paramètre Biologique Réel</label>
+            <select id="select-norm-biomarker" class="sim-select">
+              <option value="height_m">Taille Adulte Hommes (μ = 175 cm, σ = 7.0 cm)</option>
+              <option value="height_f">Taille Adulte Femmes (μ = 163 cm, σ = 6.5 cm)</option>
+              <option value="albumin">Albuminémie Sérique (μ = 42.0 g/L, σ = 3.5 g/L)</option>
+              <option value="glucose">Glycémie à Jeun (μ = 0.95 g/L, σ = 0.08 g/L)</option>
+              <option value="custom">Paramètre Personnalisé</option>
+            </select>
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-norm-mu"><span>Moyenne ($\mu$)</span><span class="sim-value-badge" id="val-norm-mu">175 cm</span></label>
+            <input type="range" id="slider-norm-mu" class="sim-slider" min="140" max="210" step="1" value="175">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-norm-sig"><span>Écart-Type ($\sigma$)</span><span class="sim-value-badge" id="val-norm-sig">7.0 cm</span></label>
+            <input type="range" id="slider-norm-sig" class="sim-slider" min="2" max="25" step="0.5" value="7">
+          </div>
+          <div class="sim-presets-group">
+            <span class="sim-presets-title">Intervalle de Dispersion à Visualiser</span>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.35rem;">
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="norm-rule" value="1" style="cursor: pointer;"> $\mu \pm 1\sigma$ (68.27% des individus)
+              </label>
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="norm-rule" value="1.96" checked style="cursor: pointer;"> $\mu \pm 1.96\sigma$ (95.00% Référence Clinique)
+              </label>
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="norm-rule" value="2" style="cursor: pointer;"> $\mu \pm 2\sigma$ (95.45% Approximation empirique)
+              </label>
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="norm-rule" value="3" style="cursor: pointer;"> $\mu \pm 3\sigma$ (99.73% Quasi-totalité)
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper"><canvas id="canvas-normale" class="sim-canvas"></canvas></div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-prob" style="color: #0d9488;">95.00%</div><div class="sim-metric-lbl">Probabilité Couverte</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-interval" style="color: #1a365d;">--</div><div class="sim-metric-lbl">Intervalle $[\mu \pm k\sigma]$ en Unités Réelles</div></div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Que Signifient Concrètement $\mu$ et $\sigma$ en Biologie ?</h5>
+            <p class="sim-insight-desc"><strong>La moyenne $\mu$</strong> représente la taille ou la concentration la plus fréquente au sein de la population saine. <strong>L'écart-type $\sigma$</strong> quantifie l'amplitude de dispersion naturelle.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 6 : TCL -->
+    <div id="sim-tcl" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Contrôles de Simulation</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="select-tcl-dist">Distribution Parentale</label>
+            <select id="select-tcl-dist" class="sim-select">
+              <option value="exp">Exponentielle (Fortement Asymétrique)</option>
+              <option value="uniform">Uniforme (Plate [0 ; 10])</option>
+              <option value="bimodal">Bimodale (Mélange de 2 Populations)</option>
+            </select>
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-tcl-n"><span>Taille de chaque Échantillon ($n$)</span><span class="sim-value-badge" id="val-tcl-n">30</span></label>
+            <input type="range" id="slider-tcl-n" class="sim-slider" min="2" max="100" step="1" value="30">
+          </div>
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button id="btn-step-tcl" class="sim-preset-btn" style="flex: 1;"><i class="fas fa-step-forward"></i> +1 Échantillon</button>
+            <button id="btn-anim-tcl" class="sim-preset-btn" style="flex: 1;"><i class="fas fa-play"></i> Animation Continue</button>
+          </div>
+          <div style="display: flex; gap: 0.4rem; margin-top: 0.25rem;">
+            <button id="btn-run-tcl" class="sim-action-btn" style="flex: 2;"><i class="fas fa-bolt"></i> Simuler 2 000</button>
+            <button id="btn-reset-tcl" class="sim-preset-btn" style="flex: 1;"><i class="fas fa-redo"></i> Reset</button>
+          </div>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper"><canvas id="canvas-tcl" class="sim-canvas" style="height: 380px;"></canvas></div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-tcl-k" style="color: #38bdf8;">--</div><div class="sim-metric-lbl">Échantillons Accumulés ($K$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-tcl-mean" style="color: #0d9488;">--</div><div class="sim-metric-lbl">Moyenne des Moyennes ($\bar{X}$)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-tcl-sd" style="color: #e11d48;">--</div><div class="sim-metric-lbl">Écart-Type ($S_{\bar{X}} \approx \sigma/\sqrt{n}$)</div></div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> La Magie Visuelle du Théorème Central Limite</h5>
+            <p class="sim-insight-desc">En haut, observez la population d'origine (très asymétrique ou bimodale). En bas, observez les moyennes d'échantillons qui tombent et s'empilent. Dès que $n \ge 30$, la distribution des moyennes devient une cloche de Gauss parfaite.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 7 : IC -->
+    <div id="sim-ci" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres des Études</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-ci-n"><span>Effectif par Étude ($n$)</span><span class="sim-value-badge" id="val-ci-n">15</span></label>
+            <input type="range" id="slider-ci-n" class="sim-slider" min="5" max="100" step="5" value="15">
+          </div>
+          <button id="btn-regen-ci" class="sim-action-btn"><i class="fas fa-sync-alt"></i> Relancer 25 Études Indépendantes</button>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper"><canvas id="canvas-ci" class="sim-canvas"></canvas></div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-ci-rate" style="color: #10b981;">--</div><div class="sim-metric-lbl">Taux de Recouvrement de la Vraie Moyenne ($\mu=100$)</div></div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Que Signifie Réellement un Intervalle de Confiance à 95% ?</h5>
+            <p class="sim-insight-desc">La vraie moyenne $\mu$ est fixe. C'est l'intervalle calculé qui fluctue d'une équipe de recherche à l'autre.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Onglet 8 : Hypothèses -->
+    <div id="sim-hypo" class="sim-tab-panel">
+      <div class="sim-grid">
+        <div class="sim-controls-card">
+          <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres du Test Statistique</h4>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-delta"><span>Taille de l'Effet Biologique ($\Delta$)</span><span class="sim-value-badge" id="val-delta">1.8</span></label>
+            <input type="range" id="slider-delta" class="sim-slider" min="0.5" max="4.0" step="0.1" value="1.8">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="slider-hypo-n"><span>Nombre d'Animaux / Sujets ($n$)</span><span class="sim-value-badge" id="val-hypo-n">20</span></label>
+            <input type="range" id="slider-hypo-n" class="sim-slider" min="6" max="60" step="2" value="20">
+          </div>
+          <div class="sim-control-group">
+            <label class="sim-control-label" for="select-alpha">Seuil de Signification ($\alpha$)</label>
+            <select id="select-alpha" class="sim-select">
+              <option value="0.05">$\alpha = 0.05$ (5% - Standard)</option>
+              <option value="0.01">$\alpha = 0.01$ (1% - Conservateur)</option>
+            </select>
+          </div>
+        </div>
+        <div class="sim-display-area">
+          <div class="sim-canvas-wrapper"><canvas id="canvas-hypo" class="sim-canvas"></canvas></div>
+          <div class="sim-metrics-grid">
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-alpha" style="color: #e11d48;">--</div><div class="sim-metric-lbl">Risque Alpha (Faux Positif)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-beta" style="color: #d97706;">--</div><div class="sim-metric-lbl">Risque Bêta (Faux Négatif)</div></div>
+            <div class="sim-metric-card"><div class="sim-metric-val" id="metric-power" style="color: #10b981;">--</div><div class="sim-metric-lbl">Puissance Statistique ($1-\beta$)</div></div>
+          </div>
+          <div class="sim-insight-card">
+            <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> L'Arbitrage Essentiel entre Erreur d'Espèce I et Puissance</h5>
+            <p class="sim-insight-desc">La puissance $1-\beta$ représente la capacité à détecter une différence réelle. Elle augmente vigoureusement lorsque $n$ ou $\Delta$ augmentent.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ====================================================================
+       CONTENU DU CHAPITRE 1 : ANOVA À DEUX FACTEURS CROISÉS
+       ==================================================================== -->
+  <section id="section-ch1" class="sim-chapter-section">
+    <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
+      <span class="chapter-badge badge-blue">Chapitre 01</span>
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-top: 0.5rem;">Simulateur d'ANOVA à Deux Facteurs Croisés & Interactions</h2>
+      <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 800px;">
+        Explorez graphiquement les profils de réponse pour détecter l'interaction entre deux facteurs (ex: Traitement Antioxydant et Génotype). Visualisez l'impact du parallélisme vs croisement sur la partition des variances ($SS$) et la statistique $F$.
+      </p>
+    </div>
+
+    <div class="sim-grid">
+      <div class="sim-controls-card">
+        <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres du Modèle Factoriel</h4>
+
+        <div class="sim-control-group">
+          <label class="sim-control-label" for="slider-anova-a">
+            <span>Effet Facteur A (Traitement Dose)</span>
+            <span class="sim-value-badge" id="val-anova-a">8.0</span>
+          </label>
+          <input type="range" id="slider-anova-a" class="sim-slider" min="0" max="20" step="0.5" value="8">
+        </div>
+
+        <div class="sim-control-group">
+          <label class="sim-control-label" for="slider-anova-b">
+            <span>Effet Facteur B (Génotype Diabétique)</span>
+            <span class="sim-value-badge" id="val-anova-b">10.0</span>
+          </label>
+          <input type="range" id="slider-anova-b" class="sim-slider" min="0" max="20" step="0.5" value="10">
+        </div>
+
+        <div class="sim-control-group">
+          <label class="sim-control-label" for="slider-anova-ab">
+            <span>Terme d'Interaction ($\alpha\beta$ : Synergie/Antagonisme)</span>
+            <span class="sim-value-badge" id="val-anova-ab">6.0</span>
+          </label>
+          <input type="range" id="slider-anova-ab" class="sim-slider" min="-12" max="15" step="0.5" value="6">
+          <span style="font-size: 0.72rem; color: var(--text-dim);">Valeur 0 = Droites parfaitement parallèles (Additivité).</span>
+        </div>
+
+        <div class="sim-control-group">
+          <label class="sim-control-label" for="slider-anova-k">
+            <span>Taille par Groupe ($K$ répétitions)</span>
+            <span class="sim-value-badge" id="val-anova-k">5</span>
+          </label>
+          <input type="range" id="slider-anova-k" class="sim-slider" min="3" max="15" step="1" value="5">
+        </div>
+      </div>
+
+      <div class="sim-display-area">
+        <div class="sim-canvas-wrapper">
+          <canvas id="canvas-anova" class="sim-canvas"></canvas>
+        </div>
+
+        <div class="sim-metrics-grid">
+          <div class="sim-metric-card">
+            <div class="sim-metric-val" id="metric-anova-ssab" style="color: #e11d48;">--</div>
+            <div class="sim-metric-lbl">Variance Interaction ($SS_{AB}$)</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="sim-metric-val" id="metric-anova-fab" style="color: #0d9488;">--</div>
+            <div class="sim-metric-lbl">Statistique $F_{\text{obs}}$ (Interaction)</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="sim-metric-val" id="metric-anova-pab" style="color: #d97706;">--</div>
+            <div class="sim-metric-lbl">Valeur $p$ ($p$-value)</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="sim-metric-val" id="metric-anova-status" style="color: #1a365d; font-size: 0.95rem;">--</div>
+            <div class="sim-metric-lbl">Diagnostic du Modèle</div>
+          </div>
+        </div>
+
+        <div id="anova-diag-insight" class="sim-insight-card">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       CATALOGUE DES AUTRES CHAPITRES (EN DÉVELOPPEMENT)
+       ==================================================================== -->
+  <section id="section-ch-more" class="sim-chapter-section">
+    <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
+      <span class="section-tag"><i class="fas fa-road"></i> Feuille de Route Expérimentale</span>
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-top: 0.5rem;">Simulateurs Numériques en Préparation</h2>
+      <p style="color: var(--text-muted); font-size: 0.92rem; max-width: 800px;">
+        Chaque chapitre du cursus disposera de son propre banc d'essai interactif pour consolider l'intuition biomathématique des étudiants de Master 2.
+      </p>
+    </div>
+
+    <div class="sim-preview-grid">
+      <div class="sim-preview-card">
+        <span class="chapter-badge badge-teal">Chapitre 02</span>
+        <h4 style="margin: 0.75rem 0 0.4rem 0; font-size: 1.1rem; color: var(--text-main);">ANOVA Hiérarchisée (Nested)</h4>
+        <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">Simulateur de décomposition de variance multiniveau (animaux, organes, coupes histologiques) pour éviter la pseudo-réplication.</p>
+        <div style="margin-top: 1rem; font-size: 0.8rem; font-weight: 700; color: var(--accent-teal);">
+          <i class="fas fa-spinner fa-spin"></i> En cours d'implémentation
+        </div>
+      </div>
+
+      <div class="sim-preview-card">
+        <span class="chapter-badge badge-teal">Chapitre 03</span>
+        <h4 style="margin: 0.75rem 0 0.4rem 0; font-size: 1.1rem; color: var(--text-main);">Mesures Répétées & Modèles Mixtes</h4>
+        <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">Simulateur cinétique enzymatique temporelle avec matrice de covariance (sphéricité de Mauchly et correction Greenhouse-Geisser).</p>
+        <div style="margin-top: 1rem; font-size: 0.8rem; font-weight: 700; color: var(--accent-teal);">
+          <i class="fas fa-clock"></i> Planifié
+        </div>
+      </div>
+
+      <div class="sim-preview-card">
+        <span class="chapter-badge badge-teal">Chapitre 04</span>
+        <h4 style="margin: 0.75rem 0 0.4rem 0; font-size: 1.1rem; color: var(--text-main);">Régression Non Linéaire & Michaelis-Menten</h4>
+        <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">Ajustement itératif de Gauss-Newton, calcul dynamique de $V_{\max}$ et $K_m$, et comparaison avec Lineweaver-Burk.</p>
+        <div style="margin-top: 1rem; font-size: 0.8rem; font-weight: 700; color: var(--accent-teal);">
+          <i class="fas fa-clock"></i> Planifié
+        </div>
+      </div>
+
+      <div class="sim-preview-card">
+        <span class="chapter-badge badge-teal">Chapitre 05</span>
+        <h4 style="margin: 0.75rem 0 0.4rem 0; font-size: 1.1rem; color: var(--text-main);">Analyse en Composantes Principales (ACP)</h4>
+        <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">Projection multidimensionnelle interactive (Cercle des corrélations & Carte des individus) sur données transcriptomiques.</p>
+        <div style="margin-top: 1rem; font-size: 0.8rem; font-weight: 700; color: var(--accent-teal);">
+          <i class="fas fa-clock"></i> Planifié
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script d'orchestration de la page simulateurs.html -->
+  <script src="simulator.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Gestionnaire de bascule entre chapitres
+      const chapterButtons = document.querySelectorAll('.chapter-hub-btn');
+      const chapterSections = document.querySelectorAll('.sim-chapter-section');
+
+      chapterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const chKey = btn.getAttribute('data-chapter');
+          chapterButtons.forEach(b => b.classList.remove('active'));
+          chapterSections.forEach(s => s.classList.remove('active'));
+
+          btn.classList.add('active');
+          const targetSection = document.getElementById(`section-${chKey}`);
+          if (targetSection) {
+            targetSection.classList.add('active');
+            if (chKey === 'ch1' && window.BioStatSimulator) {
+              window.BioStatSimulator.drawAnova();
+            } else if (chKey === 'ch0' && window.BioStatSimulator) {
+              const activeTab = targetSection.querySelector('.sim-tab-btn.active');
+              if (activeTab) window.BioStatSimulator.triggerDraw(activeTab.getAttribute('data-tab'));
+            }
+          }
+        });
+      });
+
+      // Gestionnaire de thème clair/sombre
+      const themeBtn = document.getElementById('themeToggleBtn');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme') || 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('biostat_theme', next);
+          themeBtn.innerHTML = next === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+        const savedTheme = localStorage.getItem('biostat_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeBtn.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      }
+
+      // Rendu KaTeX
+      function applyKatex() {
+        if (typeof window.renderMathInElement === 'function') {
+          window.renderMathInElement(document.body, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            throwOnError: false
+          });
+        } else {
+          setTimeout(applyKatex, 150);
+        }
+      }
+      applyKatex();
+    });
+  </script>
+</body>
+</html>

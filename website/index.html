@@ -17,6 +17,7 @@
   <!-- KaTeX pour le Rendu Mathématique Typographique Haute Définition -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
   
   <!-- Feuille de Style Personnalisée -->
   <link rel="stylesheet" href="style.css">
@@ -456,6 +457,11 @@
         <span class="section-tag"><i class="fas fa-flask"></i> Laboratoire Virtuel & Exploration Dynamique</span>
         <h2 class="section-title">Simulateur Interactif des Concepts Fondamentaux</h2>
         <p class="section-subtitle">Manipulez en temps réel les paramètres biostatistiques du Chapitre 0 : asymétrie, variabilité biologique vs précision de mesure, détection d'outliers, théorème de Bayes, loi normale, convergence du TCL, intervalles de confiance et puissance des tests d'hypothèses.</p>
+        <div style="margin-top: 1.25rem;">
+          <a href="simulateurs.html" class="sim-action-btn" style="display: inline-flex; width: auto; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: var(--radius-full); box-shadow: var(--shadow-md);">
+            <i class="fas fa-laptop-code"></i> Ouvrir le Hub Plein Écran de Tous les Simulateurs (Ch. 0 & Ch. 1 ANOVA) <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
       </div>
 
       <!-- Barre de Navigation des 8 Onglets Interactifs -->
@@ -473,10 +479,10 @@
           <i class="fas fa-vial"></i> 4. Bayes & Test ELISA
         </button>
         <button class="sim-tab-btn" data-tab="sim-normale">
-          <i class="fas fa-bell"></i> 5. Loi Normale (68-95-99.7)
+          <i class="fas fa-bell"></i> 5. Loi Normale (Taille & Biomarqueurs)
         </button>
         <button class="sim-tab-btn" data-tab="sim-tcl">
-          <i class="fas fa-compress-arrows-alt"></i> 6. Théorème Central Limite
+          <i class="fas fa-compress-arrows-alt"></i> 6. Théorème Central Limite (Animé)
         </button>
         <button class="sim-tab-btn" data-tab="sim-ci">
           <i class="fas fa-tasks"></i> 7. Intervalles de Confiance
@@ -492,7 +498,7 @@
       <div id="sim-skew" class="sim-tab-panel active">
         <div class="sim-grid">
           <div class="sim-controls-card">
-            <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres de Distribution</h4>
+            <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres & Échantillonnage</h4>
             
             <div class="sim-control-group">
               <label class="sim-control-label" for="slider-skewness">
@@ -503,12 +509,24 @@
             </div>
 
             <div class="sim-control-group">
+              <label class="sim-control-label" for="slider-sample-n">
+                <span>Taille Échantillon ($N$) — Loi des Grands Nombres</span>
+                <span class="sim-value-badge" id="val-sample-n">30</span>
+              </label>
+              <input type="range" id="slider-sample-n" class="sim-slider" min="5" max="500" step="5" value="30">
+            </div>
+
+            <div class="sim-control-group">
               <label class="sim-control-label" for="slider-outlier">
                 <span>Injection d'Outlier Extrême</span>
                 <span class="sim-value-badge" id="val-outlier">+0 pg/mL</span>
               </label>
               <input type="range" id="slider-outlier" class="sim-slider" min="0" max="80" step="5" value="0">
             </div>
+
+            <button id="btn-resample-skew" class="sim-action-btn">
+              <i class="fas fa-dice"></i> Prélever un Nouvel Échantillon
+            </button>
 
             <div class="sim-presets-group">
               <span class="sim-presets-title">Scénarios Biologiques Types</span>
@@ -527,26 +545,26 @@
             
             <div class="sim-metrics-grid">
               <div class="sim-metric-card">
+                <div class="sim-metric-val" id="metric-pop-mean" style="color: #f59e0b;">--</div>
+                <div class="sim-metric-lbl">Vraie Moyenne Pop. ($\mu$)</div>
+              </div>
+              <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-mean" style="color: #e11d48;">--</div>
-                <div class="sim-metric-lbl">Moyenne (Sensible)</div>
+                <div class="sim-metric-lbl">Moyenne Échantillon ($\bar{x}$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-median" style="color: #10b981;">--</div>
-                <div class="sim-metric-lbl">Médiane (Robuste)</div>
+                <div class="sim-metric-lbl">Médiane Échantillon (Robuste)</div>
               </div>
               <div class="sim-metric-card">
-                <div class="sim-metric-val" id="metric-mode" style="color: #0d9488;">--</div>
-                <div class="sim-metric-lbl">Mode (Pic)</div>
-              </div>
-              <div class="sim-metric-card">
-                <div class="sim-metric-val" id="metric-diff" style="color: #d97706;">--</div>
-                <div class="sim-metric-lbl">Écart Moyenne - Médiane</div>
+                <div class="sim-metric-val" id="metric-sample-err" style="color: #38bdf8;">--</div>
+                <div class="sim-metric-lbl">Erreur $|\bar{x} - \mu|$ (Convergence)</div>
               </div>
             </div>
 
             <div class="sim-insight-card">
-              <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Interprétation en Laboratoire de Biochimie</h5>
-              <p class="sim-insight-desc">En biochimie et immunologie (ELISA, cytokines sériques IL-6, IgE), les distributions biologiques sont fréquemment asymétriques à droite. Lorsque des valeurs extrêmes surviennent (outliers), <strong>la moyenne arithmétique est violemment tirée vers la droite</strong>, tandis que la médiane demeure parfaitement stable. Présentez toujours la médiane et l'IQR pour les données biomédicales asymétriques.</p>
+              <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Interprétation : Loi des Grands Nombres & Résistance aux Outliers</h5>
+              <p class="sim-insight-desc">La <strong>Vraie Moyenne biologique ($\mu$)</strong> en or est fixe. Pour un petit effectif ($N=5$), la moyenne de l'échantillon ($\bar{x}$, en rouge) fluctue fortement. À mesure que vous augmentez $N$ vers $100$ ou $500$, <strong>$\bar{x}$ converge infailliblement vers $\mu$</strong> (Loi des Grands Nombres). Observez aussi l'impact d'un outlier : la moyenne $\bar{x}$ est immédiatement aspirée vers la droite, tandis que la médiane reste impassible.</p>
             </div>
           </div>
         </div>
@@ -585,15 +603,15 @@
             <div class="sim-metrics-grid">
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-sd" style="color: #0d9488;">--</div>
-                <div class="sim-metric-lbl">Écart-Type (SD)</div>
+                <div class="sim-metric-lbl">Écart-Type ($SD$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-sem" style="color: #e11d48;">--</div>
-                <div class="sim-metric-lbl">Erreur Standard (SEM)</div>
+                <div class="sim-metric-lbl">Erreur Standard ($SEM$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-shrink" style="color: #1a365d;">--</div>
-                <div class="sim-metric-lbl">Facteur de Réduction (1/√N)</div>
+                <div class="sim-metric-lbl">Facteur de Réduction ($1/\sqrt{N}$)</div>
               </div>
             </div>
 
@@ -645,19 +663,19 @@
             <div class="sim-metrics-grid">
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-q1">--</div>
-                <div class="sim-metric-lbl">Premier Quartile (Q1)</div>
+                <div class="sim-metric-lbl">Premier Quartile ($Q_1$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-med" style="color: #e11d48;">--</div>
-                <div class="sim-metric-lbl">Médiane (Q2)</div>
+                <div class="sim-metric-lbl">Médiane ($Q_2$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-q3">--</div>
-                <div class="sim-metric-lbl">Troisième Quartile (Q3)</div>
+                <div class="sim-metric-lbl">Troisième Quartile ($Q_3$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-iqr" style="color: #0d9488;">--</div>
-                <div class="sim-metric-lbl">Écart Interquartile (IQR)</div>
+                <div class="sim-metric-lbl">Écart Interquartile ($IQR$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-outliers-count" style="color: #e11d48;">--</div>
@@ -720,14 +738,17 @@
               <canvas id="canvas-bayes" class="sim-canvas"></canvas>
             </div>
 
+            <!-- Boîte de dérivation mathématique détaillée pas-à-pas -->
+            <div id="bayes-calc-breakdown" class="sim-bayes-formula-card"></div>
+
             <div class="sim-metrics-grid">
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-vpp" style="color: #0d9488;">--</div>
-                <div class="sim-metric-lbl">Valeur Prédictive Positive (VPP)</div>
+                <div class="sim-metric-lbl">Valeur Prédictive Positive ($VPP$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-vpn" style="color: #10b981;">--</div>
-                <div class="sim-metric-lbl">Valeur Prédictive Négative (VPN)</div>
+                <div class="sim-metric-lbl">Valeur Prédictive Négative ($VPN$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-fp-ratio" style="color: #e11d48;">--</div>
@@ -737,14 +758,14 @@
 
             <div class="sim-insight-card">
               <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Le Paradoxe des Faux Positifs en Dépistage de Masse</h5>
-              <p class="sim-insight-desc">Même avec un test ELISA présentant une sensibilité exceptionnelle de 99% et une spécificité de 95%, si la pathologie est rare dans la population générale ($P(M)=1\%$), <strong>la probabilité qu'un sujet testé positif soit réellement malade (VPP) n'est que d'environ 16%</strong> ! Les faux positifs sont plus nombreux que les vrais positifs. C'est la raison pour laquelle un test de confirmation (Western Blot, RT-qPCR) est toujours obligatoire en clinique.</p>
+              <p class="sim-insight-desc">Même avec un test ELISA présentant une sensibilité exceptionnelle de 99% et une spécificité de 95%, si la pathologie est rare dans la population générale ($P(M)=1\%$), <strong>la probabilité qu'un sujet testé positif soit réellement malade ($VPP$) n'est que d'environ 16%</strong> ! Les faux positifs sont plus nombreux que les vrais positifs. C'est la raison pour laquelle un test de confirmation (Western Blot, RT-qPCR) est toujours obligatoire en clinique.</p>
             </div>
           </div>
         </div>
       </div>
 
       <!-- ================================================================
-           PANNEAU 5 : Loi Normale (Règle 68-95-99.7%)
+           PANNEAU 5 : Loi Normale (Règle 68-95-99.7% & Biomarqueurs Réels)
            ================================================================ -->
       <div id="sim-normale" class="sim-tab-panel">
         <div class="sim-grid">
@@ -752,19 +773,30 @@
             <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres de Gauss</h4>
 
             <div class="sim-control-group">
+              <label class="sim-control-label" for="select-norm-biomarker">Paramètre Biologique Réel</label>
+              <select id="select-norm-biomarker" class="sim-select">
+                <option value="height_m">Taille Adulte Hommes (μ = 175 cm, σ = 7.0 cm)</option>
+                <option value="height_f">Taille Adulte Femmes (μ = 163 cm, σ = 6.5 cm)</option>
+                <option value="albumin">Albuminémie Sérique (μ = 42.0 g/L, σ = 3.5 g/L)</option>
+                <option value="glucose">Glycémie à Jeun (μ = 0.95 g/L, σ = 0.08 g/L)</option>
+                <option value="custom">Paramètre Personnalisé</option>
+              </select>
+            </div>
+
+            <div class="sim-control-group">
               <label class="sim-control-label" for="slider-norm-mu">
-                <span>Moyenne Théorique ($\mu$)</span>
-                <span class="sim-value-badge" id="val-norm-mu">100</span>
+                <span>Moyenne ($\mu$)</span>
+                <span class="sim-value-badge" id="val-norm-mu">175 cm</span>
               </label>
-              <input type="range" id="slider-norm-mu" class="sim-slider" min="50" max="150" step="5" value="100">
+              <input type="range" id="slider-norm-mu" class="sim-slider" min="140" max="210" step="1" value="175">
             </div>
 
             <div class="sim-control-group">
               <label class="sim-control-label" for="slider-norm-sig">
                 <span>Écart-Type ($\sigma$)</span>
-                <span class="sim-value-badge" id="val-norm-sig">15</span>
+                <span class="sim-value-badge" id="val-norm-sig">7.0 cm</span>
               </label>
-              <input type="range" id="slider-norm-sig" class="sim-slider" min="5" max="30" step="1" value="15">
+              <input type="range" id="slider-norm-sig" class="sim-slider" min="2" max="25" step="0.5" value="7">
             </div>
 
             <div class="sim-presets-group">
@@ -798,29 +830,29 @@
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-interval" style="color: #1a365d;">--</div>
-                <div class="sim-metric-lbl">Intervalle Numérique $[\mu \pm k\sigma]$</div>
+                <div class="sim-metric-lbl">Intervalle $[\mu \pm k\sigma]$ en Unités Réelles</div>
               </div>
             </div>
 
             <div class="sim-insight-card">
-              <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Définition des Intervalles de Référence Biologiques</h5>
-              <p class="sim-insight-desc">En biologie médicale, la quasi-totalité des valeurs usuelles (glycémie, urée, cholestérol sérique) est calibrée sur l'intervalle bilatéral à 95% d'une population de donneurs sains : $[\mu - 1.96\sigma \; ; \; \mu + 1.96\sigma]$. Par définition mathématique, <strong>5% des sujets parfaitement sains</strong> se situeront naturellement en dehors de ces bornes de référence.</p>
+              <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> Que Signifient Concrètement $\mu$ et $\sigma$ en Biologie ?</h5>
+              <p class="sim-insight-desc"><strong>La moyenne $\mu$</strong> représente la taille ou la concentration la plus fréquente au sein de la population saine. <strong>L'écart-type $\sigma$</strong> quantifie l'amplitude de dispersion naturelle : pour une taille moyenne de 175 cm avec $\sigma = 7\,\text{cm}$, 95% des adultes mesurent entre 161.3 cm et 188.7 cm ($175 \pm 1.96 \times 7$). C'est cette règle exacte qui définit les intervalles de référence du laboratoire médical.</p>
             </div>
           </div>
         </div>
       </div>
 
       <!-- ================================================================
-           PANNEAU 6 : Théorème Central Limite (TCL)
+           PANNEAU 6 : Théorème Central Limite (TCL) Ultra-Visuel & Animé
            ================================================================ -->
       <div id="sim-tcl" class="sim-tab-panel">
         <div class="sim-grid">
           <div class="sim-controls-card">
-            <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Paramètres du TCL</h4>
+            <h4 class="sim-controls-title"><i class="fas fa-sliders-h"></i> Contrôles de Simulation</h4>
 
             <div class="sim-control-group">
               <label class="sim-control-label" for="select-tcl-dist">Distribution Parentale</label>
-              <select id="select-tcl-dist" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-family: inherit;">
+              <select id="select-tcl-dist" class="sim-select">
                 <option value="exp">Exponentielle (Fortement Asymétrique)</option>
                 <option value="uniform">Uniforme (Plate [0 ; 10])</option>
                 <option value="bimodal">Bimodale (Mélange de 2 Populations)</option>
@@ -832,33 +864,43 @@
                 <span>Taille de chaque Échantillon ($n$)</span>
                 <span class="sim-value-badge" id="val-tcl-n">30</span>
               </label>
-              <input type="range" id="slider-tcl-n" class="sim-slider" min="1" max="100" step="1" value="30">
+              <input type="range" id="slider-tcl-n" class="sim-slider" min="2" max="100" step="1" value="30">
             </div>
 
-            <button id="btn-run-tcl" class="sim-action-btn">
-              <i class="fas fa-play"></i> Simuler 2000 Échantillons
-            </button>
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <button id="btn-step-tcl" class="sim-preset-btn" style="flex: 1;"><i class="fas fa-step-forward"></i> +1 Échantillon</button>
+              <button id="btn-anim-tcl" class="sim-preset-btn" style="flex: 1;"><i class="fas fa-play"></i> Animation Continue</button>
+            </div>
+
+            <div style="display: flex; gap: 0.4rem; margin-top: 0.25rem;">
+              <button id="btn-run-tcl" class="sim-action-btn" style="flex: 2;"><i class="fas fa-bolt"></i> Simuler 2 000</button>
+              <button id="btn-reset-tcl" class="sim-preset-btn" style="flex: 1;"><i class="fas fa-redo"></i> Reset</button>
+            </div>
           </div>
 
           <div class="sim-display-area">
             <div class="sim-canvas-wrapper">
-              <canvas id="canvas-tcl" class="sim-canvas"></canvas>
+              <canvas id="canvas-tcl" class="sim-canvas" style="height: 380px;"></canvas>
             </div>
 
             <div class="sim-metrics-grid">
+              <div class="sim-metric-card">
+                <div class="sim-metric-val" id="metric-tcl-k" style="color: #38bdf8;">--</div>
+                <div class="sim-metric-lbl">Échantillons Accumulés ($K$)</div>
+              </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-tcl-mean" style="color: #0d9488;">--</div>
                 <div class="sim-metric-lbl">Moyenne des Moyennes ($\bar{X}$)</div>
               </div>
               <div class="sim-metric-card">
                 <div class="sim-metric-val" id="metric-tcl-sd" style="color: #e11d48;">--</div>
-                <div class="sim-metric-lbl">Écart-Type des Moyennes ($\approx \sigma/\sqrt{n}$)</div>
+                <div class="sim-metric-lbl">Écart-Type ($S_{\bar{X}} \approx \sigma/\sqrt{n}$)</div>
               </div>
             </div>
 
             <div class="sim-insight-card">
-              <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> La Magie du Théorème Central Limite pour le Biologiste</h5>
-              <p class="sim-insight-desc">Le TCL garantit que <strong>la somme ou la moyenne de $n$ variables aléatoires indépendantes tend vers une loi normale</strong>, quelle que soit la forme de la distribution d'origine (même si la variable biologique brute est exponentielle ou bimodale !). Dès que $n \ge 30$, l'histogramme des moyennes prend une forme de cloche de Gauss parfaite. C'est ce pilier fondamental qui légitime l'usage des tests paramétriques ($t$ de Student, ANOVA).</p>
+              <h5 class="sim-insight-title"><i class="fas fa-microscope"></i> La Magie Visuelle du Théorème Central Limite</h5>
+              <p class="sim-insight-desc">En haut, observez la population d'origine (très asymétrique ou bimodale). En bas, observez les moyennes d'échantillons qui tombent et s'empilent. <strong>Même si les données brutes ne sont absolument pas normales, la distribution des moyennes d'échantillon devient une cloche de Gauss parfaite</strong> dès que $n \ge 30$. C'est ce principe qui autorise l'usage des tests paramétriques ($t$ de Student, ANOVA) en biologie.</p>
             </div>
           </div>
         </div>
@@ -931,7 +973,7 @@
 
             <div class="sim-control-group">
               <label class="sim-control-label" for="select-alpha">Seuil de Signification ($\alpha$)</label>
-              <select id="select-alpha" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-main); font-family: inherit;">
+              <select id="select-alpha" class="sim-select">
                 <option value="0.05">$\alpha = 0.05$ (5% - Standard)</option>
                 <option value="0.01">$\alpha = 0.01$ (1% - Conservateur)</option>
               </select>
