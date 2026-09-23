@@ -55,9 +55,10 @@ Grâce au fichier d'automatisation préconfiguré (`.github/workflows/deploy.yml
    - Dans le menu déroulant **« Source »**, sélectionnez **« GitHub Actions »** (au lieu de *Deploy from a branch*).
 4. C'est tout ! GitHub va automatiquement déclencher le workflow qui publie le dossier `website/` en direct.
 5. Après environ 60 secondes, rafraîchissez la page : GitHub affichera un bandeau vert avec le lien officiel de votre site :
-   ```
-   https://<VOTRE_NOM_UTILISATEUR>.github.io/<NOM_DU_DEPOT>/
-   ```
+   - **URL officielle du site déployé** :
+     ```
+     https://hosniadilemp-a11y.github.io/BioStat/
+     ```
 
 ---
 
@@ -67,19 +68,35 @@ Grâce au fichier d'automatisation préconfiguré (`.github/workflows/deploy.yml
 - **Affichage Mathématique Parfait (KaTeX)** : Rendu typographique des formules (ex: critère de Ward $\Delta I(A, B) = \frac{n_A n_B}{n_A + n_B} d_E^2(g_A, g_B)$).
 - **Hub de Téléchargement Différencié & 100% Fonctionnel** :
   - 8 Diapositives Beamer (PDF 16:9).
-  - 8 Énoncés de TD (Fascicules A4).
-  - 8 Corrigés de TD détaillés (Solutions complètes A4).
+  - 8 Énoncés de TD (Fascicules A4 pour les étudiants).
   - 7 Notebooks interactifs Jupyter (.ipynb).
   - 5 Jeux de données biologiques réels (.csv).
   - Manuel d'installation Python & Anaconda (PDF & MD).
+- **Sécurité Pédagogique** : Les corrigés de TD sont strictement réservés à l'enseignante et ne sont pas téléchargeables sur le site public des étudiants.
 - **Adaptation Téléphone & Tablette (100% Mobile Ready)** : Menu hamburger tactile et grilles fluides pour écrans de smartphone (360px–480px).
 - **Profil Enseignante Détaillé** : Biographie académique, compétences et permanence du **Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)**.
 
 ---
 
-## 🔄 Comment mettre à jour le site à l'avenir ?
+## 🛠️ Tableau de Bord Enseignant (Gestion & Mises à Jour en 1 Clic)
 
-Dès que vous modifiez un document ou ajoutez un fichier, il vous suffit de taper :
+Pour régénérer les cours, compiler les TD ou republier le site sans taper de commande dans le terminal :
+
+1. Lancez simplement le script à la racine :
+   ```bash
+   ./lancer_gestion_cours.sh
+   ```
+2. Votre navigateur s'ouvrira sur l'interface sécurisée locale : `http://localhost:8000/gestion_cours.html` (située dans le dossier isolé `admin/`).
+3. Vous disposez de boutons simples avec barre de progression en temps réel :
+   - Régénération individuelle par chapitre (Ch 00 à 07)
+   - Régénération globale des cours et des TD
+   - Publication / Synchronisation en 1 clic sur GitHub Pages !
+
+---
+
+## 🔄 Comment mettre à jour le site manuellement ?
+
+Si vous préférez le terminal :
 
 ```bash
 git add .
