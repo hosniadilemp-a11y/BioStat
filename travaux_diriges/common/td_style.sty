@@ -1,0 +1,157 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{td_style}[2025/09/23 Style Officiel Travaux Diriges Biostatistiques UMBB]
+
+% --------------------------------------------------------
+% Packages Fondamentaux
+% --------------------------------------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage[a4paper, top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm]{geometry}
+\RequirePackage{microtype}
+\RequirePackage{amsmath, amssymb, amsfonts}
+\RequirePackage{booktabs, colortbl, array, multirow}
+\RequirePackage{graphicx}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\RequirePackage{fontawesome5}
+\RequirePackage{hyperref}
+
+% --------------------------------------------------------
+% Palette de Couleurs Professionnelle
+% --------------------------------------------------------
+\definecolor{BioNavy}{HTML}{1A365D}     % Bleu saphir profond
+\definecolor{BioNavyLight}{HTML}{F0F4F8}
+\definecolor{BioTeal}{HTML}{0D9488}     % Vert canard / Sarcelle
+\definecolor{BioTealLight}{HTML}{F0FDFA}
+\definecolor{BioGreen}{HTML}{10B981}    % Émeraude / Succès
+\definecolor{BioGreenLight}{HTML}{ECFDF5}
+\definecolor{BioAmber}{HTML}{D97706}    % Ambre / Avertissement
+\definecolor{BioAmberLight}{HTML}{FFFBEB}
+\definecolor{BioCrimson}{HTML}{B91C1C}  % Rouge carmin
+\definecolor{BioCrimsonLight}{HTML}{FEF2F2}
+\definecolor{BioDark}{HTML}{0F172A}     % Texte ardoise sombre
+\definecolor{BioBorder}{HTML}{CBD5E1}
+
+% --------------------------------------------------------
+% Configuration Hyperref
+% --------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=BioNavy,
+  urlcolor=BioTeal,
+  citecolor=BioGreen
+}
+
+% --------------------------------------------------------
+% En-tête et Pied de Page
+% --------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small \textcolor{BioNavy}{\textbf{UMBB}} --- Faculté des Sciences | Département de Biologie}
+\fancyhead[R]{\small \textcolor{BioTeal}{\textbf{Biostatistiques Appliquées}} --- M2 Biochimie}
+\fancyfoot[L]{\footnotesize \textcolor{gray}{Dr. Sarra BENMOUMOU (Ph.D.)}}
+\fancyfoot[R]{\footnotesize \textcolor{gray}{Page \thepage}}
+
+% --------------------------------------------------------
+% Macro de Titre Officiel Universitaire
+% --------------------------------------------------------
+\newcommand{\makeuniversityheader}[3]{%
+  \begin{tcolorbox}[
+    colback=BioNavyLight,
+    colframe=BioNavy,
+    arc=4mm,
+    boxrule=1pt,
+    left=12pt, right=12pt, top=10pt, bottom=10pt
+  ]
+    \begin{minipage}[c]{0.70\textwidth}
+      {\footnotesize \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}}\\[1mm]
+      {\footnotesize Faculté des Sciences --- Département de Biologie}\\[1mm]
+      {\footnotesize \textbf{Master 2 :} Biochimie Appliquée (Semestre 3)}\\[1mm]
+      {\footnotesize Module : \textbf{Biostatistiques Appliquées \& Plans d'Expériences}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.28\textwidth}
+      \flushright
+      {\footnotesize \textbf{Année 2024 -- 2025}}\\[1mm]
+      {\footnotesize \faUserTie\ \textbf{Dr. S. BENMOUMOU}}\\[1mm]
+      {\scriptsize Enseignante Responsable}\\[1mm]
+      \textbf{#3}
+    \end{minipage}
+    
+    \vspace{2mm}
+    \hrule height 0.8pt color BioNavy
+    \vspace{3mm}
+    
+    \begin{center}
+      {\Large \color{BioNavy}\textbf{#1}}\\[1.5mm]
+      {\normalsize \color{BioTeal}\textbf{#2}}
+    \end{center}
+  \end{tcolorbox}
+  \vspace{4mm}
+}
+
+% --------------------------------------------------------
+% Environnements d'Exercices et de Solutions
+% --------------------------------------------------------
+\newtcolorbox{exercicebox}[2][]{
+  colback=white,
+  colframe=BioNavy,
+  fonttitle=\bfseries,
+  title={\faFlask\quad #2},
+  boxrule=0.8pt,
+  arc=3mm,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+  coltitle=white,
+  colbacktitle=BioNavy,
+  breakable,
+  #1
+}
+
+\newtcolorbox{solutionbox}[2][]{
+  colback=BioTealLight,
+  colframe=BioTeal,
+  fonttitle=\bfseries,
+  title={\faCheckCircle\quad Solution Détaillée --- #2},
+  boxrule=0.8pt,
+  arc=3mm,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+  coltitle=white,
+  colbacktitle=BioTeal,
+  breakable,
+  #1
+}
+
+\newtcolorbox{astucebox}[1][Astuce Méthodologique]{
+  colback=BioAmberLight,
+  colframe=BioAmber,
+  fonttitle=\bfseries,
+  title={\faLightbulb\quad #1},
+  boxrule=0.8pt,
+  arc=2mm,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=8pt, after skip=8pt,
+  coltitle=BioDark,
+  colbacktitle=BioAmberLight!80,
+  breakable
+}
+
+\newtcolorbox{biotakeaway}[1][Interprétation Biologique]{
+  colback=BioGreenLight,
+  colframe=BioGreen,
+  fonttitle=\bfseries,
+  title={\faLeaf\quad #1},
+  boxrule=0.8pt,
+  arc=2mm,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=8pt, after skip=8pt,
+  coltitle=white,
+  colbacktitle=BioGreen,
+  breakable
+}

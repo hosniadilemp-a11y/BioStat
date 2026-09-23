@@ -1,0 +1,88 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 06}{Classification Ascendante Hiérarchique (CAH)}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Métriques de Distance \& Matrice de Dissimilarité (RT-qPCR)}
+Le niveau d'expression relative ($\Delta\Delta Ct$, en unité arbitraire) de 2 gènes de résistance ($G_1$ : efflux, $G_2$ : $\beta$-lactamase) est mesuré chez 4 isolats bactériens hospitaliers ($S_1, S_2, S_3, S_4$) :
+\begin{center}
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Isolat Bactérien} & $S_1$ & $S_2$ & $S_3$ & $S_4$ \\
+    \midrule
+    \textbf{Gène $G_1$ (Efflux)}          & 1.0 & 2.0 & 5.0 & 6.0 \\
+    \textbf{Gène $G_2$ ($\beta$-lactamase)} & 2.0 & 1.0 & 5.0 & 4.0 \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Rappelez les formules de la distance euclidienne $d_E(A, B) = \sqrt{\sum (x_{Ai} - x_{Bi})^2}$ et de la distance de Manhattan $d_M(A, B) = \sum |x_{Ai} - x_{Bi}|$.
+  \item Calculez les distances euclidiennes entre toutes les paires d'isolats : $d(S_1, S_2)$, $d(S_1, S_3)$, $d(S_1, S_4)$, $d(S_2, S_3)$, $d(S_2, S_4)$ et $d(S_3, S_4)$.
+  \item Dressez la matrice de dissimilarité triangulaire inférieure $D_0$ ($4 \times 4$).
+  \item Quels sont les deux premiers isolats qui vont fusionner lors de la première étape de l'algorithme de CAH ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Stratégies de Liaison (Linkage Methods) \& Critère de Ward}
+Soient deux sous-groupes d'échantillons déjà formés : $C_1 = \{S_1, S_2\}$ et $C_2 = \{S_3, S_4\}$.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Définissez les quatre méthodes d'agrégation usuelles pour calculer la distance entre deux groupes $D(C_1, C_2)$ :
+  \begin{itemize}
+    \item Saut minimum (\textit{Single Linkage}) : $D_{\min} = \min d(x_i, y_j)$.
+    \item Saut maximum (\textit{Complete Linkage}) : $D_{\max} = \max d(x_i, y_j)$.
+    \item Lien moyen (\textit{Average Linkage} / UPGMA) : $D_{\text{avg}} = \frac{1}{|C_1||C_2|} \sum d(x_i, y_j)$.
+    \item Critère de Ward (\textit{Minimum Variance Method}).
+  \end{itemize}
+  \item À partir des distances calculées à l'Exercice 1, calculez la distance $D(C_1, C_2)$ selon le Single Linkage, le Complete Linkage et l'Average Linkage.
+  \item Quel est le défaut majeur du Single Linkage en biologie (phénomène de « chaînage » / \textit{chaining effect}) ?
+  \item Pourquoi la méthode de Ward est-elle la référence absolue en biochimie et médecine ? Que minimise-t-elle exactement ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Fusion Pas-à-Pas \& Construction du Dendrogramme}
+On applique le critère de Ward sur les données des 4 isolats ($S_1, S_2, S_3, S_4$).
+L'augmentation d'inertie intra-classe lors de la fusion de deux clusters $A$ et $B$ d'effectifs $n_A$ et $n_B$ et de centres de gravité $g_A$ et $g_B$ est donnée par :
+\begin{equation*}
+  \Delta I(A, B) = \frac{n_A \cdot n_B}{n_A + n_B} \, d_E^2(g_A, g_B)
+\end{equation*}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Étape 1 :} Calculez $\Delta I(S_1, S_2)$ sachant que $d_E^2(S_1, S_2) = (2-1)^2 + (1-2)^2 = 2.0$.
+  \item \textbf{Étape 2 :} Calculez $\Delta I(S_3, S_4)$ sachant que $d_E^2(S_3, S_4) = (6-5)^2 + (4-5)^2 = 2.0$.
+  Les deux premiers clusters formés sont donc $C_1 = \{S_1, S_2\}$ et $C_2 = \{S_3, S_4\}$.
+  \item Calculez les barycentres $g_1$ du groupe $C_1$ et $g_2$ du groupe $C_2$.
+  \item \textbf{Étape 3 :} Calculez le saut d'inertie $\Delta I(C_1, C_2)$ lors de la fusion finale des deux groupes.
+  \item Dessinez schématiquement le dendrogramme obtenu en graduant l'axe vertical des ordonnées avec les valeurs d'indice de dissimilarité / inertie ($\Delta I$).
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Détermination du Seuil de Coupure \& Profilage des Classes}
+À partir du dendrogramme construit à l'Exercice 3 :
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Où doit-on positionner la ligne de coupure horizontale pour obtenir la partition la plus stable et pertinente biologiquement ?
+  \item Quel est le nombre optimal de clusters ($k$) suggéré par le saut d'inertie majeur ?
+  \item Calculez le profil biologique moyen de chaque classe (moyennes des gènes $G_1$ et $G_2$ dans le Groupe 1 et dans le Groupe 2).
+  \item Caractérisez cliniquement les deux groupes d'isolats : lequel correspond à des souches bactériennes sensibles et lequel correspond à des souches super-résistantes hospitalières ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Lecture \& Interprétation d'une Clustermap (Heatmap Bi-Clusterisée)}
+Dans une étude métabolomique sur 30 sérums de patients testés sur 20 acides aminés et lipides, l'équipe génère une Clustermap via le package \texttt{seaborn.clustermap}.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Pourquoi une Clustermap comporte-t-elle **deux dendrogrammes distincts** (l'un au-dessus des colonnes, l'autre à gauche des lignes) ?
+  \item Que permet d'identifier le dendrogramme horizontal situé en colonnes ?
+  \item Que permet d'identifier le dendrogramme vertical situé en lignes ?
+  \item Si l'on observe un bloc compact rouge vif (surexpression) à l'intersection du cluster de patients 2 et d'un cluster d'enzymes hépatiques (ALAT, ASAT, PAL), quelle conclusion physiopathologique immédiate le biochimiste peut-il en déduire ?
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

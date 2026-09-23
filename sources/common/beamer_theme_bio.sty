@@ -1,0 +1,133 @@
+\ProvidesPackage{beamer_theme_bio}[2025/09/23 Theme Beamer pour Biostatistiques Master Biochimie]
+
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{amsmath,amssymb,amsfonts}
+\RequirePackage{booktabs}
+\RequirePackage{colortbl}
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{fontawesome5}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% --- Palette de Couleurs "Sciences du Vivant & Biochimie" ---
+\definecolor{BioNavy}{RGB}{26, 54, 93}      % Bleu Saphir / Nuit profond (Titres, barre d'en-tête)
+\definecolor{BioTeal}{RGB}{13, 148, 136}    % Sarcelle / Émeraude (Accents, blocs bio)
+\definecolor{BioGreen}{RGB}{46, 125, 50}    % Vert feuille / biologie (Validation)
+\definecolor{BioAmber}{RGB}{217, 119, 6}    % Ambre chaleureux (Attentions, astuces)
+\definecolor{BioRed}{RGB}{225, 29, 72}      % Rouge rubis (Erreurs, rejets H0)
+\definecolor{BioLight}{RGB}{248, 250, 252}  % Fond très doux
+\definecolor{BioDark}{RGB}{30, 41, 59}      % Texte principal lisible
+
+% --- Marges et Géométrie Anti-Débordement ---
+\setbeamersize{text margin left=7mm, text margin right=7mm}
+
+% --- Configuration Globale Beamer ---
+\usefonttheme{professionalfonts}
+\setbeamercolor{normal text}{fg=BioDark,bg=white}
+\setbeamercolor{structure}{fg=BioNavy}
+\setbeamercolor{title}{fg=white,bg=BioNavy}
+\setbeamercolor{frametitle}{fg=white,bg=BioNavy}
+\setbeamercolor{section in toc}{fg=BioNavy}
+\setbeamercolor{subsection in toc}{fg=BioTeal}
+\setbeamercolor{item}{fg=BioTeal}
+\setbeamercolor{subitem}{fg=BioNavy}
+
+% Désactiver les symboles de navigation distrayants
+\setbeamertemplate{navigation symbols}{}
+
+% --- Style du Titre des Diapositives (Frametitle Anti-Débordement) ---
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=4.2ex,dp=1.8ex,leftskip=7mm,rightskip=7mm]{frametitle}%
+    {\fontsize{12}{14}\selectfont\textbf{\insertframetitle}}%
+    \ifx\insertframesubtitle\@empty\else%
+      \par\vspace{1pt}%
+      {\fontsize{8.5}{10}\selectfont\color{BioTeal!40}\textbf{\insertframesubtitle}}%
+    \fi%
+  \end{beamercolorbox}%
+  \vspace{1.5mm}%
+}
+
+% --- Pied de Page Épuré & Informatif (Footline) ---
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.5ex,dp=1ex,left,leftskip=7mm]{author in head/foot}%
+      \fontsize{7}{9}\selectfont\color{BioNavy}\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+      \fontsize{7}{9}\selectfont\color{BioTeal}\textbf{Biostatistiques --- M2 Biochimie (UMBB)}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.5ex,dp=1ex,right,rightskip=7mm]{date in head/foot}%
+      \fontsize{7}{9}\selectfont\color{BioNavy}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}%
+  }%
+  \vskip1ex%
+}
+
+% --- Boîtes Personnalisées Anti-Débordement (width=\linewidth) ---
+
+% 1. Boîte Cas Pratique Biochimie / Biologie
+\newtcolorbox{biobox}[1]{
+  enhanced,
+  width=\linewidth,
+  colback=BioTeal!6,
+  colframe=BioTeal,
+  coltitle=white,
+  fonttitle=\bfseries\small,
+  title={\faFlask\hspace{0.5em}Cas Pratique Biochimie : #1},
+  arc=1.5mm,
+  boxrule=0.8pt,
+  top=3pt,bottom=3pt,left=5pt,right=5pt,
+  before skip=4pt,after skip=4pt
+}
+
+% 2. Boîte Définition / Concept Théorique
+\newtcolorbox{conceptbox}[1]{
+  enhanced,
+  width=\linewidth,
+  colback=BioNavy!5,
+  colframe=BioNavy,
+  coltitle=white,
+  fonttitle=\bfseries\small,
+  title={\faBook\hspace{0.5em}Définition / Concept Clé : #1},
+  arc=1.5mm,
+  boxrule=0.8pt,
+  top=3pt,bottom=3pt,left=5pt,right=5pt,
+  before skip=4pt,after skip=4pt
+}
+
+% 3. Boîte Attention / Piège Fréquent
+\newtcolorbox{warnbox}[1]{
+  enhanced,
+  width=\linewidth,
+  colback=BioAmber!8,
+  colframe=BioAmber!90!black,
+  coltitle=white,
+  fonttitle=\bfseries\small,
+  title={\faExclamationTriangle\hspace{0.5em}Piège Fréquent en Biologie : #1},
+  arc=1.5mm,
+  boxrule=0.8pt,
+  top=3pt,bottom=3pt,left=5pt,right=5pt,
+  before skip=4pt,after skip=4pt
+}
+
+% 4. Boîte À Retenir / Takeaway
+\newtcolorbox{takeawaybox}[1]{
+  enhanced,
+  width=\linewidth,
+  colback=BioGreen!6,
+  colframe=BioGreen!90!black,
+  coltitle=white,
+  fonttitle=\bfseries\small,
+  title={\faLightbulb\hspace{0.5em}Message Clé à Retenir : #1},
+  arc=1.5mm,
+  boxrule=0.8pt,
+  top=3pt,bottom=3pt,left=5pt,right=5pt,
+  before skip=4pt,after skip=4pt
+}
+
+\endinput

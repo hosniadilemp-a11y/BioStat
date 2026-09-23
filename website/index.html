@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Biostatistiques Appliquées & Modélisation | Master 2 Biochimie — Dr. Sarra BENMOUMOU-HOSNI</title>
+  <meta name="description" content="Portail officiel du cours de Biostatistiques Appliquées et Modélisation du Vivant (Master 2 Biochimie, UMBB). Diapositives Beamer, Polycopiés de TD, Corrigés Détaillés, TP Python/Jupyter et Datasets par Dr. Sarra BENMOUMOU-HOSNI (Ph.D.).">
+  
+  <!-- Polices Google Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- KaTeX pour le Rendu Mathématique Typographique Haute Définition -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  
+  <!-- Feuille de Style Personnalisée -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ====================================================================
+       Éléments Graphiques d'Arrière-Plan & Pictogrammes Biologiques
+       ==================================================================== -->
+  <div class="bio-bg-decorations" aria-hidden="true">
+    <!-- Orbes lumineux doux -->
+    <div class="bg-glow-orb bg-glow-1"></div>
+    <div class="bg-glow-orb bg-glow-2"></div>
+    <div class="bg-glow-orb bg-glow-3"></div>
+
+    <!-- Pictogramme 1 : Hélice d'ADN Double Brin -->
+    <svg class="bio-svg bio-dna bio-svg-1" viewBox="0 0 100 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 20 C60 50, 60 70, 20 100 C-20 130, -20 150, 20 180 C60 210, 60 230, 20 260" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <path d="M80 20 C40 50, 40 70, 80 100 C120 130, 120 150, 80 180 C40 210, 40 230, 80 260" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <!-- Paires de bases -->
+      <line x1="26" y1="35" x2="74" y2="35" stroke="currentColor" stroke-width="2" stroke-dasharray="2 3"/>
+      <line x1="42" y1="60" x2="58" y2="60" stroke="currentColor" stroke-width="2.5"/>
+      <line x1="26" y1="85" x2="74" y2="85" stroke="currentColor" stroke-width="2" stroke-dasharray="2 3"/>
+      <line x1="10" y1="140" x2="90" y2="140" stroke="currentColor" stroke-width="2" stroke-dasharray="2 3"/>
+      <line x1="26" y1="165" x2="74" y2="165" stroke="currentColor" stroke-width="2"/>
+      <line x1="42" y1="190" x2="58" y2="190" stroke="currentColor" stroke-width="2.5"/>
+      <line x1="26" y1="215" x2="74" y2="215" stroke="currentColor" stroke-width="2" stroke-dasharray="2 3"/>
+    </svg>
+
+    <!-- Pictogramme 2 : Bactérie Bacille avec Flagelles -->
+    <svg class="bio-svg bio-bacteria bio-svg-2" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Corps de la bactérie (capsule) -->
+      <rect x="40" y="35" width="90" height="45" rx="22.5" stroke="currentColor" stroke-width="3" fill="currentColor" fill-opacity="0.04"/>
+      <!-- Plasmide / ADN nucléoïde circulaire -->
+      <path d="M55 57 Q65 47 78 57 T102 57" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="112" cy="50" r="3" fill="currentColor"/>
+      <circle cx="60" cy="65" r="2" fill="currentColor"/>
+      <!-- Pili & cils membranaires -->
+      <line x1="60" y1="35" x2="58" y2="27" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="85" y1="35" x2="85" y2="25" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="105" y1="35" x2="108" y2="26" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="60" y1="80" x2="58" y2="88" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="85" y1="80" x2="85" y2="90" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="105" y1="80" x2="108" y2="89" stroke="currentColor" stroke-width="1.8"/>
+      <!-- Longs flagelles ondulants -->
+      <path d="M40 57 C25 50, 15 70, 0 60" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M40 50 C20 40, 10 30, -5 45" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M40 65 C22 75, 12 85, -2 80" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Pictogramme 3 : Cellule Vivante avec Noyau & Organites -->
+    <svg class="bio-svg bio-cell bio-svg-3" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M80 15 C120 10, 148 45, 145 85 C142 125, 115 148, 75 145 C35 142, 12 118, 15 75 C18 35, 45 20, 80 15 Z" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 3"/>
+      <!-- Noyau -->
+      <circle cx="80" cy="80" r="28" stroke="currentColor" stroke-width="2.2" fill="currentColor" fill-opacity="0.05"/>
+      <circle cx="76" cy="76" r="10" stroke="currentColor" stroke-width="1.8"/>
+      <!-- Mitochondries -->
+      <ellipse cx="45" cy="55" rx="14" ry="7" transform="rotate(-30 45 55)" stroke="currentColor" stroke-width="1.6"/>
+      <ellipse cx="115" cy="110" rx="14" ry="7" transform="rotate(25 115 110)" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
+
+    <!-- Pictogramme 4 : Boîte de Pétri avec Colonies Bactériennes -->
+    <svg class="bio-svg bio-petri bio-svg-4" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="75" cy="75" r="65" stroke="currentColor" stroke-width="3"/>
+      <circle cx="75" cy="75" r="54" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <!-- Colonies circulaires (UFC) -->
+      <circle cx="60" cy="60" r="7" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.15"/>
+      <circle cx="95" cy="65" r="9" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.2"/>
+      <circle cx="70" cy="95" r="6" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.15"/>
+      <circle cx="85" cy="82" r="4" fill="currentColor"/>
+      <circle cx="50" cy="80" r="3.5" fill="currentColor"/>
+      <circle cx="105" cy="90" r="4.5" fill="currentColor"/>
+    </svg>
+
+    <!-- Pictogramme 5 : Bactériophage / Virus -->
+    <svg class="bio-svg bio-phage bio-svg-5" viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tête icosaédrique -->
+      <polygon points="50,15 80,35 80,65 50,85 20,65 20,35" stroke="currentColor" stroke-width="2.5" fill="currentColor" fill-opacity="0.04"/>
+      <!-- Collier et queue hélicoïdale -->
+      <line x1="50" y1="85" x2="50" y2="120" stroke="currentColor" stroke-width="3"/>
+      <line x1="43" y1="95" x2="57" y2="95" stroke="currentColor" stroke-width="2"/>
+      <line x1="43" y1="105" x2="57" y2="105" stroke="currentColor" stroke-width="2"/>
+      <line x1="43" y1="115" x2="57" y2="115" stroke="currentColor" stroke-width="2"/>
+      <!-- Fibres caudales -->
+      <path d="M50 120 L30 145 L15 140" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M50 120 L70 145 L85 140" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M50 120 L50 150" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- ====================================================================
+       Barre de Navigation Principale Responsive
+       ==================================================================== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#accueil" class="nav-brand">
+        <div class="nav-brand-badge">
+          <i class="fas fa-dna"></i>
+        </div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-title">Biostatistiques</span>
+          <span class="nav-brand-subtitle">M2 Biochimie • UMBB</span>
+        </div>
+      </a>
+
+      <!-- Menu de liens Desktop -->
+      <ul id="navLinks" class="nav-links">
+        <li><a href="#accueil" class="nav-link active">Accueil</a></li>
+        <li><a href="#programme" class="nav-link">Programme & Piliers</a></li>
+        <li><a href="#telechargements" class="nav-link">Téléchargements</a></li>
+        <li><a href="#guide-tp" class="nav-link">Guide des TP</a></li>
+        <li><a href="#galerie" class="nav-link">Galerie HD</a></li>
+        <li><a href="#enseignante" class="nav-link">Enseignante</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Bouton bascule Thème Clair / Sombre -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Basculer Mode Clair / Sombre" aria-label="Toggle Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <!-- Bouton Hamburger Mobile -->
+        <button id="mobileMenuBtn" class="mobile-menu-btn" title="Menu" aria-label="Ouvrir le menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tiroir Mobile Dropdown -->
+    <div id="mobileNavDrawer" class="mobile-nav-drawer">
+      <ul class="mobile-nav-links">
+        <li><a href="#accueil" class="mobile-nav-link"><i class="fas fa-home"></i> Accueil</a></li>
+        <li><a href="#programme" class="mobile-nav-link"><i class="fas fa-graduation-cap"></i> Programme & Piliers</a></li>
+        <li><a href="#telechargements" class="mobile-nav-link"><i class="fas fa-cloud-download-alt"></i> Téléchargements</a></li>
+        <li><a href="#guide-tp" class="mobile-nav-link"><i class="fab fa-python"></i> Guide des TP Python</a></li>
+        <li><a href="#galerie" class="mobile-nav-link"><i class="fas fa-chart-area"></i> Galerie des 13 Figures HD</a></li>
+        <li><a href="#enseignante" class="mobile-nav-link"><i class="fas fa-user-tie"></i> Dr. Sarra BENMOUMOU-HOSNI</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ====================================================================
+       Section Hero Principale
+       ==================================================================== -->
+  <header id="accueil" class="hero">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-pill">
+          <i class="fas fa-microscope"></i> Master 2 Biochimie Appliquée • Semestre 3
+        </div>
+        <h1 class="hero-title">
+          Biostatistiques & <span>Modélisation du Vivant</span>
+        </h1>
+        <p class="hero-description">
+          Une formation universitaire d'excellence conçue spécifiquement pour les étudiants et chercheurs en biologie, biochimie et biotechnologie, <strong>sans prérequis informatique</strong>. De l'expérimentation animale et l'étalonnage analytique jusqu'à la classification omique sous Python.
+        </p>
+
+        <!-- Carte Enseignante Hero -->
+        <div class="hero-meta-card">
+          <div class="teacher-avatar">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <div class="teacher-info">
+            <h4>Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)</h4>
+            <p>Enseignante-Chercheuse en Biostatistiques & Bio-informatique</p>
+            <p><strong>Faculté des Sciences • Université M'Hamed Bougara de Boumerdès (UMBB)</strong></p>
+          </div>
+        </div>
+
+        <div class="hero-buttons">
+          <a href="#telechargements" class="btn btn-primary">
+            <i class="fas fa-cloud-download-alt"></i> Hub de Téléchargement
+          </a>
+          <a href="#guide-tp" class="btn btn-secondary">
+            <i class="fab fa-python"></i> Lancer les TP Python
+          </a>
+          <a href="#galerie" class="btn btn-outline">
+            <i class="fas fa-chart-line"></i> Galerie des Figures HD
+          </a>
+        </div>
+      </div>
+
+      <!-- Panneau de Statistiques Clés -->
+      <div class="hero-stats-panel">
+        <div class="stat-card stat-cours">
+          <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+          <div class="stat-meta">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Chapitres Magistraux (Slides 16:9)</div>
+          </div>
+        </div>
+        <div class="stat-card stat-td">
+          <div class="stat-icon"><i class="fas fa-pencil-ruler"></i></div>
+          <div class="stat-meta">
+            <div class="stat-number">16</div>
+            <div class="stat-label">Fascicules de TD (8 Énoncés & 8 Corrigés)</div>
+          </div>
+        </div>
+        <div class="stat-card stat-tp">
+          <div class="stat-icon"><i class="fab fa-python"></i></div>
+          <div class="stat-meta">
+            <div class="stat-number">7</div>
+            <div class="stat-label">Notebooks Interactifs (.ipynb)</div>
+          </div>
+        </div>
+        <div class="stat-card stat-data">
+          <div class="stat-icon"><i class="fas fa-database"></i></div>
+          <div class="stat-meta">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Jeux de Données CSV Réalistes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====================================================================
+       Section Parcours Pédagogique Complet (Roadmap par Piliers)
+       ==================================================================== -->
+  <section id="programme" class="section">
+    <div class="section-header">
+      <span class="section-tag">Syllabus Universitaire Structuré</span>
+      <h2 class="section-title">Parcours Pédagogique Complet</h2>
+      <p class="section-subtitle">Une progression didactique rigoureuse articulée autour de 3 grands piliers thématiques, ancrée dans des cas d'étude réels de laboratoire biomédical.</p>
+    </div>
+
+    <!-- PILIER 1 -->
+    <div class="pillar-block">
+      <div class="pillar-header pillar-1">
+        <div class="pillar-badge"><i class="fas fa-layer-group"></i> Pilier I</div>
+        <div class="pillar-title-group">
+          <h3>Fondements, Distribution & Expérimentations Factorielles</h3>
+          <p>Maîtriser la variabilité biologique, l'interaction statistique et la structure hiérarchique des bioprocédés.</p>
+        </div>
+      </div>
+
+      <div class="syllabus-grid">
+        <!-- Ch 00 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-blue">Chapitre 00</span>
+            <span class="chapter-app-pill"><i class="fas fa-vial"></i> Albumine Sérique</span>
+          </div>
+          <h4 class="chapter-title">Introduction & Rappels Fondamentaux</h4>
+          <p class="chapter-desc">Variabilité biologique vs technique, types de variables, écart-type (SD) vs erreur standard (SEM), logique de Neyman-Pearson et démystification de la <em>p-value</em>.</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Distribution Normale</span>
+            <span class="tag-pill">SD vs SEM</span>
+            <span class="tag-pill">Risques α & β</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_00_Introduction_Biostatistiques.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_00_Introduction.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_00_Introduction.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP00_Prise_En_Main_Python_Bio.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 00</a>
+          </div>
+        </div>
+
+        <!-- Ch 01 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-blue">Chapitre 01</span>
+            <span class="chapter-app-pill"><i class="fas fa-fire-alt"></i> Stress Oxydatif (MDA)</span>
+          </div>
+          <h4 class="chapter-title">ANOVA à Deux Facteurs Croisés</h4>
+          <p class="chapter-desc">Plans factoriels complets ($2 \times 3$), concept central d'Interaction (synergie vs antagonisme), profils de réponse et tests de comparaisons multiples de Tukey HSD.</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Plans Factoriels</span>
+            <span class="tag-pill">Synergie Thérapeutique</span>
+            <span class="tag-pill">Tukey HSD</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_01_ANOVA_Croisee.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_01_ANOVA_Croisee.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_01_ANOVA_Croisee.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP01_ANOVA_Croisee_Biochimie.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 01</a>
+          </div>
+        </div>
+
+        <!-- Ch 02 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-blue">Chapitre 02</span>
+            <span class="chapter-app-pill"><i class="fas fa-industry"></i> Insuline Recombinante</span>
+          </div>
+          <h4 class="chapter-title">ANOVA Hiérarchisée (Nested ANOVA)</h4>
+          <p class="chapter-desc">Facteurs emboîtés ($B \subset A$), prévention absolue de la pseudoréplication biologique, choix du bon dénominateur $F$ et composantes de variance de bioproduction.</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Facteurs Emboîtés</span>
+            <span class="tag-pill">Pseudoréplication</span>
+            <span class="tag-pill">Variance Cuves</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_02_ANOVA_Hierarchisee.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_02_ANOVA_Hierarchisee.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_02_ANOVA_Hierarchisee.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP02_ANOVA_Hierarchisee_Biochimie.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 02</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILIER 2 -->
+    <div class="pillar-block">
+      <div class="pillar-header pillar-2">
+        <div class="pillar-badge"><i class="fas fa-wave-square"></i> Pilier II</div>
+        <div class="pillar-title-group">
+          <h3>Modélisation, Étalonnage & Cinétique Biochimique</h3>
+          <p>Passer des droites d'étalonnage quantitatives aux cinétiques enzymatiques réelles et modèles logistiques.</p>
+        </div>
+      </div>
+
+      <div class="syllabus-grid">
+        <!-- Ch 03 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-indigo">Chapitre 03</span>
+            <span class="chapter-app-pill"><i class="fas fa-flask"></i> Dosage Bradford (BSA)</span>
+          </div>
+          <h4 class="chapter-title">Corrélation & Régression Linéaire</h4>
+          <p class="chapter-desc">Moindres Carrés Ordinaires (MCO), corrélation de Pearson, analyse des résidus, estimation d'inconnue avec IC et calcul rigoureux des limites LOD/LOQ (ICH Q2).</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Gamme Étalon</span>
+            <span class="tag-pill">Diagnostic Résidus</span>
+            <span class="tag-pill">LOD & LOQ</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_03_Regression_Lineaire.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_03_Regression_Lineaire.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_03_Regression_Lineaire.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP03_Regression_Lineaire_Dosage/TP03_Regression_Lineaire_Dosage.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 03</a>
+          </div>
+        </div>
+
+        <!-- Ch 04 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-indigo">Chapitre 04</span>
+            <span class="chapter-app-pill"><i class="fas fa-dna"></i> Phosphatase & ELISA</span>
+          </div>
+          <h4 class="chapter-title">Régression Non Linéaire en Biochimie</h4>
+          <p class="chapter-desc">Réfutation de Lineweaver-Burk, ajustement direct NLLS (Levenberg-Marquardt), modèle de Michaelis-Menten, équation de Hill et courbe logistique 4PL pour ELISA.</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Michaelis-Menten</span>
+            <span class="tag-pill">Allostérie Hill</span>
+            <span class="tag-pill">Modèle 4PL</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_04_Regression_Non_Lineaire.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_04_Regression_Non_Lineaire.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_04_Regression_Non_Lineaire.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP04_Cinetique_Non_Lineaire/TP04_Cinetique_Non_Lineaire.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 04</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILIER 3 -->
+    <div class="pillar-block">
+      <div class="pillar-header pillar-3">
+        <div class="pillar-badge"><i class="fas fa-project-diagram"></i> Pilier III</div>
+        <div class="pillar-title-group">
+          <h3>Exploration Multivariée, Typologies & Rigueur Scientifique</h3>
+          <p>Explorer les cohortes omiques par ACP/CAH et planifier des essais conformes aux normes internationales.</p>
+        </div>
+      </div>
+
+      <div class="syllabus-grid">
+        <!-- Ch 05 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-teal">Chapitre 05</span>
+            <span class="chapter-app-pill"><i class="fas fa-heartbeat"></i> Métabolomique NASH</span>
+          </div>
+          <h4 class="chapter-title">Analyse en Composantes Principales (ACP)</h4>
+          <p class="chapter-desc">Réduction de dimension en biologie omique, centrage-réduction obligatoire ($Z$-score), cercle des corrélations et cartographie diagnostique des patients.</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">ACP Normée</span>
+            <span class="tag-pill">Cercle Corrélations</span>
+            <span class="tag-pill">Plan Factoriel</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_05_ACP.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_05_ACP.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_05_ACP.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP05_ACP_Metabolomique/TP05_ACP_Metabolomique.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 05</a>
+          </div>
+        </div>
+
+        <!-- Ch 06 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-teal">Chapitre 06</span>
+            <span class="chapter-app-pill"><i class="fas fa-bacterium"></i> Typage BMR</span>
+          </div>
+          <h4 class="chapter-title">Classification Hiérarchique (CAH)</h4>
+          <p class="chapter-desc">Distances euclidienne et Manhattan, saut d'inertie de Ward, tracé du dendrogramme, coupure optimale et lecture critique des clustermaps (heatmaps).</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Critère de Ward</span>
+            <span class="tag-pill">Dendrogramme</span>
+            <span class="tag-pill">Clustermap</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_06_CAH.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_06_CAH.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_06_CAH.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/tp/TP06_CAH_Classification_Biologique/TP06_CAH_Classification_Biologique.ipynb" class="btn-micro btn-tp" download title="Télécharger le Notebook TP"><i class="fab fa-python"></i> TP 06</a>
+          </div>
+        </div>
+
+        <!-- Ch 07 -->
+        <div class="chapter-card">
+          <div class="chapter-card-top">
+            <span class="chapter-badge badge-teal">Chapitre 07</span>
+            <span class="chapter-app-pill"><i class="fas fa-award"></i> Normes SAMPL & ARRIVE</span>
+          </div>
+          <h4 class="chapter-title">Interprétation, DoE & Bonnes Pratiques</h4>
+          <p class="chapter-desc">Calcul de puissance statistique ($1-\beta$), dimensionnement éthique de l'échantillon (3R), éradication du p-hacking et rédaction selon les standards internationaux.</p>
+          <div class="chapter-tags">
+            <span class="tag-pill">Puissance (1-β)</span>
+            <span class="tag-pill">Taille Échantillon</span>
+            <span class="tag-pill">Éthique 3R</span>
+          </div>
+          <div class="chapter-actions">
+            <a href="downloads/cours/Chapitre_07_Interpretation_Analyse.pdf" class="btn-micro btn-cours" download title="Télécharger les Diapos"><i class="fas fa-file-pdf"></i> Cours</a>
+            <a href="downloads/td_enonces/TD_Chapitre_07_Interpretation.pdf" class="btn-micro btn-enonce" download title="Télécharger l'Énoncé TD"><i class="fas fa-pencil-alt"></i> TD</a>
+            <a href="downloads/td_corriges/Corrige_TD_Chapitre_07_Interpretation.pdf" class="btn-micro btn-corrige" download title="Télécharger le Corrigé TD"><i class="fas fa-check-double"></i> Corrigé</a>
+            <a href="downloads/guide/Guide_Installation_Anaconda_Jupyter.pdf" class="btn-micro btn-guide" download title="Télécharger le Guide PDF"><i class="fas fa-book"></i> Guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Section Hub Central de Téléchargement (Différenciation Visuelle Nette)
+       ==================================================================== -->
+  <section id="telechargements" class="section">
+    <div class="section-header">
+      <span class="section-tag">Ressources Officielles Téléchargeables</span>
+      <h2 class="section-title">Hub Central de Téléchargement</h2>
+      <p class="section-subtitle">Retrouvez l'intégralité des 8 cours magistraux, 8 séries de TD (énoncés et corrigés détaillés), 7 TP Python et 5 jeux de données CSV réels.</p>
+    </div>
+
+    <!-- Barre de Recherche & Filtres Thématiques Distincts -->
+    <div class="hub-controls">
+      <div class="search-box-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="downloadSearch" class="search-input" placeholder="Rechercher une ressource (ex : ANOVA, Corrigé, Bradford, ACP, Insuline, TP...)...">
+      </div>
+
+      <!-- Boutons Filtres avec Couleurs Thématiques Spécifiques -->
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-filter="all">
+          <i class="fas fa-th"></i> Tous les Supports (34)
+        </button>
+        <button class="tab-btn tab-cours" data-filter="cours">
+          <i class="fas fa-file-powerpoint"></i> Cours Magistraux (8)
+        </button>
+        <button class="tab-btn tab-td-enonce" data-filter="td-enonce">
+          <i class="fas fa-pencil-alt"></i> TD Énoncés (8)
+        </button>
+        <button class="tab-btn tab-td-corrige" data-filter="td-corrige">
+          <i class="fas fa-check-double"></i> TD Corrigés (8)
+        </button>
+        <button class="tab-btn tab-tp" data-filter="tp">
+          <i class="fab fa-python"></i> Travaux Pratiques (7)
+        </button>
+        <button class="tab-btn tab-data" data-filter="data">
+          <i class="fas fa-table"></i> Données CSV (5)
+        </button>
+      </div>
+    </div>
+
+    <!-- Légende de Différenciation Rapide -->
+    <div class="category-legend">
+      <span class="legend-item legend-cours"><span class="legend-dot"></span> Cours Magistraux (Diapos PDF)</span>
+      <span class="legend-item legend-enonce"><span class="legend-dot"></span> TD Énoncés (Exercices A4)</span>
+      <span class="legend-item legend-corrige"><span class="legend-dot"></span> TD Corrigés (Solutions A4)</span>
+      <span class="legend-item legend-tp"><span class="legend-dot"></span> Travaux Pratiques (.ipynb)</span>
+      <span class="legend-item legend-data"><span class="legend-dot"></span> Jeux de Données (.csv)</span>
+    </div>
+
+    <div id="downloadsGrid" class="downloads-grid">
+
+      <!-- ==========================================
+           1. COURS MAGISTRAUX (8) - Thème Bleu Roi
+           ========================================== -->
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 00</span>
+            <h4 class="dl-card-title">Introduction & Rappels Fondamentaux</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Variabilité biologique vs technique, types de variables, SD vs SEM, logique du test d'hypothèse et valeur de <em>p</em>.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 11 Slides</span>
+          <a href="downloads/cours/Chapitre_00_Introduction_Biostatistiques.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 01</span>
+            <h4 class="dl-card-title">ANOVA à Deux Facteurs Croisés</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Plans factoriels, notion clé d'Interaction (synergie/antagonisme), profils de réponse et post-hoc Tukey.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 11 Slides</span>
+          <a href="downloads/cours/Chapitre_01_ANOVA_Croisee.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 02</span>
+            <h4 class="dl-card-title">ANOVA Hiérarchisée (Nested ANOVA)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Facteurs emboîtés ($B \subset A$), lutte contre la pseudoréplication et terme d'erreur approprié (Insuline industrielle).</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 9 Slides</span>
+          <a href="downloads/cours/Chapitre_02_ANOVA_Hierarchisee.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 03</span>
+            <h4 class="dl-card-title">Corrélation & Régression Linéaire</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Pearson vs Spearman, droite des moindres carrés, diagnostic des résidus et limites analytiques LOD/LOQ.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 11 Slides</span>
+          <a href="downloads/cours/Chapitre_03_Regression_Lineaire.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 04</span>
+            <h4 class="dl-card-title">Régression Non Linéaire en Biochimie</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Réfutation de Lineweaver-Burk, ajustement direct NLLS, modèles de Michaelis-Menten, Hill et logistique 4PL.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 11 Slides</span>
+          <a href="downloads/cours/Chapitre_04_Regression_Non_Lineaire.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 05</span>
+            <h4 class="dl-card-title">Analyse en Composantes Principales (ACP)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Données multivariées omiques, centrage-réduction, cercle des corrélations et plan factoriel des biomarqueurs.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 11 Slides</span>
+          <a href="downloads/cours/Chapitre_05_ACP.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 06</span>
+            <h4 class="dl-card-title">Classification Hiérarchique (CAH)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Distances euclidienne et Manhattan, critère de Ward, dendrogramme et heatmaps bi-clusterisées.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 8 Slides</span>
+          <a href="downloads/cours/Chapitre_06_CAH.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-cours" data-category="cours">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-cours"><i class="fas fa-file-powerpoint"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-cours">Cours Magistral • Ch. 07</span>
+            <h4 class="dl-card-title">Interprétation, DoE & Bonnes Pratiques</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Calcul de puissance ($1-\beta$), élimination du p-hacking, directives SAMPL / ARRIVE 2.0 et rédaction scientifique.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-cours">Diapos PDF • 11 Slides</span>
+          <a href="downloads/cours/Chapitre_07_Interpretation_Analyse.pdf" class="dl-action-btn btn-action-cours" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Cours
+          </a>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           2. TD ÉNONCÉS (8) - Thème Violet / Indigo
+           ========================================== -->
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 00</span>
+            <h4 class="dl-card-title">Introduction & Rappels (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Typologie des variables, calcul de SD et SEM, IC à 95%, test d'hypothèse et détection des outliers.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_00_Introduction.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 01</span>
+            <h4 class="dl-card-title">ANOVA Croisée (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Plans factoriels $2 \times 3$, calcul manuel du tableau d'ANOVA, détection de synergie et comparaisons Tukey.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_01_ANOVA_Croisee.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 02</span>
+            <h4 class="dl-card-title">ANOVA Hiérarchisée (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Facteurs emboîtés $B \subset A$, arborescence, calcul du test $F$ valide et composantes de variance de bioproduction.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_02_ANOVA_Hierarchisee.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 03</span>
+            <h4 class="dl-card-title">Régression Linéaire (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Gamme Bradford, corrélation de Pearson, droite MCO, estimation d'inconnue avec IC et limites analytiques LOD/LOQ.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_03_Regression_Lineaire.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 04</span>
+            <h4 class="dl-card-title">Régression Non Linéaire (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Michaelis-Menten vs Lineweaver-Burk, Levenberg-Marquardt, équation allostérique de Hill et modèle 4PL ELISA.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_04_Regression_Non_Lineaire.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 05</span>
+            <h4 class="dl-card-title">ACP en Biologie (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Centrage-réduction $Z$-score, matrice de corrélation, cercle des corrélations et discrimination de patients.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_05_ACP.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 06</span>
+            <h4 class="dl-card-title">Classification CAH (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Distances euclidienne et Manhattan, critère de Ward, dendrogramme et lecture d'une Clustermap omique.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_06_CAH.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-enonce" data-category="td-enonce">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-enonce"><i class="fas fa-pencil-alt"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-enonce">TD Énoncé • Série 07</span>
+            <h4 class="dl-card-title">Interprétation & DoE (5 Exercices)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Calcul d'effectif $n$ ($1-\beta$), détection du p-hacking, audit ARRIVE 2.0 / SAMPL et rédaction de mémoire.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-enonce">Polycopié A4 • Exercices</span>
+          <a href="downloads/td_enonces/TD_Chapitre_07_Interpretation.pdf" class="dl-action-btn btn-action-enonce" download target="_blank">
+            <i class="fas fa-download"></i> Énoncé PDF
+          </a>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           3. TD CORRIGÉS (8) - Thème Vert Émeraude
+           ========================================== -->
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 00</span>
+            <h4 class="dl-card-title">Corrigé : Introduction & Rappels</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Calculs arithmétiques détaillés, calcul d'intervalles de confiance et résolutions pas-à-pas.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_00_Introduction.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 01</span>
+            <h4 class="dl-card-title">Corrigé : ANOVA Croisée</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Tableau d'ANOVA résolu, calcul des $F_{\text{obs}}$, seuil critique Tukey HSD et conclusion biomédicale.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_01_ANOVA_Croisee.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 02</span>
+            <h4 class="dl-card-title">Corrigé : ANOVA Hiérarchisée</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Démonstration de la pseudoréplication, tableau ANOVA $B(A)$, calcul des composantes de variance et audit.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_02_ANOVA_Hierarchisee.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 03</span>
+            <h4 class="dl-card-title">Corrigé : Régression Linéaire</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Calcul de $r$ et $R^2$, droite $y = 0.0635x - 0.005$, concentration inconnue du foie ($0.654\text{ mg/mL}$) et LOD/LOQ.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_03_Regression_Lineaire.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 04</span>
+            <h4 class="dl-card-title">Corrigé : Régression Non Linéaire</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Démonstration de la distorsion d'erreur, équation inverse 4PL, calcul IL-6 ($24.2\text{ pg/mL}$) et sélection AICc.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_04_Regression_Non_Lineaire.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 05</span>
+            <h4 class="dl-card-title">Corrigé : ACP en Biologie</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Calcul du $Z$-score, inertie de $78\%$, tableau $\cos^2$ complété et sélection d'un panel minimal à 3 marqueurs.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_05_ACP.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 06</span>
+            <h4 class="dl-card-title">Corrigé : Classification CAH</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Matrice des distances, saut d'inertie de Ward ($\Delta I = 25.0$), coupure optimale à $k = 2$ et profilage des souches BMR.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_06_CAH.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-corrige" data-category="td-corrige">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-corrige"><i class="fas fa-check-double"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-corrige">Corrigé Officiel • Série 07</span>
+            <h4 class="dl-card-title">Corrigé : Interprétation & DoE</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Calcul $n = 16$ rats par groupe, inflation alpha à $64\%$, audit critique d'article et paragraphe modèle rédigé.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-corrige">Solution A4 • 100% Résolu</span>
+          <a href="downloads/td_corriges/Corrige_TD_Chapitre_07_Interpretation.pdf" class="dl-action-btn btn-action-corrige" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Corrigé
+          </a>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           4. TRAVAUX PRATIQUES (7) - Thème Ambre / Or
+           ========================================== -->
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 00</span>
+            <h4 class="dl-card-title">Prise en Main de Python & Jupyter</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Variables, tableaux NumPy, graphiques Matplotlib et calculs de statistiques descriptives pour biologistes.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP00_Prise_En_Main_Python_Bio.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 01</span>
+            <h4 class="dl-card-title">ANOVA Croisée (Stress Oxydatif MDA)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Chargement CSV, ANOVA factorielle via Statsmodels, interaction Statut $\times$ Traitement et post-hoc Tukey.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP01_ANOVA_Croisee_Biochimie.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 02</span>
+            <h4 class="dl-card-title">ANOVA Hiérarchisée (Insuline Recombinante)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Modèle hiérarchisé mixte $B \subset A$, test $F$ contre $CM_{B(A)}$ et estimation des composantes de variance.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP02_ANOVA_Hierarchisee_Biochimie.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 03</span>
+            <h4 class="dl-card-title">Régression Linéaire (Bradford & LOD/LOQ)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Droite d'étalonnage des protéines, régression des moindres carrés, diagnostic graphique des résidus et limites.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP03_Regression_Lineaire_Dosage/TP03_Regression_Lineaire_Dosage.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 04</span>
+            <h4 class="dl-card-title">Régression Non Linéaire (Cinétique)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Ajustement direct SciPy pour l'équation de Michaelis-Menten, comparaison avec Lineweaver-Burk et Hill.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP04_Cinetique_Non_Lineaire/TP04_Cinetique_Non_Lineaire.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 05</span>
+            <h4 class="dl-card-title">ACP Métabolomique (Cercle & Patients)</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">StandardScaler Scikit-learn, calcul des composantes, cercle des corrélations et cartographie clinique des patients.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP05_ACP_Metabolomique/TP05_ACP_Metabolomique.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-tp" data-category="tp">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-tp"><i class="fab fa-python"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-tp">Notebook Jupyter • TP 06</span>
+            <h4 class="dl-card-title">CAH & Clustermap Biologique</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Matrice de distances, linkage SciPy (Ward), tracé du dendrogramme avec seuil et génération de clustermap Seaborn.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-tp">Notebook Interactif (.ipynb)</span>
+          <a href="downloads/tp/TP06_CAH_Classification_Biologique/TP06_CAH_Classification_Biologique.ipynb" class="dl-action-btn btn-action-tp" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le Notebook
+          </a>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           5. DATASETS CSV (5) - Thème Cyan / Turquoise
+           ========================================== -->
+      <div class="download-card card-data" data-category="data">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-data"><i class="fas fa-table"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-data">Dataset CSV • Étalonnage</span>
+            <h4 class="dl-card-title">dosage_bradford.csv</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Gamme standard de BSA ($0\text{ à }10\text{ µg/mL}$) vs absorbances $A_{595}$ mesurées en triplicats techniques.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-data">CSV • Données Brutes</span>
+          <a href="downloads/datasets/dosage_bradford.csv" class="dl-action-btn btn-action-data" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le CSV
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-data" data-category="data">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-data"><i class="fas fa-table"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-data">Dataset CSV • Cinétique</span>
+            <h4 class="dl-card-title">cinetique_enzyme_phosphatase.csv</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Concentrations de substrat $[S]$ ($0.1\text{ à }15\text{ mM}$) et vitesses initiales $v$ de la phosphatase alcaline.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-data">CSV • Données Brutes</span>
+          <a href="downloads/datasets/cinetique_enzyme_phosphatase.csv" class="dl-action-btn btn-action-data" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le CSV
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-data" data-category="data">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-data"><i class="fas fa-table"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-data">Dataset CSV • Stress Oxydatif</span>
+            <h4 class="dl-card-title">peroxydation_mda_diabete.csv</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Plan factoriel $2 \times 3$ : Statut (WT vs db/db) $\times$ 3 Doses d'antioxydant sur la concentration de MDA.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-data">CSV • 30 Échantillons</span>
+          <a href="downloads/datasets/peroxydation_mda_diabete.csv" class="dl-action-btn btn-action-data" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le CSV
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-data" data-category="data">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-data"><i class="fas fa-table"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-data">Dataset CSV • Biotechnologie</span>
+            <h4 class="dl-card-title">production_insuline_nested.csv</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Plan hiérarchisé : 2 Procédés $\times$ 3 Bioréacteurs $\times$ 4 Flacons dosés par HPLC pour le rendement.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-data">CSV • 24 Mesures</span>
+          <a href="downloads/datasets/production_insuline_nested.csv" class="dl-action-btn btn-action-data" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le CSV
+          </a>
+        </div>
+      </div>
+
+      <div class="download-card card-data" data-category="data">
+        <div class="dl-card-top">
+          <div class="file-type-icon icon-data"><i class="fas fa-table"></i></div>
+          <div class="dl-card-meta">
+            <span class="dl-card-category category-badge-data">Dataset CSV • Métabolomique</span>
+            <h4 class="dl-card-title">metabolomique_serum.csv</h4>
+          </div>
+        </div>
+        <p class="dl-card-desc">Cohorte de 45 patients (Témoins sains, Diabétiques, Stéatose NASH) caractérisés sur 7 biomarqueurs sériques.</p>
+        <div class="dl-card-footer">
+          <span class="dl-size-badge badge-data">CSV • Matrice Multivariée</span>
+          <a href="downloads/datasets/metabolomique_serum.csv" class="dl-action-btn btn-action-data" download target="_blank">
+            <i class="fas fa-download"></i> Télécharger le CSV
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Section Guide de Lancement des Travaux Pratiques sous Jupyter
+       ==================================================================== -->
+  <section id="guide-tp" class="section">
+    <div class="section-header">
+      <span class="section-tag">Guide Pratique pour Biologistes</span>
+      <h2 class="section-title">Lancer vos Travaux Pratiques sous Jupyter</h2>
+      <p class="section-subtitle">Instructions simples pas-à-pas pour installer l'environnement Python scientifique et exécuter vos notebooks interactifs sans aucune compétence préalable en informatique.</p>
+    </div>
+
+    <div class="guide-wrapper">
+      <div class="os-selector">
+        <button class="os-btn active" data-os="windows"><i class="fab fa-windows"></i> Windows</button>
+        <button class="os-btn" data-os="macos"><i class="fab fa-apple"></i> macOS (M1/M2/M3 & Intel)</button>
+        <button class="os-btn" data-os="linux"><i class="fab fa-linux"></i> Linux (Ubuntu, Debian)</button>
+      </div>
+
+      <div id="guideStepsContainer" class="steps-container">
+        <!-- Rendu dynamique par app.js -->
+      </div>
+
+      <div class="troubleshoot-box">
+        <div class="troubleshoot-header">
+          <i class="fas fa-exclamation-triangle"></i> Dépannage des Erreurs Fréquentes en Laboratoire
+        </div>
+        <ul class="troubleshoot-list">
+          <li>
+            <strong>1. Erreur <code>FileNotFoundError: [Errno 2] No such file or directory: '../datasets/...'</code> :</strong>
+            Signifie que Jupyter a été ouvert depuis un dossier parent ou distant. Solution : ouvrez votre terminal ou invite Anaconda directement dans le répertoire des TP avant d'exécuter <code>jupyter notebook</code>.
+          </li>
+          <li>
+            <strong>2. Erreur <code>ModuleNotFoundError: No module named 'seaborn'</code> :</strong>
+            La bibliothèque n'est pas installée dans l'environnement actif. Tapez simplement : <code>conda activate biostat</code> puis <code>pip install seaborn scikit-learn statsmodels</code>.
+          </li>
+          <li>
+            <strong>3. Manuel Complet d'Installation en PDF Imprimable :</strong>
+            Consultez le livret officiel pas-à-pas avec captures d'écran :
+            <a href="downloads/guide/Guide_Installation_Anaconda_Jupyter.pdf" class="guide-link-btn" download target="_blank">
+              <i class="fas fa-file-pdf"></i> Télécharger le Guide d'Installation (PDF)
+            </a>.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Section Galerie Scientifique Interactive (13 Figures HD 300 DPI)
+       ==================================================================== -->
+  <section id="galerie" class="section">
+    <div class="section-header">
+      <span class="section-tag">Visualisation Biomédicale Haute Définition</span>
+      <h2 class="section-title">Galerie Scientifique des 13 Figures HD</h2>
+      <p class="section-subtitle">Cliquez sur chaque figure pour révéler son contexte biologique d'application, sa formule mathématique associée (rendue par KaTeX) et son interprétation médicale.</p>
+    </div>
+
+    <div id="galleryGrid" class="gallery-grid">
+      <!-- Rendu dynamique par app.js -->
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Modale Lightbox Haute Résolution avec KaTeX
+       ==================================================================== -->
+  <div id="figureModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button id="modalCloseBtn" class="modal-close-btn" aria-label="Fermer la modale">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="modal-img-area">
+        <img id="modalImg" src="" alt="Figure Scientifique Haute Résolution">
+      </div>
+      <div class="modal-info-area">
+        <span id="modalChapter" class="modal-chapter"></span>
+        <h3 id="modalTitle" class="modal-title"></h3>
+
+        <h5 class="modal-section-title"><i class="fas fa-vial"></i> Contexte Expérimental & Biochimique</h5>
+        <p id="modalContext" class="modal-desc"></p>
+
+        <h5 class="modal-section-title"><i class="fas fa-square-root-alt"></i> Modélisation Mathématique & Formule</h5>
+        <p id="modalMethod" class="modal-desc"></p>
+
+        <!-- Conteneur d'Équation KaTeX Stylisée -->
+        <div id="modalFormula" class="modal-formula-katex"></div>
+
+        <h5 class="modal-section-title"><i class="fas fa-stethoscope"></i> Interprétation Biologique & Prise de Décision</h5>
+        <p id="modalInterpretation" class="modal-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       Section Profil de l'Enseignante : Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)
+       ==================================================================== -->
+  <section id="enseignante" class="section">
+    <div class="section-header">
+      <span class="section-tag">Direction Pédagogique & Scientifique</span>
+      <h2 class="section-title">Profil de l'Enseignante</h2>
+      <p class="section-subtitle">Conception et animation pédagogique du module de Biostatistiques Appliquées & Modélisation du Vivant.</p>
+    </div>
+
+    <div class="teacher-profile-card">
+      <div class="teacher-profile-aside">
+        <div class="teacher-profile-avatar">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <h3 class="teacher-profile-name">Dr. Sarra BENMOUMOU-HOSNI</h3>
+        <span class="teacher-profile-degree"><i class="fas fa-certificate"></i> Doctorat (Ph.D.) en Sciences Biologiques</span>
+        <p class="teacher-profile-role">Enseignante-Chercheuse en Biostatistiques & Bio-informatique Appliquée</p>
+
+        <div class="teacher-profile-meta-list">
+          <div class="tp-meta-item">
+            <i class="fas fa-university"></i>
+            <div>
+              <strong>Université M'Hamed Bougara de Boumerdès</strong>
+              <span>Faculté des Sciences • Département de Biologie</span>
+            </div>
+          </div>
+          <div class="tp-meta-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <strong>Campus Universitaire</strong>
+              <span>Boumerdès, 35000, Algérie</span>
+            </div>
+          </div>
+          <div class="tp-meta-item">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <strong>Contact Académique</strong>
+              <span>s.benmoumou@univ-boumerdes.dz</span>
+            </div>
+          </div>
+          <div class="tp-meta-item">
+            <i class="fas fa-calendar-check"></i>
+            <div>
+              <strong>Permanence Pédagogique</strong>
+              <span>Mardi & Jeudi (Bureau de Consultation Master)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="teacher-profile-main">
+        <div class="teacher-bio-section">
+          <h4><i class="fas fa-microscope"></i> Biographie & Domaine de Recherche</h4>
+          <p>
+            Docteure en Sciences Biologiques, le <strong>Dr. Sarra BENMOUMOU-HOSNI</strong> consacre ses travaux d'enseignement et de recherche à la modélisation mathématique du vivant, à la biostatistique expérimentale et à l'analyse de données biomédicales massives (omiques, métabolomique et transcriptomique).
+          </p>
+          <p>
+            Elle s'investit particulièrement dans l'optimisation des plans d'expériences (DoE) en laboratoire et la validation de méthodes bioanalytiques selon les normes internationales (ICH, FDA, ARRIVE 2.0).
+          </p>
+        </div>
+
+        <div class="teacher-bio-section">
+          <h4><i class="fas fa-lightbulb"></i> Philosophie Pédagogique du Cours</h4>
+          <blockquote class="teacher-quote">
+            « La biostatistique ne doit plus être perçue comme un obstacle mathématique abstrait, mais comme la boussole incontournable du biologiste moderne. Mon objectif est d'éliminer la boîte noire informatique et de donner à chaque étudiant les clés méthodologiques pour concevoir des expériences robustes, reproductibles et publiables. »
+          </blockquote>
+          <p>
+            Ce cours a été pensé pour guider pas-à-pas les étudiants de Master en Biochimie, sans barrière informatique préalable, en remplaçant les calculs rébarbatifs manuels par l'automatisation intelligente sous Python et Jupyter, tout en conservant une rigueur d'interprétation biologique sans compromis.
+          </p>
+        </div>
+
+        <div class="teacher-skills-grid">
+          <div class="teacher-skill-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Plans Factoriels & ANOVA Avancée</span>
+          </div>
+          <div class="teacher-skill-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Cinétique Enzymatique Non Linéaire (NLLS)</span>
+          </div>
+          <div class="teacher-skill-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Analyse Multivariée (ACP & CAH Omique)</span>
+          </div>
+          <div class="teacher-skill-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Validation Analytique (LOD, LOQ, ICH Q2)</span>
+          </div>
+          <div class="teacher-skill-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Programmation Scientifique Python / R</span>
+          </div>
+          <div class="teacher-skill-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Directives Éthiques 3R & ARRIVE 2.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       Pied de Page Universitaire
+       ==================================================================== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-brand-title">
+          <i class="fas fa-dna"></i> Biostatistiques & Modélisation
+        </div>
+        <p>Portail académique officiel d'enseignement supérieur de Master 2 en Biochimie Appliquée. Faculté des Sciences, Département de Biologie, Université M'Hamed Bougara de Boumerdès (UMBB).</p>
+        <p class="footer-subtext">Ressources complètes : Diapositives Beamer, Polycopiés de TD, Corrigés d'exercices, Notebooks interactifs Jupyter et Jeux de données réels.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Navigation Rapide</h4>
+        <ul>
+          <li><a href="#accueil"><i class="fas fa-chevron-right"></i> Accueil du Portail</a></li>
+          <li><a href="#programme"><i class="fas fa-chevron-right"></i> Programme & 3 Piliers</a></li>
+          <li><a href="#telechargements"><i class="fas fa-chevron-right"></i> Hub de Téléchargement</a></li>
+          <li><a href="#guide-tp"><i class="fas fa-chevron-right"></i> Guide Pratique Python/Jupyter</a></li>
+          <li><a href="#galerie"><i class="fas fa-chevron-right"></i> Galerie des 13 Figures HD</a></li>
+          <li><a href="#enseignante"><i class="fas fa-chevron-right"></i> Profil de l'Enseignante</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Enseignante Responsable</h4>
+        <ul>
+          <li><strong>Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)</strong></li>
+          <li>Enseignante-Chercheuse</li>
+          <li>Département de Biologie</li>
+          <li>Faculté des Sciences — UMBB</li>
+          <li>Boumerdès, Algérie</li>
+          <li>Année Universitaire 2024 — 2025</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2024 — 2025 Dr. Sarra BENMOUMOU-HOSNI • Université M'Hamed Bougara de Boumerdès. Tous droits réservés.</p>
+      <p>Module de Biostatistiques Appliquées & Plans d'Expériences (Master 2 Biochimie Appliquée)</p>
+    </div>
+  </footer>
+
+  <!-- Script applicatif -->
+  <script src="app.js"></script>
+</body>
+</html>

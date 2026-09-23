@@ -1,0 +1,133 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 04}{Régression Non Linéaire en Biochimie}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Cinétique de Michaelis-Menten \& Dérive de Lineweaver-Burk}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Équation hyperbolique de Michaelis-Menten :}
+  \begin{equation*}
+    v = \frac{V_{max} \cdot [S]}{K_m + [S]}
+  \end{equation*}
+
+  \item \textbf{Linéarisation de Lineweaver-Burk (Double réciproque) :}
+  En inversant les deux membres :
+  \begin{equation*}
+    \frac{1}{v} = \frac{K_m + [S]}{V_{max} \cdot [S]} = \left(\frac{K_m}{V_{max}}\right) \cdot \frac{1}{[S]} + \frac{1}{V_{max}}
+  \end{equation*}
+  Il s'agit d'une droite $Y = a X + b$ avec $Y = 1/v$, $X = 1/[S]$, pente $a = K_m/V_{max}$ et ordonnée à l'origine $b = 1/V_{max}$.
+
+  \item \textbf{Calcul des valeurs extrêmes de double réciproque :}
+  \begin{itemize}
+    \item À $[S] = 0.20\,\text{mM}$ : $\frac{1}{[S]} = \frac{1}{0.20} = \mathbf{5.00\,\text{mM}^{-1}}$, et $\frac{1}{v} = \frac{1}{8.5} = \mathbf{0.1176\,\mu\text{mol}^{-1}\cdot\text{min}\cdot\text{mg}}$.
+    \item À $[S] = 10.00\,\text{mM}$ : $\frac{1}{[S]} = \frac{1}{10.00} = \mathbf{0.10\,\text{mM}^{-1}}$, et $\frac{1}{v} = \frac{1}{39.5} = \mathbf{0.0253\,\mu\text{mol}^{-1}\cdot\text{min}\cdot\text{mg}}$.
+  \end{itemize}
+
+  \item \textbf{Distorsion des erreurs \& Réfutation de Lineweaver-Burk :}
+  La transformation réciproque $1/v$ comprime artificiellement les points de forte vitesse et étire démesurément les points de faible vitesse :
+  \begin{itemize}
+    \item Si $v = 8.5 \pm 1$ ($11.7\%$ d'erreur relative), $1/v$ varie de $1/9.5 = 0.105$ à $1/7.5 = 0.133$ ($\Delta = 0.028$).
+    \item Si $v = 39.5 \pm 1$ ($2.5\%$ d'erreur relative), $1/v$ varie de $0.0247$ à $0.0260$ ($\Delta = 0.0013$).
+  \end{itemize}
+  Les points à très faible $[S]$ (les plus imprécis expérimentalement au laboratoire) reçoivent un poids visuel et statistique écrasant, faussant lourdement la pente et surévaluant systématiquement $K_m$. L'ajustement non linéaire direct (NLLS) conserve la métrique originale de $v$, garantissant l'homoscédasticité et un calcul d'erreurs rigoureux.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Ajustement Non Linéaire Direct (NLLS) \& Levenberg-Marquardt}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Critère de minimisation :}
+  L'algorithme NLLS minimise la somme des carrés des résidus bruts :
+  \begin{equation*}
+    \text{SCR}(V_{max}, K_m) = \sum_{i=1}^n \left( v_i - \frac{V_{max} [S]_i}{K_m + [S]_i} \right)^2
+  \end{equation*}
+
+  \item \textbf{Fonctionnement de l'algorithme de Levenberg-Marquardt (LM) :}
+  \begin{itemize}
+    \item **Loin de la solution optimale :** L'algorithme se comporte comme une **descente de gradient** (Steepest Descent), garantissant la convergence même avec des valeurs initiales grossières.
+    \item **Près du minimum :** L'algorithme bascule automatiquement en méthode de **Gauss-Newton**, assurant une convergence quadratique ultra-rapide vers le minimum global.
+  \end{itemize}
+
+  \item \textbf{Intervalle de Confiance à 95\% de $K_m$ :}
+  \begin{align*}
+    \text{IC}_{95\%}(K_m) &= \hat{K}_m \pm t_{0.05, \, 4} \times SE(K_m) \\
+    &= 0.842 \pm (2.776 \times 0.045) = 0.842 \pm 0.125 = \mathbf{[0.717 \,;\, 0.967]\,\text{mM}}
+  \end{align*}
+
+  \item \textbf{Signification biochimique de $K_m$ :}
+  La constante de Michaelis $K_m$ est la concentration de substrat pour laquelle la vitesse initiale est égale à la moitié de la vitesse maximale ($v = V_{max}/2$). Elle est inversement proportionnelle à l'affinité apparente de l'enzyme pour son substrat.
+  \par Si une mutation fait passer $K_m$ de $0.84\,\text{mM}$ à $5.20\,\text{mM}$, il faut une concentration de substrat plus de 6 fois supérieure pour atteindre la même saturation : cela traduit une **perte massive d'affinité** pour le substrat.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Coopérativité Allostérique \& Modélisation par Hill}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Interprétation du coefficient de Hill $n_H$ :}
+  \begin{itemize}
+    \item $n_H > 1$ ($n_H = 2.85$) : **Coopérativité positive**. La liaison d'une première molécule de substrat sur l'un des protomères de la PFK-1 induit une transition conformationnelle qui augmente l'affinité des autres sites de liaison.
+    \item $n_H = 1$ : Absence totale de coopérativité (cinétique hyperbolique de Michaelis-Menten classique).
+    \item $n_H < 1$ : Coopérativité négative.
+  \end{itemize}
+
+  \item \textbf{Calcul des vitesses prédites :}
+  \begin{itemize}
+    \item À $[S] = K_{0.5} = 1.80\,\text{mM}$ : Par définition, la vitesse est à moitié de $V_{max}$ :
+    $v(1.80) = \frac{120 \times 1.80^{2.85}}{1.80^{2.85} + 1.80^{2.85}} = \frac{120}{2} = \mathbf{60.0\,\text{U/mg}}$.
+    \item À $[S] = 0.90\,\text{mM}$ (soit $0.5 \times K_{0.5}$) :
+    $v(0.90) = \frac{120 \times 0.90^{2.85}}{1.80^{2.85} + 0.90^{2.85}} = \frac{120 \times 0.741}{5.340 + 0.741} = \frac{88.92}{6.081} = \mathbf{14.62\,\text{U/mg}}$.
+  \end{itemize}
+
+  \item \textbf{Rôle d'interrupteur biochimique ultrasensible :}
+  Lorsque le substrat passe de $0.90\,\text{mM}$ à $1.80\,\text{mM}$ (facteur 2 seulement), la vitesse saute de $14.6$ à $60.0\,\text{U/mg}$ (multipliée par plus de 4 !). Avec une cinétique hyperbolique michaelienne, un doublement de $[S]$ n'aurait augmenté la vitesse que d'un facteur 1.5. Cette réponse sigmoïde permet d'activer brutalement la glycolyse dès que la charge énergétique cellulaire baisse.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Dosage Immunologique ELISA \& Modèle 4PL}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Concentration médiane sans calcul :}
+  Pour $y = \frac{A + D}{2} = \frac{0.045 + 2.450}{2} = 1.2475\,\text{OD}$, le signal est exactement au point d'inflexion. Par définition du modèle 4PL, cette valeur correspond au paramètre $C = EC_{50}$ :
+  La concentration du patient est donc immédiatement : $\mathbf{x = 62.5\,\text{pg/mL}}$.
+
+  \item \textbf{Démonstration de l'équation inverse :}
+  \begin{align*}
+    y - D = \frac{A - D}{1 + (x/C)^B} &\implies 1 + \left(\frac{x}{C}\right)^B = \frac{A - D}{y - D} \\
+    &\implies \left(\frac{x}{C}\right)^B = \frac{A - D - (y - D)}{y - D} = \frac{A - y}{y - D} \\
+    &\implies \mathbf{x = C \cdot \left(\frac{A - y}{y - D}\right)^{1/B}}
+  \end{align*}
+
+  \item \textbf{Calcul pour $y = 0.650\,\text{OD}$ :}
+  \begin{align*}
+    x &= 62.5 \times \left( \frac{0.045 - 0.650}{0.650 - 2.450} \right)^{1/1.15} = 62.5 \times \left( \frac{-0.605}{-1.800} \right)^{0.8696} \\
+    &= 62.5 \times (0.3361)^{0.8696} = 62.5 \times 0.3872 = \mathbf{24.20\,\text{pg/mL}}
+  \end{align*}
+  La concentration sérique en IL-6 de ce patient est de $\mathbf{24.2\,\text{pg/mL}}$.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Sélection de Modèles par AICc et BIC}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calcul de $\text{AICc}_1$ ($N = 18, p_1 = 2, \text{SCR}_1 = 4.250$) :}
+  \begin{align*}
+    \text{AICc}_1 &= 18 \cdot \ln\left(\frac{4.250}{18}\right) + (2 \times 2) + \frac{2 \times 2 \times 3}{18 - 2 - 1} \\
+    &= 18 \times (-1.4435) + 4 + \frac{12}{15} = -25.983 + 4.800 = \mathbf{-21.18}
+  \end{align*}
+
+  \item \textbf{Calcul de $\text{AICc}_2$ ($N = 18, p_2 = 3, \text{SCR}_2 = 2.110$) :}
+  \begin{align*}
+    \text{AICc}_2 &= 18 \cdot \ln\left(\frac{2.110}{18}\right) + (2 \times 3) + \frac{2 \times 3 \times 4}{18 - 3 - 1} \\
+    &= 18 \times (-2.1437) + 6 + \frac{24}{14} = -38.587 + 7.714 = \mathbf{-30.87}
+  \end{align*}
+
+  \item \textbf{Différence $\Delta\text{AICc}$ et sélection du modèle :}
+  \begin{equation*}
+    \Delta\text{AICc} = \text{AICc}_1 - \text{AICc}_2 = -21.18 - (-30.87) = \mathbf{+9.69}
+  \end{equation*}
+  Un modèle ayant un AICc plus faible est supérieur. Selon la règle empirique de Burnham \& Anderson, un $\Delta\text{AICc} > 7$ apporte une **preuve quasi-certaine en faveur du Modèle 2** (Inhibition Mixte / Allostérique).
+
+  \item \textbf{Le Rasoir d'Ockham dans l'AIC / BIC :}
+  Ajouter un paramètre libre réduit toujours mathématiquement la somme des carrés résiduels $\text{SCR}$, même s'il s'agit de pur bruit. Le terme de pénalité ($+2p$ dans l'AIC, $+p \cdot \ln(N)$ dans le BIC) agit comme un arbitre rigoureux : pour qu'un paramètre supplémentaire soit accepté, il doit améliorer l'ajustement biologique de façon bien plus significative que le coût imposé par la pénalité de complexité.
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

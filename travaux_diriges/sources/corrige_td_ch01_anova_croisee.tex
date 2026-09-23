@@ -1,0 +1,157 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 01}{ANOVA à Deux Facteurs Croisés (Two-Way ANOVA)}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Plan Factoriel \& Identification des Facteurs (MDA Hépatique)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Type de plan d'expérience :}
+  Il s'agit d'un \textbf{plan factoriel complet à deux facteurs croisés ($2 \times 3$)}, équilibré.
+  \begin{itemize}
+    \item « Complet » car toutes les combinaisons possibles des modalités des facteurs A et B sont testées.
+    \item « Équilibré » (ou orthogonal) car chaque cellule expérimentale comporte exactement le même effectif ($n = 5$).
+  \end{itemize}
+
+  \item \textbf{Nombre de lots et effectif total :}
+  \begin{itemize}
+    \item Nombre de lots : $k = a \times b = 2 \times 3 = \mathbf{6\text{ lots expérimentaux}}$.
+    \item Effectif total : $N = a \times b \times n = 2 \times 3 \times 5 = \mathbf{30\text{ rats}}$.
+  \end{itemize}
+
+  \item \textbf{Les trois hypothèses nulles simultanées :}
+  \begin{enumerate}
+    \item $H_0^A$ : L'effet principal de la pathologie est nul ($\mu_{WT} = \mu_{db/db}$).
+    \item $H_0^B$ : L'effet principal du traitement curcumine est nul ($\mu_{\text{Véhicule}} = \mu_{\text{Dose 50}} = \mu_{\text{Dose 200}}$).
+    \item $H_0^{AB}$ : L'interaction est nulle (l'effet du traitement par la curcumine est rigoureusement identique chez les rats sains et chez les rats diabétiques).
+  \end{enumerate}
+
+  \item \textbf{Degrés de liberté ($df$) :}
+  \begin{itemize}
+    \item $df_A = a - 1 = 2 - 1 = \mathbf{1}$.
+    \item $df_B = b - 1 = 3 - 1 = \mathbf{2}$.
+    \item $df_{AB} = (a - 1)(b - 1) = 1 \times 2 = \mathbf{2}$.
+    \item $df_{\text{Résiduel}} = a \cdot b \cdot (n - 1) = 2 \times 3 \times 4 = \mathbf{24}$ (ou $N - ab = 30 - 6 = 24$).
+    \item $df_{\text{Total}} = N - 1 = 30 - 1 = \mathbf{29}$.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Calcul Complet du Tableau d'ANOVA à Deux Facteurs}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calcul de la SCE Résiduelle :}
+  Par additivité de la variance :
+  \begin{align*}
+    \text{SCE}_{\text{Résiduelle}} &= \text{SCE}_{\text{Total}} - (\text{SCE}_A + \text{SCE}_B + \text{SCE}_{AB}) \\
+    &= 384.50 - (142.20 + 98.40 + 68.30) = 384.50 - 308.90 = \mathbf{75.60}
+  \end{align*}
+
+  \item \textbf{Tableau d'ANOVA complété ($N = 16$, $a=2, b=2, n=4$) :}
+  \begin{center}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lcccccc}
+      \toprule
+      \textbf{Source de Variation} & \textbf{SCE} & \textbf{$df$} & \textbf{Carré Moyen ($CM$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{crit}}(5\%)$} & \textbf{Conclusion} \\
+      \midrule
+      \textbf{Facteur A (Régime)}      & 142.20 & 1  & $142.20 / 1 = 142.20$ & $\frac{142.20}{6.30} = \mathbf{22.57}$ & 4.75 & $p < 0.001$ (Signif.) \\
+      \textbf{Facteur B (Vitamine E)}  & 98.40  & 1  & $98.40 / 1 = 98.40$   & $\frac{98.40}{6.30} = \mathbf{15.62}$  & 4.75 & $p < 0.01$ (Signif.) \\
+      \textbf{Interaction $A \times B$}& 68.30  & 1  & $68.30 / 1 = 68.30$   & $\frac{68.30}{6.30} = \mathbf{10.84}$  & 4.75 & $p < 0.01$ (Signif.) \\
+      \textbf{Erreur Résiduelle}       & 75.60  & 12 & $75.60 / 12 = \mathbf{6.30}$ & --- & --- & --- \\
+      \midrule
+      \textbf{Total}                   & 384.50 & 15 & --- & --- & --- & --- \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{center}
+
+  \item \textbf{Conclusions statistiques et biologiques :}
+  \begin{itemize}
+    \item $F_{\text{obs}}(A) = 22.57 > 4.75$ : Le régime riche en fructose modifie significativement l'activité de la GPx ($p < 0.001$).
+    \item $F_{\text{obs}}(B) = 15.62 > 4.75$ : L'apport de vitamine E a un effet global hautement significatif ($p < 0.01$).
+    \item $F_{\text{obs}}(AB) = 10.84 > 4.75$ : \textbf{L'interaction est significative}. L'effet de la vitamine E n'est pas le même selon que les animaux reçoivent ou non le régime fructose. L'interprétation doit se faire sur les effets simples par sous-groupe.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Détection \& Interprétation Biologique des Interactions}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Graphiques de profils de réponse :}
+  \begin{itemize}
+    \item \textbf{Étude 1 :} Courbes parfaitement parallèles.
+    \item \textbf{Étude 2 :} Courbes fortement divergentes (écart faible à bas glucose, écart massif à haut glucose).
+  \end{itemize}
+
+  \item \textbf{Absence d'interaction (Étude 1) :}
+  \begin{itemize}
+    \item À Glucose Bas : $\Delta = 25 - 10 = +15\,\text{ng/mL}$ sous Incrétine.
+    \item À Glucose Haut : $\Delta = 45 - 30 = +15\,\text{ng/mL}$ sous Incrétine.
+  \end{itemize}
+  L'effet de l'incrétine est rigoureusement constant ($+15\,\text{ng/mL}$) quel que soit le niveau de glucose. Les facteurs sont purement \textbf{additifs} : \textbf{Interaction nulle}.
+
+  \item \textbf{Synergie biologique (Étude 2) :}
+  \begin{itemize}
+    \item À Glucose Bas : $\Delta = 12 - 10 = +2\,\text{ng/mL}$ (effet très modeste).
+    \item À Glucose Haut : $\Delta = 85 - 30 = +55\,\text{ng/mL}$ (amplification spectaculaire).
+  \end{itemize}
+  Il y a une puissante \textbf{synergie positive (effet coopératif)}. C'est la propriété clé des hormones incrétines (GLP-1) : elles stimulent l'insuline \textit{uniquement en présence d'une glycémie élevée}, ce qui évite les hypoglycémies chez les patients diabétiques.
+
+  \item \textbf{Interprétation en présence d'interaction significative :}
+  \textbf{Non !} En présence d'interaction significative, les effets moyens dits « principaux » masquent la réalité. Par exemple dans l'Étude 2, dire que « l'incrétine augmente en moyenne l'insuline de $28.5\,\text{ng/mL}$ » est trompeur car cet effet est quasi-nul à jeun et gigantesque en post-prandial.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Comparaisons Multiples Post-Hoc (Test de Tukey HSD)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calcul de la valeur critique HSD :}
+  \begin{equation*}
+    \text{HSD} = q_{\alpha} \times \sqrt{\frac{\text{CMR}}{n}} = 3.53 \times \sqrt{\frac{0.72}{5}} = 3.53 \times \sqrt{0.144} = 3.53 \times 0.3795 = \mathbf{1.340\,\mu\text{mol/g}}
+  \end{equation*}
+
+  \item \textbf{Calcul des différences observées entre paires :}
+  \begin{itemize}
+    \item $|\bar{y}_{\text{Témoin}} - \bar{y}_{\text{Dose 50}}| = |8.40 - 6.10| = \mathbf{2.30\,\mu\text{mol/g}}$
+    \item $|\bar{y}_{\text{Témoin}} - \bar{y}_{\text{Dose 200}}| = |8.40 - 3.90| = \mathbf{4.50\,\mu\text{mol/g}}$
+    \item $|\bar{y}_{\text{Dose 50}} - \bar{y}_{\text{Dose 200}}| = |6.10 - 3.90| = \mathbf{2.20\,\mu\text{mol/g}}$
+  \end{itemize}
+
+  \item \textbf{Comparaison et conclusions :}
+  Toutes les différences absolues ($2.30, \, 4.50, \, 2.20$) sont supérieures au seuil $\text{HSD} = 1.340$ :
+  \begin{itemize}
+    \item Témoin vs Dose 50 : Différence significative ($p < 0.05$).
+    \item Témoin vs Dose 200 : Différence hautement significative ($p < 0.001$).
+    \item Dose 50 vs Dose 200 : Différence significative ($p < 0.05$).
+  \end{itemize}
+  \textbf{Conclusion biologique :} La dose $50\,\text{mg/kg}$ réduit déjà significativement le MDA par rapport au témoin, et la dose $200\,\text{mg/kg}$ apporte un bénéfice antioxydant protecteur supplémentaire significatif (effet dose-dépendant avéré).
+
+  \item \textbf{Pourquoi rejeter les tests $t$ répétés (Risque d'inflation de l'erreur $\alpha$) :}
+  Faire 3 tests $t$ au seuil $\alpha = 0.05$ fait monter le risque global de faux positif à :
+  $\alpha_{\text{global}} = 1 - (1 - 0.05)^3 = 1 - 0.95^3 = 1 - 0.857 = 14.3\%$.
+  La méthode de Tukey HSD maintient le taux d'erreur par famille strictement à 5\%.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Diagnostic des Hypothèses de Validité \& Données Asymétriques}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Trois conditions de validité :}
+  \begin{enumerate}
+    \item \textbf{Normalité des résidus :} $\epsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)$ dans chaque cellule.
+    \item \textbf{Homoscédasticité :} Égalité des variances résiduelles ($\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2$).
+    \item \textbf{Indépendance :} Les résidus et unités expérimentales sont strictement indépendants.
+  \end{enumerate}
+
+  \item \textbf{Vérification formelle et visuelle :}
+  \begin{itemize}
+    \item Test formel : **Test de Levene** (robuste aux écarts modérés à la normalité) ou test de Bartlett.
+    \item Graphique visuel : Graphique des résidus standardisés en fonction des valeurs ajustées (\textit{Residuals vs Fitted}). Les points doivent former une bande horizontale de largeur constante.
+  \end{itemize}
+
+  \item \textbf{Transformation mathématique stabilisatrice :}
+  En biochimie, la **transformation logarithmique** ($\log_{10}(y)$ ou $\ln(y)$) est la plus efficace pour stabiliser la variance lorsque l'écart-type est proportionnel à la moyenne (variabilité relative constante). D'autres options incluent la racine carrée $\sqrt{y}$ (pour décomptes) ou Box-Cox.
+
+  \item \textbf{Alternative non paramétrique :}
+  L'ANOVA non paramétrique de **Scheirer-Ray-Hare** (extension du test de Kruskal-Wallis à deux facteurs basée sur les rangs) ou les modèles linéaires généralisés (GLM).
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

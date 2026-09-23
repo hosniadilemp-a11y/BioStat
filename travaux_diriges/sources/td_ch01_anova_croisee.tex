@@ -1,0 +1,97 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 01}{ANOVA à Deux Facteurs Croisés (Two-Way ANOVA)}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Plan Factoriel \& Identification des Facteurs (MDA Hépatique)}
+Pour évaluer l'effet protecteur d'un extrait de curcumine sur la peroxydation lipidique hépatique, un biochimiste conçoit une expérimentation animale croisant deux facteurs contrôlés :
+\begin{itemize}
+  \item \textbf{Facteur A (Pathologie) :} 2 modalités ($a = 2$) : Rats Sauvages sains (\textit{WT}) vs Rats Diabétiques (\textit{db/db}).
+  \item \textbf{Facteur B (Traitement) :} 3 modalités ($b = 3$) : Véhicule (Témoin négatif), Curcumine faible dose ($50\,\text{mg/kg}$), Curcumine forte dose ($200\,\text{mg/kg}$).
+\end{itemize}
+Chaque lot comprend $n = 5$ rats indépendants. Le biomarqueur mesuré est la concentration hépatique en Malondialdéhyde (MDA, en $\mu\text{mol/g}$ de tissu).
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Quel est le type exact de ce plan d'expérience ? Pourquoi est-il qualifié de « plan factoriel complet équilibré » ?
+  \item Quel est le nombre total de lots expérimentaux et le nombre total d'animaux ($N$) requis ?
+  \item Énoncez les trois hypothèses nulles ($H_0$) testées simultanément dans cette analyse.
+  \item Donnez l'expression des degrés de liberté ($df$) associés au Facteur A, au Facteur B, à l'Interaction $A \times B$, à l'Erreur résiduelle et au Total.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Calcul Complet du Tableau d'ANOVA à Deux Facteurs}
+Lors d'une étude factorielle $2 \times 2$ évaluant l'activité de la Glutathion Peroxydase (GPx, en U/mg prot.) chez des rats soumis à un régime enrichi en fructose (Facteur A, $a=2$) et recevant ou non de la vitamine E (Facteur B, $b=2$), avec $n = 4$ animaux par condition ($N = 16$), les sommes des carrés des écarts (SCE) calculées sont :
+\begin{itemize}
+  \item $\text{SCE}_{\text{Total}} = 384.50$
+  \item $\text{SCE}_A (\text{Régime}) = 142.20$
+  \item $\text{SCE}_B (\text{Vitamine E}) = 98.40$
+  \item $\text{SCE}_{A \times B} (\text{Interaction}) = 68.30$
+\end{itemize}
+Les valeurs critiques de Fisher au seuil $\alpha = 0.05$ sont : $F_{crit}(1, 12) = 4.75$.
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la Somme des Carrés Résiduelle ($\text{SCE}_{\text{Résiduelle}}$).
+  \item Construisez et complétez intégralement le tableau d'ANOVA (Sources de variation, SCE, $df$, Carrés Moyens $CM$, $F_{\text{obs}}$ et $F_{\text{crit}}$).
+  \item Quelles sont vos conclusions statistiques pour l'effet du Régime, l'effet de la Vitamine E et l'Interaction ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Détection \& Interprétation Biologique des Interactions}
+Dans trois études distinctes mesurant la sécrétion d'insuline par des îlots pancréatiques en réponse au Glucose (Bas vs Haut) et à une Incrétine (Absente vs Présente), les moyennes observées par lot sont :
+
+\begin{center}
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    & \multicolumn{2}{c}{\textbf{Étude 1 (Insuline, ng/mL)}} & \multicolumn{2}{c}{\textbf{Étude 2 (Insuline, ng/mL)}} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+    & \textbf{Incrétine (-)} & \textbf{Incrétine (+)} & \textbf{Incrétine (-)} & \textbf{Incrétine (+)} \\
+    \midrule
+    \textbf{Glucose Bas}  & 10 & 25 & 10 & 12 \\
+    \textbf{Glucose Haut} & 30 & 45 & 30 & 85 \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Tracez mentalement ou sur votre brouillon le graphique d'interaction (profils de réponse) pour chaque étude.
+  \item Dans quelle étude observe-t-on une stricte absence d'interaction (effets additifs) ? Justifiez par le calcul des variations de moyennes.
+  \item Dans quelle étude observe-t-on une synergie biologique positive ? Pourquoi cette interaction est-elle physiologiquement essentielle pour le traitement du diabète de type 2 ?
+  \item Si l'interaction $A \times B$ est hautement significative, a-t-on le droit d'interpréter les effets principaux globaux sans précaution ? Expliquez.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Comparaisons Multiples Post-Hoc (Test de Tukey HSD)}
+Après avoir constaté un effet traitement significatif ($p < 0.001$) dans l'ANOVA, on souhaite comparer les moyennes des 3 doses d'antioxydant :
+\begin{center}
+  $\bar{y}_{\text{Témoin}} = 8.40\,\mu\text{mol/g}, \quad \bar{y}_{\text{Dose 50}} = 6.10\,\mu\text{mol/g}, \quad \bar{y}_{\text{Dose 200}} = 3.90\,\mu\text{mol/g}$
+\end{center}
+Le carré moyen résiduel issu de l'ANOVA est $\text{CMR} = 0.72$ avec $n = 5$ animaux par lot et $df_{\text{résiduel}} = 24$.
+La valeur tabulée de l'étendue studentisée au seuil $\alpha = 0.05$ pour $k = 3$ groupes est $q_{0.05, \, 3, \, 24} = 3.53$.
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la Différence Honnêtement Significative de Tukey ($\text{HSD} = q_{\alpha} \times \sqrt{\frac{\text{CMR}}{n}}$).
+  \item Calculez les différences observées $|\bar{y}_i - \bar{y}_j|$ pour les trois paires possibles.
+  \item Quelles paires de traitements présentent une différence statistiquement significative ?
+  \item Pourquoi ne doit-on pas réaliser 3 tests $t$ de Student classiques successifs à la place de la procédure de Tukey ? Quel risque statistique cela engendrerait-il ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Diagnostic des Hypothèses de Validité \& Données Asymétriques}
+L'application de l'ANOVA à deux facteurs repose sur trois postulats fondamentaux.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Rappelez les trois conditions de validité d'une ANOVA à deux facteurs.
+  \item Quel test statistique permet de vérifier formellement l'égalité des variances (homoscédasticité) entre les sous-groupes ? Quel graphique permet de l'apprécier visuellement ?
+  \item Si l'hypothèse d'homogénéité des variances est violée de manière flagrante (rapport des variances extrêmes $> 5$), quelle transformation mathématique classique de la variable dépendante peut-on appliquer aux données de biochimie ?
+  \item Quelle alternative non paramétrique peut être envisagée si les données restent profondément non normales et hétéroscédastiques ?
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

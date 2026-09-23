@@ -1,0 +1,134 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 03}{Corrélation \& Régression Linéaire en Biochimie}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Dosage Protéique de Bradford \& Coefficient de Pearson}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Sommes élémentaires ($n = 5$) :}
+  \begin{itemize}
+    \item $\sum x_i = 2.0 + 4.0 + 6.0 + 8.0 + 10.0 = \mathbf{30.0\,\mu\text{g/mL}}$ ($\bar{x} = 6.0$).
+    \item $\sum y_i = 0.125 + 0.245 + 0.380 + 0.495 + 0.635 = \mathbf{1.880\,\text{OD}}$ ($\bar{y} = 0.376$).
+    \item $\sum x_i^2 = 4 + 16 + 36 + 64 + 100 = \mathbf{220.0}$.
+    \item $\sum y_i^2 = 0.015625 + 0.060025 + 0.144400 + 0.245025 + 0.403225 = \mathbf{0.86830}$.
+    \item $\sum x_i y_i = (2 \times 0.125) + (4 \times 0.245) + (6 \times 0.380) + (8 \times 0.495) + (10 \times 0.635)$ \\
+    $= 0.250 + 0.980 + 2.280 + 3.960 + 6.350 = \mathbf{13.820}$.
+  \end{itemize}
+
+  \item \textbf{Sommes des carrés corrigées :}
+  \begin{itemize}
+    \item $SS_{xx} = \sum x_i^2 - \frac{(\sum x_i)^2}{n} = 220.0 - \frac{30.0^2}{5} = 220.0 - 180.0 = \mathbf{40.00}$.
+    \item $SS_{yy} = \sum y_i^2 - \frac{(\sum y_i)^2}{n} = 0.86830 - \frac{1.880^2}{5} = 0.86830 - 0.70688 = \mathbf{0.16142}$.
+    \item $SP_{xy} = \sum x_i y_i - \frac{(\sum x_i)(\sum y_i)}{n} = 13.820 - \frac{30.0 \times 1.880}{5} = 13.820 - 11.280 = \mathbf{2.540}$.
+  \end{itemize}
+
+  \item \textbf{Coefficient de corrélation linéaire de Pearson ($r$) :}
+  \begin{equation*}
+    r = \frac{SP_{xy}}{\sqrt{SS_{xx} \cdot SS_{yy}}} = \frac{2.540}{\sqrt{40.0 \times 0.16142}} = \frac{2.540}{\sqrt{6.4568}} = \frac{2.540}{2.54102} = \mathbf{0.9996}
+  \end{equation*}
+
+  \item \textbf{Test de significativité de $r$ ($df = n - 2 = 3$) :}
+  \begin{equation*}
+    t_{\text{obs}} = \frac{r \sqrt{n - 2}}{\sqrt{1 - r^2}} = \frac{0.9996 \times \sqrt{3}}{\sqrt{1 - 0.9992}} = \frac{0.9996 \times 1.73205}{\sqrt{0.0008}} = \frac{1.7314}{0.02828} = \mathbf{61.22}
+  \end{equation*}
+  Puisque $t_{\text{obs}} = 61.22 \gg t_{\text{crit}}(3) = 5.841$, la corrélation linéaire entre la concentration en BSA et l'absorbance est \textbf{extrêmement hautement significative} ($p < 0.0001$).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Droite des Moindres Carrés \& Coefficient de Détermination $R^2$}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Équation de la droite de régression $\hat{y} = ax + b$ :}
+  \begin{itemize}
+    \item Pente : $a = \frac{SP_{xy}}{SS_{xx}} = \frac{2.540}{40.00} = \mathbf{0.0635\,\text{OD}/(\mu\text{g/mL})}$.
+    \item Ordonnée à l'origine : $b = \bar{y} - a \bar{x} = 0.376 - (0.0635 \times 6.0) = 0.376 - 0.381 = \mathbf{-0.005\,\text{OD}}$.
+  \end{itemize}
+  L'équation est : $\mathbf{\hat{y} = 0.0635 \, x - 0.005}$.
+
+  \item \textbf{Signification biochimique :}
+  \begin{itemize}
+    \item Pente $a = 0.0635$ : C'est la **sensibilité analytique** de la méthode de Bradford. Chaque ajout de $1\,\mu\text{g/mL}$ de BSA induit une augmentation de $0.0635$ unité d'absorbance à $595\,\text{nm}$.
+    \item Ordonnée $b = -0.005$ : Très proche de 0 (non significativement différente de 0), elle confirme l'excellence du zéro optique réalisé contre le blanc.
+  \end{itemize}
+
+  \item \textbf{Coefficient de détermination $R^2$ :}
+  $R^2 = r^2 = (0.9996)^2 = \mathbf{0.9992}$ (soit $\mathbf{99.92\%}$).
+  $99.92\%$ de la dispersion observée des absorbances est rigoureusement expliquée par les variations de concentration protéique.
+
+  \item \textbf{Critère de validation qualité :}
+  Puisque $R^2 = 0.9992 \ge 0.995$, la gamme étalon est formellement validée pour un usage en laboratoire d'analyse accrédité.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Dosage d'un Échantillon Inconnu \& Intervalle de Confiance}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Concentration estimée dans l'échantillon dilué ($\hat{x}_0$) :}
+  \begin{equation*}
+    \hat{x}_0 = \frac{y_0 - b}{a} = \frac{0.410 - (-0.005)}{0.0635} = \frac{0.415}{0.0635} = \mathbf{6.535\,\mu\text{g/mL}}
+  \end{equation*}
+
+  \item \textbf{Erreur type d'estimation inverse ($s_{\hat{x}_0}$) :}
+  \begin{align*}
+    s_{\hat{x}_0} &= \frac{s_{y/x}}{a} \sqrt{1 + \frac{1}{n} + \frac{(y_0 - \bar{y})^2}{a^2 \cdot SS_{xx}}} \\
+    &= \frac{0.00894}{0.0635} \sqrt{1 + \frac{1}{5} + \frac{(0.410 - 0.376)^2}{(0.0635)^2 \times 40.0}} \\
+    &= 0.1408 \sqrt{1 + 0.20 + \frac{0.001156}{0.1613}} = 0.1408 \sqrt{1.2072} = 0.1408 \times 1.0987 = \mathbf{0.155\,\mu\text{g/mL}}
+  \end{align*}
+
+  \item \textbf{Intervalle de Confiance à 95\% :}
+  \begin{align*}
+    \text{IC}_{95\%} &= \hat{x}_0 \pm t_{0.05, \, 3} \times s_{\hat{x}_0} \\
+    &= 6.535 \pm (3.182 \times 0.155) = 6.535 \pm 0.493 = \mathbf{[6.04 \,;\, 7.03]\,\mu\text{g/mL}}
+  \end{align*}
+
+  \item \textbf{Concentration tissulaire native :}
+  En multipliant par le facteur de dilution 100 :
+  $C_{\text{foie}} = 6.535 \times 100 = 653.5\,\mu\text{g/mL} = \mathbf{0.654\,\text{mg/mL}}$ (ou $\text{g/L}$).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Diagnostic des Résidus \& Limites du Modèle Linéaire}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Définition et propriété des résidus :}
+  $e_i = y_i - \hat{y}_i$ (écart entre l'absorbance réelle et l'absorbance prédite par la droite). Dans la régression par moindres carrés avec constante, la somme des résidus est obligatoirement nulle : $\sum e_i = 0$.
+
+  \item \textbf{Forme en U inversé des résidus :}
+  Elle révèle une **non-linéarité systématique**. En biochimie, au-delà d'une certaine concentration en protéines, les molécules de colorant libre Coomassie s'épuisent ou la lumière diffusée n'obéit plus à la loi de Beer-Lambert (phénomène de saturation optique). Le modèle linéaire n'est alors plus valide sur cette plage.
+
+  \item \textbf{Résidus en entonnoir (Hétéroscédasticité) :}
+  L'hypothèse d'homoscédasticité ($\sigma_e^2 = \text{constante}$) est violée : l'incertitude sur la mesure grandit avec la concentration. Les Moindres Carrés Ordinaires (MCO) accordent trop de poids aux fortes concentrations imprécises. La solution est la **Régression Linéaire Pondérée (WLS)** avec des poids inversement proportionnels à la variance : $w_i = 1 / s_i^2$ ou $w_i = 1 / x_i^2$.
+
+  \item \textbf{Usage du coefficient de Spearman :}
+  Le coefficient des rangs de Spearman doit être privilégié lorsque :
+  \begin{itemize}
+    \item La relation entre les variables est monotone mais non strictement linéaire (courbe sigmoïde ou hyperbolique).
+    \item Les données comportent des valeurs aberrantes extrêmes ou ne suivent pas la loi normale.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Limites Analytiques de Détection (LOD) et de Quantification (LOQ)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calcul de la Limite de Détection (LOD) :}
+  \begin{equation*}
+    \text{LOD} = \frac{3.3 \cdot s_{y/x}}{a} = \frac{3.3 \times 0.00894}{0.0635} = \frac{0.02950}{0.0635} = \mathbf{0.465\,\mu\text{g/mL}}
+  \end{equation*}
+
+  \item \textbf{Calcul de la Limite de Quantification (LOQ) :}
+  \begin{equation*}
+    \text{LOQ} = \frac{10 \cdot s_{y/x}}{a} = \frac{10 \times 0.00894}{0.0635} = \frac{0.0894}{0.0635} = \mathbf{1.408\,\mu\text{g/mL}}
+  \end{equation*}
+
+  \item \textbf{Distinction biologique et réglementaire :}
+  \begin{itemize}
+    \item **LOD ($0.46\,\mu\text{g/mL}$) :** Plus faible concentration pouvant être distinguée avec certitude du bruit de fond du blanc ($p < 0.01$), mais sans précision chiffrée suffisante (CV $> 20\%$).
+    \item **LOQ ($1.41\,\mu\text{g/mL}$) :** Plus faible concentration quantifiable avec une fidélité et une justesse acceptables selon les normes internationales (erreur relative $< 10\%$).
+  \end{itemize}
+
+  \item \textbf{Décision sur l'échantillon à $0.80\,\mu\text{g/mL}$ :}
+  Puisque $\text{LOD} (0.46) < 0.80 < \text{LOQ} (1.41)$ :
+  \textbf{Non !} On ne peut pas consigner une valeur numérique quantitative. La présence de protéines est formellement détectée, mais le rapport d'analyse doit porter la mention réglementaire : « \textit{Protéines détectées, inférieures à la limite de quantification ($< 1.41\,\mu\text{g/mL}$)} » ou bien le biologiste doit recommencer le dosage avec un échantillon moins dilué.
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

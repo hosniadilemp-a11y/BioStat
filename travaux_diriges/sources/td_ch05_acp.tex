@@ -1,0 +1,92 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 05}{Analyse en Composantes Principales (ACP) en Biologie}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Centrage-Réduction \& Nécessité de la Standardisation}
+Une étude métabolomique hospitalière mesure 3 paramètres sanguins chez $N = 40$ patients :
+\begin{itemize}
+  \item Glycémie ($X_1$) : Moyenne $\bar{x}_1 = 1.10\,\text{g/L}$, écart-type $s_1 = 0.25\,\text{g/L}$ ($s_1^2 = 0.0625$).
+  \item Transaminases ALAT ($X_2$) : Moyenne $\bar{x}_2 = 45.0\,\text{UI/L}$, écart-type $s_2 = 30.0\,\text{UI/L}$ ($s_2^2 = 900.0$).
+  \item Cholestérol total ($X_3$) : Moyenne $\bar{x}_3 = 5.20\,\text{mmol/L}$, écart-type $s_3 = 0.80\,\text{mmol/L}$ ($s_3^2 = 0.640$).
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Donnez la formule de transformation en variable centrée-réduite ($Z$-score) : $z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j}$.
+  \item Un patient présente : Glycémie $= 1.60\,\text{g/L}$, ALAT $= 105.0\,\text{UI/L}$, Cholestérol $= 6.80\,\text{mmol/L}$. Calculez ses trois coordonnées centrées-réduites ($z_{i1}, z_{i2}, z_{i3}$). Quel paramètre biologique est le plus anormal chez ce patient ?
+  \item Si l'on réalisait une ACP brute sur la matrice de covariance sans centrage-réduction, quelle variable dicterait à elle seule le premier axe factoriel ? Pourquoi cela fausserait-il totalement l'analyse biologique ?
+  \item Déduisez-en pourquoi toute ACP en biologie/biochimie doit impérativement être une **ACP normée** (sur la matrice des corrélations $R$).
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Matrice de Corrélation, Valeurs Propres \& Éboulis de Kaiser}
+Dans une étude omique portant sur $p = 5$ biomarqueurs de stress oxydatif et d'inflammation (MDA, Catalase, SOD, IL-6, TNF-$\alpha$), l'ACP normée fournit les 5 valeurs propres ordonnées suivantes :
+\begin{center}
+  $\lambda_1 = 2.65, \quad \lambda_2 = 1.25, \quad \lambda_3 = 0.60, \quad \lambda_4 = 0.35, \quad \lambda_5 = 0.15$
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Quelle est la somme totale des valeurs propres $\sum_{j=1}^5 \lambda_j$ ? Justifiez cette valeur à partir de la trace de la matrice de corrélation $R$.
+  \item Calculez pour chaque axe factoriel la proportion de variance expliquée ($\% \text{ Inertie} = \lambda_k / p \times 100$) ainsi que le pourcentage cumulé.
+  \item Selon le critère de Kaiser ($\lambda \ge 1.0$), combien d'axes factoriels doit-on retenir ?
+  \item Quel pourcentage cumulé de la variabilité biologique totale le premier plan factoriel (PC1 -- PC2) permet-il de résumer ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Interprétation du Cercle des Corrélations \& Métriques}
+Sur le cercle des corrélations du premier plan factoriel (PC1, PC2), les coordonnées factorielles (qui représentent les corrélations linéaires $r(X_j, \text{PC}_k)$) des 5 biomarqueurs sont :
+\begin{center}
+  \small
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Biomarqueur} & \textbf{PC1 ($F_1$)} & \textbf{PC2 ($F_2$)} & \textbf{$\cos^2(\text{PC1})$} & \textbf{$\cos^2(\text{PC2})$} & \textbf{Qualité Globale ($\cos^2_{1+2}$)} \\
+    \midrule
+    \textbf{MDA (Peroxydation)}       & $+0.88$ & $-0.20$ & ? & ? & ? \\
+    \textbf{IL-6 (Cytokine)}           & $+0.92$ & $-0.15$ & ? & ? & ? \\
+    \textbf{TNF-$\alpha$ (Cytokine)}   & $+0.85$ & $-0.25$ & ? & ? & ? \\
+    \textbf{Catalase (Antioxydant)}    & $-0.80$ & $-0.45$ & ? & ? & ? \\
+    \textbf{SOD (Antioxydant)}         & $-0.10$ & $+0.85$ & ? & ? & ? \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Complétez le tableau en calculant pour chaque variable sa qualité de représentation : $\cos^2(\text{PC}_k) = r^2(X_j, \text{PC}_k)$, ainsi que $\cos^2_{1+2} = \cos^2(\text{PC1}) + \cos^2(\text{PC2})$.
+  \item Quelle est la variable la mieux représentée sur l'axe PC1 ? Quelle est celle qui définit principalement l'axe PC2 ?
+  \item Interprétez l'angle proche de $0^\circ$ entre les vecteurs IL-6 et MDA : quelle est la relation biologique entre ces deux molécules ?
+  \item Interprétez l'angle obtus ($\approx 180^\circ$) entre le cluster (MDA, IL-6) et la Catalase. Donnez une dénomination biologique claire pour l'axe PC1 (ex: « Axe de l'état inflammatoire et du stress oxydatif »).
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Plan des Individus \& Discrimination Clinique}
+L'ACP projette les 40 patients dans le plan factoriel (PC1, PC2). Les patients sont répartis en 3 groupes diagnostiques :
+\begin{itemize}
+  \item Groupe 1 (Témoins sains, $n=15$) : situés majoritairement dans le cadran gauche ($\text{PC1} < -1.0$).
+  \item Groupe 2 (Diabétiques équilibrés, $n=15$) : situés au centre ($-0.5 < \text{PC1} < +0.5$).
+  \item Groupe 3 (Patients avec Stéatohépatite NASH, $n=10$) : situés à l'extrême droite ($\text{PC1} > +1.5$).
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item L'ACP est-elle une méthode supervisée (qui utilise les diagnostics pour classer) ou non supervisée ? Pourquoi l'alignement spontané des groupes le long de PC1 est-il une validation biologique remarquable ?
+  \item Si un nouveau patient non étiqueté se projette avec les coordonnées $(\text{PC1} = +2.40, \, \text{PC2} = -0.30)$, quel est son profil biologique probable ? Quels examens de confirmation préconisez-vous ?
+  \item Deux patients présentent le même score $\text{PC1} = +1.80$, mais l'un a $\text{PC2} = +1.50$ et l'autre $\text{PC2} = -1.20$. Quelle différence enzymatique spécifique les distingue ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Sélection de Biomarqueurs \& Élimination de la Redondance}
+Dans le but de concevoir une trousse de diagnostic rapide (Point-of-Care) à faible coût pour les centres de santé, l'équipe hospitalière souhaite réduire le nombre de biomarqueurs à doser de 5 à 2 ou 3 sans perdre d'information diagnostique majeure.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item En analysant le cercle des corrélations de l'Exercice 3, pourquoi doser simultanément IL-6 et TNF-$\alpha$ constitue-t-il un gaspillage analytique redondant ?
+  \item Parmi l'IL-6 et le TNF-$\alpha$, laquelle choisiriez-vous en justifiant par sa qualité de représentation $\cos^2(\text{PC1})$ ?
+  \item Proposez le panel minimal optimal de 2 ou 3 biomarqueurs qui capture à la fois l'information de l'axe PC1 et celle de l'axe PC2.
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

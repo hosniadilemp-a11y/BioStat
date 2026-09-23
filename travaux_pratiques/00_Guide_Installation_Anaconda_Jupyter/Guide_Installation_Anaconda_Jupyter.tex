@@ -1,0 +1,109 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{fontawesome5}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+\definecolor{BioNavy}{RGB}{26, 54, 93}
+\definecolor{BioTeal}{RGB}{13, 148, 136}
+\definecolor{BioAmber}{RGB}{217, 119, 6}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=BioNavy,
+    urlcolor=BioTeal
+}
+
+\title{\textbf{\LARGE Guide Pratique d'Installation \& Prise en Main}\\
+\Large Python, Anaconda \& Jupyter Notebook pour les Biologistes}
+\author{\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
+\small Faculté des Sciences --- Département de Biologie\\
+\small Master 2 Biochimie Appliquée --- Université M'Hamed Bougara de Boumerdès (UMBB)}
+\date{Année Universitaire 2024 -- 2025}
+
+\begin{document}
+
+\maketitle
+
+\vspace{-5mm}
+\begin{center}
+  \rule{\textwidth}{1pt}
+\end{center}
+
+\section*{\faGraduationCap\hspace{0.5em}Bienvenue dans le Calcul Scientifique Biologique !}
+Chers étudiants,\\
+En tant que futurs chercheurs ou cadres en biochimie et biotechnologie, vous manipulerez des données de plus en plus complexes (cinétiques enzymatiques, spectres, ELISA, profilages métabolomiques).
+
+\textbf{Rassurez-vous :} vous n'avez besoin d'\textbf{aucune formation préalable en informatique}. Python et les carnets interactifs \textbf{Jupyter Notebook} ont été choisis pour leur extrême simplicité, leur lisibilité et leur capacité à générer en quelques lignes des graphiques prêts pour la publication scientifique.
+
+\section*{\faDownload\hspace{0.5em}Étape 1 : Téléchargement Gratuit d'Anaconda}
+\textbf{Anaconda} est la distribution scientifique de référence dans le monde. Elle installe en un seul paquet :
+\begin{itemize}
+  \item Python 3.x et l'interface conviviale \textbf{Anaconda Navigator}.
+  \item L'environnement interactif de travail \textbf{Jupyter Notebook}.
+  \item Toutes les bibliothèques utiles en biochimie : \texttt{pandas}, \texttt{scipy}, \texttt{matplotlib}, \texttt{seaborn}, \texttt{scikit-learn}.
+\end{itemize}
+
+\textbf{Lien officiel de téléchargement :} \url{https://www.anaconda.com/download}
+
+\section*{\faCogs\hspace{0.5em}Étape 2 : Installation Pas-à-Pas}
+\begin{itemize}
+  \item \textbf{Sous Windows :} Double-cliquez sur le fichier \texttt{.exe} téléchargé. Cliquez sur \textit{Next}, acceptez la licence (\textit{I Agree}), choisissez \textit{Just Me (recommended)} et conservez tous les paramètres par défaut.
+  \item \textbf{Sous macOS :} Ouvrez le fichier \texttt{.pkg} et suivez les instructions à l'écran.
+  \item \textbf{Sous Linux :} Ouvrez un terminal et tapez \texttt{bash Anaconda3-xxxx-Linux-x86\_64.sh}.
+\end{itemize}
+
+\section*{\faRocket\hspace{0.5em}Étape 3 : Lancement de Jupyter Notebook}
+\begin{enumerate}
+  \item Ouvrez le menu Démarrer de votre ordinateur et lancez \textbf{Anaconda Navigator}.
+  \item Dans la mosaïque d'applications, repérez \textbf{Jupyter Notebook} et cliquez sur le bouton vert \textbf{Launch}.
+  \item Votre navigateur internet s'ouvre : vous êtes prêt à travailler !
+\end{enumerate}
+
+\section*{\faKeyboard\hspace{0.5em}Étape 4 : Les Raccourcis Indispensables}
+\begin{center}
+\begin{tabular}{ll}
+  \toprule
+  \textbf{Action Souhaitée} & \textbf{Raccourci Clavier} \\
+  \midrule
+  \textbf{Exécuter le calcul de la cellule sélectionnée} & \texttt{Maj (Shift) + Entrée} \\
+  Créer une nouvelle cellule en dessous & \texttt{Échap} puis \texttt{B} \\
+  Transformer une cellule en texte explicatif (Markdown) & \texttt{Échap} puis \texttt{M} \\
+  Transformer une cellule en code de calcul & \texttt{Échap} puis \texttt{Y} \\
+  Supprimer une cellule inutile & \texttt{Échap} puis \texttt{D, D} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{5mm}
+\begin{tcolorbox}[colback=BioTeal!10, colframe=BioTeal, title={\faFlask\hspace{0.5em}Exemple Immédiat : Tracer une Gamme Étalon en 3 Lignes}]
+\small
+\begin{verbatim}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Chargement des mesures
+df = pd.read_csv('../datasets/dosage_bradford.csv')
+
+# Tracé automatique avec droite de régression
+sns.lmplot(data=df, x='BSA_ug_mL', y='Absorbance_595nm', color='#1A365D')
+plt.title("Gamme Étalon Bradford (BSA à 595 nm)")
+plt.show()
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{5mm}
+\begin{center}
+  \footnotesize
+  \color{gray}
+  Module de Biostatistiques --- Responsable pédagogique : Dr. Sarra BENMOUMOU (Ph.D.) --- UMBB
+\end{center}
+
+\end{document}

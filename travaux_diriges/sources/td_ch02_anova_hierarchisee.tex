@@ -1,0 +1,89 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 02}{ANOVA Hiérarchisée (Nested ANOVA)}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Reconnaissance des Structures Emboîtées \& Pseudoréplication}
+Dans un laboratoire de biotechnologie pharmaceutique produisant de l'érythropoïétine humaine recombinante (rhEPO), le responsable qualité veut évaluer si deux lignées cellulaires hôtes (Lignée 1 : CHO-K1 vs Lignée 2 : CHO-S, Facteur A, $a = 2$) diffèrent en termes de rendement protéique (g/L).
+\begin{itemize}
+  \item Pour chaque lignée, on ensemence $b = 3$ bioréacteurs indépendants (Facteur B, soit 6 bioréacteurs au total).
+  \item À partir de chaque bioréacteur, on prélève $n = 4$ flacons d'échantillons sur lesquels le dosage de rhEPO est mesuré.
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Pourquoi le facteur B (Bioréacteurs) est-il qualifié de facteur « emboîté » (nested) dans le facteur A (Lignées) et non de facteur « croisé » ? Notez formellement cette hiérarchie $B \subset A$.
+  \item Un technicien propose de regrouper les 12 mesures de la Lignée 1 et les 12 mesures de la Lignée 2 et de réaliser un simple test $t$ de Student avec $N = 24$. Quelle faute méthodologique majeure (la « pseudoréplication ») commet-il ?
+  \item Quelle est la véritable unité expérimentale indépendante pour tester la différence entre les deux lignées cellulaires ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Arborescence \& Calcul des Degrés de Liberté}
+On considère un plan d'expérience hiérarchisé à deux niveaux évaluant l'activité de la phosphatase alcaline hépatique :
+\begin{itemize}
+  \item Facteur A (Traitement toxique) : $a = 3$ régimes (Témoin, Dose Faible, Dose Forte).
+  \item Facteur B (Rats) : $b = 4$ rats emboîtés sous chaque traitement ($B \subset A$).
+  \item Sous-échantillonnage : $n = 3$ dosages biochimiques répétés par rat (réplicats techniques de laboratoire).
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Dessinez schématiquement l'arbre hiérarchique du dispositif expérimental.
+  \item Calculez le nombre total d'animaux utilisés et le nombre total de dosages analytiques réalisés ($N$).
+  \item Donnez les expressions littérales et calculez les valeurs numériques des degrés de liberté ($df$) pour :
+  \begin{itemize}
+    \item L'effet du Traitement : $df_A$.
+    \item L'effet des Rats emboîtés : $df_{B(A)}$.
+    \item L'erreur résiduelle analytique : $df_{\text{Résiduelle}}$.
+    \item Le Total : $df_{\text{Total}}$.
+  \end{itemize}
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Tableau d'ANOVA Hiérarchisée \& Calcul Complet}
+Dans une étude de pureté chromatographique d'un vaccin peptidique ($N = 24$), on analyse 2 procédés de purification (Procédé A1 vs Procédé A2, $a=2$). Pour chaque procédé, 3 lots industriels indépendants sont produits ($b=3$). Dans chaque lot, 4 flacons sont dosés par HPLC ($n=4$).
+Les sommes des carrés obtenues sont :
+\begin{itemize}
+  \item $\text{SCE}_A (\text{Procédés}) = 128.00$
+  \item $\text{SCE}_{B(A)} (\text{Lots dans Procédés}) = 48.00$
+  \item $\text{SCE}_{\text{Résiduelle}} (\text{Flacons dans Lots}) = 36.00$
+\end{itemize}
+Les valeurs critiques au seuil $\alpha = 0.05$ sont : $F_{crit}(1, 4) = 7.71$ et $F_{crit}(1, 18) = 4.41$ et $F_{crit}(4, 18) = 2.93$.
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la Somme des Carrés Totale ($\text{SCE}_{\text{Total}}$).
+  \item Calculez les Carrés Moyens : $CM_A$, $CM_{B(A)}$ et $CM_{\text{Résiduel}}$.
+  \item Dressez le tableau complet d'ANOVA hiérarchisée.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Le Choix Crucial du Dénominateur du Test $F$}
+En reprenant les données de l'Exercice 3 :
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la valeur observée du test $F$ pour l'effet du Procédé en utilisant le dénominateur théoriquement correct : $F_{\text{obs}}(A) = \frac{CM_A}{CM_{B(A)}}$. Ce résultat est-il statistiquement significatif au seuil $\alpha = 0.05$ ?
+  \item Si un expérimentateur débutant avait commis l'erreur classique de tester le Procédé contre l'erreur résiduelle analytique : $F_{\text{faux}}(A) = \frac{CM_A}{CM_{\text{Résiduel}}}$, quelle valeur aurait-il obtenue ? Aurait-il conclu à tort à une significativité ?
+  \item Expliquez biologiquement pourquoi l'effet du procédé $A$ doit impérativement être comparé à la variabilité inter-lots $CM_{B(A)}$ et non à l'erreur de mesure intra-lot $CM_{\text{Résiduel}}$.
+  \item Testez l'effet de variabilité inter-lots : $F_{\text{obs}}(B(A)) = \frac{CM_{B(A)}}{CM_{\text{Résiduel}}}$. Les lots industriels présentent-ils une hétérogénéité significative ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Estimation des Composantes de la Variance \& Décision Industrielle}
+Dans un modèle hiérarchisé à effets aléatoires, les carrés moyens ont pour espérances mathématiques :
+\begin{equation*}
+  E(CM_{\text{Résiduel}}) = \sigma_e^2, \qquad E(CM_{B(A)}) = \sigma_e^2 + n \cdot \sigma_B^2, \qquad E(CM_A) = \sigma_e^2 + n \cdot \sigma_B^2 + b \cdot n \cdot \sigma_A^2
+\end{equation*}
+À partir des données de l'Exercice 3 ($n = 4$, $b = 3$) :
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Estimez la variance de l'erreur analytique pure $s_e^2$.
+  \item Estimez la composante de variance inter-lots $s_B^2$.
+  \item Calculez la proportion de variance attribuable à l'instabilité entre lots par rapport à la variabilité totale intra-procédé : $\frac{s_B^2}{s_B^2 + s_e^2} \times 100$.
+  \item \textbf{Décision qualité :} Si l'entreprise souhaite réduire la variabilité globale de son procédé de fabrication, doit-elle investir dans un équipement de dosage HPLC plus précis ou dans une meilleure standardisation de la préparation des lots de fermentation ? Justifiez rigoureusement.
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

@@ -1,0 +1,86 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 03}{Corrélation \& Régression Linéaire en Biochimie}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Dosage Protéique de Bradford \& Coefficient de Pearson}
+Pour étalonner un spectrophotomètre lors d'un dosage protéique de Bradford au bleu de Coomassie G-250, une gamme standard d'albumine de sérum bovin (BSA) est préparée à 5 concentrations ($x_i$, en $\mu\text{g/mL}$). L'absorbance à $595\,\text{nm}$ ($y_i$) est lue contre un blanc réactif :
+\begin{center}
+  \small
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Tube standard} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
+    \midrule
+    \textbf{Concentration BSA ($x_i$, $\mu\text{g/mL}$)} & 2.0 & 4.0 & 6.0 & 8.0 & 10.0 \\
+    \textbf{Absorbance à $595\,\text{nm}$ ($y_i$)}      & 0.125 & 0.245 & 0.380 & 0.495 & 0.635 \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez les sommes élémentaires : $\sum x_i$, $\sum y_i$, $\sum x_i^2$, $\sum y_i^2$ et $\sum x_i y_i$.
+  \item Calculez les variances de covariance : $SS_{xx} = \sum x_i^2 - \frac{(\sum x_i)^2}{n}$ et $SS_{yy} = \sum y_i^2 - \frac{(\sum y_i)^2}{n}$ et $SP_{xy} = \sum x_i y_i - \frac{(\sum x_i)(\sum y_i)}{n}$.
+  \item Déterminez le coefficient de corrélation linéaire de Pearson ($r$).
+  \item Testez la significativité statistique de ce coefficient au seuil $\alpha = 0.01$ sachant que $t_{\text{crit}}(3) = 5.841$.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Droite des Moindres Carrés \& Coefficient de Détermination $R^2$}
+À partir des données de la gamme Bradford de l'Exercice 1 :
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la pente $a$ et l'ordonnée à l'origine $b$ de la droite de régression des moindres carrés ordinaires : $\hat{y} = ax + b$.
+  \item Donnez la signification biochimique de la pente $a$ (sensibilité de la méthode) et de l'ordonnée à l'origine $b$ (absorbance résiduelle du blanc).
+  \item Calculez le coefficient de détermination $R^2 = r^2$. Quelle proportion de la variance optique de l'absorbance est expliquée par la concentration en protéines ?
+  \item Ce test satisfait-il le critère de validation analytique des laboratoires accrédités ($R^2 \ge 0.995$) ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Dosage d'un Échantillon Inconnu \& Intervalle de Confiance}
+On souhaite doser la concentration en protéines totales d'un extrait d'homogénat de foie de rat.
+L'extrait est dilué au $1/100^{\text{e}}$. L'absorbance mesurée au spectrophotomètre à $595\,\text{nm}$ est $y_0 = 0.410$.
+La variance résiduelle de la droite d'étalonnage calculée est $s_{y/x}^2 = 0.000080$ ($s_{y/x} = 0.00894$), avec $n = 5$, $\bar{x} = 6.0\,\mu\text{g/mL}$ et $SS_{xx} = 40.0$.
+La valeur critique de Student au seuil $\alpha = 0.05$ pour $df = 3$ est $t_{0.05, \, 3} = 3.182$.
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Estimez la concentration en BSA de l'échantillon dilué $\hat{x}_0$.
+  \item Calculez l'erreur type d'estimation inverse pour une mesure unique ($m = 1$) :
+  \begin{equation*}
+    s_{\hat{x}_0} = \frac{s_{y/x}}{a} \sqrt{1 + \frac{1}{n} + \frac{(y_0 - \bar{y})^2}{a^2 \cdot SS_{xx}}}
+  \end{equation*}
+  \item Établissez l'intervalle de confiance à 95\% de cette concentration : $\hat{x}_0 \pm t_{0.05, \, 3} \times s_{\hat{x}_0}$.
+  \item En tenant compte du facteur de dilution ($1/100$), quelle est la concentration en protéines dans le tissu hépatique natif (en mg/mL) ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Diagnostic des Résidus \& Limites du Modèle Linéaire}
+Pour valider formellement une gamme étalonnée, le biologiste inspecte les 4 graphiques de résidus classiques.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Définissez le résidu ordinaire $e_i$ pour le point expérimental $i$. Quelle doit être la somme des résidus $\sum e_i$ dans une régression linéaire des moindres carrés ?
+  \item Si le graphique des résidus en fonction des valeurs prédites ($e_i$ vs $\hat{y}_i$) présente une forme parabolique en U inversé, quelle anomalie physico-chimique cela révèle-t-il (ex: saturation des récepteurs ou écart à la loi de Beer-Lambert) ?
+  \item Si les résidus s'écartent fortement en forme d'entonnoir (dispersion augmentant avec la concentration), quelle hypothèse est violée ? Pourquoi la régression linéaire simple n'est-elle plus optimale ? Quelle méthode de régression pondérée (WLS) doit être utilisée ?
+  \item Dans quel cas le coefficient de corrélation des rangs de Spearman doit-il être préféré au coefficient de Pearson ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Limites Analytiques de Détection (LOD) et de Quantification (LOQ)}
+Selon les directives internationales de l'ICH (Q2R1) pour la validation des méthodes bioanalytiques, la limite de détection (LOD) et la limite de quantification (LOQ) sont estimées à partir de la pente $a$ de la droite d'étalonnage et de l'écart-type résiduel des réponses $s_{y/x}$ :
+\begin{equation*}
+  \text{LOD} = \frac{3.3 \cdot s_{y/x}}{a}, \qquad \text{LOQ} = \frac{10 \cdot s_{y/x}}{a}
+\end{equation*}
+En utilisant les paramètres déterminés précédemment ($a = 0.0635\,\text{OD}/(\mu\text{g/mL})$ et $s_{y/x} = 0.00894\,\text{OD}$) :
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la valeur numérique de la LOD (en $\mu\text{g/mL}$).
+  \item Calculez la valeur numérique de la LOQ (en $\mu\text{g/mL}$).
+  \item Quelle est la distinction biologique et analytique majeure entre LOD et LOQ ?
+  \item Si un extrait cellulaire fournit une absorbance donnant une concentration calculée de $0.80\,\mu\text{g/mL}$, ce résultat peut-il être quantifié et consigné dans un rapport officiel de laboratoire ? Justifiez.
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

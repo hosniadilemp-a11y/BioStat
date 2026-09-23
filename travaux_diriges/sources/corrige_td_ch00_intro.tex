@@ -1,0 +1,128 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 00}{Introduction aux Biostatistiques \& Rappels Fondamentaux}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Typologie des Variables en Biochimie Clinique}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Nature exacte des variables :}
+  \begin{itemize}
+    \item \textbf{Sexe du patient :} Variable \textbf{qualitative nominale} binaire (deux modalités non hiérarchisées : Masculin / Féminin).
+    \item \textbf{Triglycérides (g/L) :} Variable \textbf{quantitative continue} (résultat de mesure biochimique sur une échelle d'intervalles/ratios réels).
+    \item \textbf{Stade de fibrose hépatique (F0 à F4) :} Variable \textbf{qualitative ordinale} (il existe un ordre biologique strict de sévérité, mais la distance entre F0 et F1 n'est pas nécessairement égale à celle entre F3 et F4).
+    \item \textbf{Nombre d'épisodes d'ictère :} Variable \textbf{quantitative discrète} (valeurs entières $\in \mathbb{N}$ issues d'un décompte).
+    \item \textbf{Absorbance à $540\,\text{nm}$ :} Variable \textbf{quantitative continue} (mesure optique continue, échelle continue positive).
+    \item \textbf{Polymorphisme \textit{PNPLA3} :} Variable \textbf{qualitative nominale} (ou ordinale si codée par le nombre d'allèles mutés 0, 1, 2).
+  \end{itemize}
+
+  \item \textbf{Indicateurs statistiques recommandés :}
+  \begin{itemize}
+    \item \textit{Variables qualitatives (Sexe, Stades, Génotypes) :} Mode et pourcentages (fréquences relatives). Pour le stade ordinale, la \textbf{Médiane} et les rangs sont appropriés.
+    \item \textit{Variables quantitatives continues symétriques/normales :} \textbf{Moyenne $\pm$ Écart-type ($SD$)}.
+    \item \textit{Variables quantitatives asymétriques ou avec outliers (ex: épisodes d'ictère, triglycérides) :} \textbf{Médiane [Intervalle Interquartile $Q_1 - Q_3$]}.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Variabilité Expérimentale \& Mesures de Dispersion}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calculs pas-à-pas ($N = 6$) :}
+  \begin{itemize}
+    \item Somme des valeurs : $\sum x_i = 38.2 + 41.5 + 39.8 + 42.0 + 37.5 + 41.0 = 240.0\,\text{g/L}$.
+    \item \textbf{Moyenne empirique :} $\bar{x} = \frac{240.0}{6} = \mathbf{40.00\,\text{g/L}}$.
+    \item Écarts à la moyenne $(x_i - \bar{x})$ : $-1.8, \, +1.5, \, -0.2, \, +2.0, \, -2.5, \, +1.0$.
+    \item Carrés des écarts $(x_i - \bar{x})^2$ : $3.24 + 2.25 + 0.04 + 4.00 + 6.25 + 1.00 = 16.78$.
+    \item \textbf{Variance sans biais ($s^2$) :} $s^2 = \frac{\sum (x_i - \bar{x})^2}{N - 1} = \frac{16.78}{5} = \mathbf{3.356\,(\text{g/L})^2}$.
+    \item \textbf{Écart-type ($s$) :} $s = \sqrt{3.356} = \mathbf{1.832\,\text{g/L}}$.
+  \end{itemize}
+
+  \item \textbf{Coefficient de variation ($CV$) :}
+  \begin{equation*}
+    CV = \frac{s}{\bar{x}} \times 100 = \frac{1.832}{40.00} \times 100 = \mathbf{4.58\%}
+  \end{equation*}
+  Puisque $CV = 4.58\% < 5\%$, la méthode satisfait le critère usuel de répétabilité en biochimie clinique.
+
+  \item \textbf{Différence $N$ vs $N-1$ (Correction de Bessel) :}
+  La division par $N$ sous-estime systématiquement la variance de la population car les écarts sont calculés par rapport à la moyenne de l'échantillon $\bar{x}$ (qui minimise mathématiquement la somme des carrés) et non par rapport à la vraie moyenne inconnue $\mu$. Diviser par $N-1$ (les degrés de liberté restants) compense exactement ce biais.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : SD versus SEM \& Intervalle de Confiance à 95\%}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Erreur standard de la moyenne ($SEM$) :}
+  \begin{equation*}
+    SEM = \frac{s}{\sqrt{N}} = \frac{20.0}{\sqrt{25}} = \frac{20.0}{5} = \mathbf{4.00\,\text{U/mg}}
+  \end{equation*}
+
+  \item \textbf{Différence biologique fondamentale :}
+  \begin{itemize}
+    \item \textbf{Écart-type ($SD = 20.0$) :} Mesure la \textbf{dispersion biologique réelle} des individus autour de la moyenne. Il ne diminue pas lorsque la taille d'échantillon augmente.
+    \item \textbf{Erreur standard ($SEM = 4.0$) :} Mesure la \textbf{précision de l'estimation de la moyenne}. C'est une métrique d'inférence. L'utiliser abusivement pour faire paraître les barres d'erreur plus petites est une pratique trompeuse très fréquente en biologie.
+  \end{itemize}
+
+  \item \textbf{Intervalle de Confiance à 95\% :}
+  \begin{align*}
+    \text{IC}_{95\%} &= \bar{x} \pm t_{0.05, \, 24} \times SEM \\
+    &= 142.0 \pm (2.064 \times 4.00) = 142.0 \pm 8.26 = \mathbf{[133.74 \,;\, 150.26]\,\text{U/mg}}
+  \end{align*}
+  \textit{Interprétation :} Si nous répétions cette expérience 100 fois dans les mêmes conditions, 95\% des intervalles calculés contiendraient la vraie moyenne biologique $\mu$ de la population.
+
+  \item \textbf{Effet de $N = 100$ :}
+  $SEM_{100} = \frac{20}{\sqrt{100}} = 2.0\,\text{U/mg}$ (divisé par 2). L'intervalle de confiance devient deux fois plus étroit, illustrant le gain de précision lié à la taille d'échantillon.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Logique du Test d'Hypothèse \& Démystification de la $p$-value}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Formulation des hypothèses :}
+  \begin{itemize}
+    \item $H_0$ (Hypothèse nulle) : $\mu_1 = \mu_2$ (l'extrait végétal n'a aucun effet hypoglycémiant ; la différence constatée est purement due aux fluctuations d'échantillonnage).
+    \item $H_1$ (Hypothèse alternative bilatérale) : $\mu_1 \neq \mu_2$ (l'extrait modifie significativement la glycémie).
+  \end{itemize}
+
+  \item \textbf{Définition probabiliste exacte de $p = 0.0042$ :}
+  C'est la probabilité d'observer une différence de moyenne au moins aussi grande que celle constatée ($|3.20 - 2.65| = 0.55\,\text{g/L}$), \textbf{sous l'hypothèse stricte que le traitement n'a aucun effet ($H_0$ vraie)}.
+  $p = P(\text{Données observées ou plus extrêmes} \mid H_0 \text{ est vraie}) = 0.0042$.
+
+  \item \textbf{Pourquoi l'affirmation 99.58\% est fausse :}
+  La $p$-value n'est \textbf{PAS} la probabilité que $H_0$ ou $H_1$ soit vraie ($P(H_0 \mid \text{Données}) \neq P(\text{Données} \mid H_0)$). Confondre les deux est l'erreur du procureur (inversion conditionnelle). Pour calculer la probabilité d'efficacité, il faudrait une approche bayésienne avec une probabilité a priori.
+
+  \item \textbf{Conclusion biologique :}
+  Puisque $p = 0.0042 < \alpha = 0.05$, on \textbf{rejette l'hypothèse nulle $H_0$}. L'extrait végétal induit une diminution statistiquement significative de la glycémie ($p < 0.01$).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Contrôle de Normalité \& Détection d'Outliers}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calcul des quartiles sur les données ordonnées ($N=8$) :}
+  Données triées : $21.8, \quad 22.1, \quad 22.5, \quad 22.9, \quad 23.0, \quad 23.4, \quad 24.1, \quad 48.7$.
+  \begin{itemize}
+    \item \textbf{Médiane} (moyenne des 4\textsuperscript{e} et 5\textsuperscript{e} valeurs) : $\frac{22.9 + 23.0}{2} = \mathbf{22.95\%}$.
+    \item \textbf{Premier quartile $Q_1$} (médiane de la 1\textsuperscript{re} moitié) : $\frac{22.1 + 22.5}{2} = \mathbf{22.30\%}$.
+    \item \textbf{Troisième quartile $Q_3$} (médiane de la 2\textsuperscript{de} moitié) : $\frac{23.4 + 24.1}{2} = \mathbf{23.75\%}$.
+    \item \textbf{Écart interquartile ($IQR$)} : $IQR = Q_3 - Q_1 = 23.75 - 22.30 = \mathbf{1.45\%}$.
+  \end{itemize}
+
+  \item \textbf{Règle de Tukey pour les barrières d'outliers :}
+  \begin{itemize}
+    \item Barrière inférieure : $Q_1 - 1.5 \times IQR = 22.30 - (1.5 \times 1.45) = 22.30 - 2.175 = \mathbf{20.125\%}$.
+    \item Barrière supérieure : $Q_3 + 1.5 \times IQR = 23.75 + 2.175 = \mathbf{25.925\%}$.
+  \end{itemize}
+  La valeur $48.7\%$ est très largement supérieure à $25.925\%$ : \textbf{c'est formellement une valeur aberrante extrême (outlier)}.
+
+  \item \textbf{Attitude scientifique du biochimiste :}
+  Ne jamais supprimer une valeur sans traçabilité !
+  \begin{enumerate}
+    \item Vérifier le cahier de laboratoire (erreur de pipetage, bulle d'air dans la cuve spectrophotométrique, turbidité anormale).
+    \item Si une erreur technique avérée est identifiée, la valeur peut être écartée en documentant la raison.
+    \item Si aucune erreur technique n'est trouvée, présenter les analyses avec et sans cette observation (analyse de sensibilité).
+  \end{enumerate}
+
+  \item \textbf{Test non-paramétrique alternatif :}
+  En cas de non-normalité ou d'outlier non éliminable, le \textbf{test $U$ de Mann-Whitney} (ou test des rangs de Wilcoxon pour séries indépendantes) doit être utilisé à la place du test $t$ de Student.
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

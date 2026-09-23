@@ -1,0 +1,104 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 04}{Régression Non Linéaire en Biochimie}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Cinétique de Michaelis-Menten \& Dérive de Lineweaver-Burk}
+La cinétique d'hydrolyse du $p$-nitrophénylphosphate ($p\text{NPP}$) par la phosphatase alcaline est suivie à $37^\circ\text{C}$ pour 6 concentrations de substrat ($[S]$ en mM). Les vitesses initiales observées ($v$, en $\mu\text{mol}\cdot\text{min}^{-1}\cdot\text{mg}^{-1}$) sont :
+\begin{center}
+  \small
+  \begin{tabular}{lcccccc}
+    \toprule
+    $[S]$ (mM) & 0.20 & 0.50 & 1.00 & 2.50 & 5.00 & 10.00 \\
+    \midrule
+    $v$ ($\mu\text{mol}\cdot\text{min}^{-1}\cdot\text{mg}^{-1}$) & 8.5 & 16.2 & 23.8 & 32.1 & 36.8 & 39.5 \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Rappelez l'équation hyperbolique de Michaelis-Menten reliant $v$ à $[S]$, $V_{max}$ et $K_m$.
+  \item Donnez l'équation de la linéarisation de Lineweaver-Burk (double réciproque) : $\frac{1}{v} = f\left(\frac{1}{[S]}\right)$.
+  \item Calculez les valeurs de $1/[S]$ et $1/v$ pour le premier point ($[S] = 0.20$) et le dernier point ($[S] = 10.00$).
+  \item Expliquez pourquoi la linéarisation de Lineweaver-Burk viole gravement l'hypothèse d'homoscédasticité de Gauss-Markov et amplifie démesurément l'erreur expérimentale sur les faibles concentrations de substrat. Pourquoi les revues modernes exigent-elles l'ajustement non linéaire direct (NLLS) ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Ajustement Non Linéaire Direct (NLLS) \& Algorithme de Levenberg-Marquardt}
+Pour ajuster directement l'équation hyperbolique sur les données brutes sans transformation réciproque, le biologiste utilise la méthode des Moindres Carrés Non Linéaires (NLLS) via la fonction \texttt{curve\_fit} sous Python.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Quelle quantité mathématique $\chi^2 = \sum [v_i - f([S]_i; V_{max}, K_m)]^2$ l'algorithme cherche-t-il à minimiser ?
+  \item L'algorithme de Levenberg-Marquardt combine astucieusement deux approches mathématiques : la méthode de descente de gradient (Steepest Descent) et la méthode de Gauss-Newton. Quel est le rôle respectif de chacune ?
+  \item Si l'ajustement NLLS fournit les estimations suivantes :
+  \begin{equation*}
+    \hat{V}_{max} = 43.82 \pm 0.74\,\mu\text{mol}\cdot\text{min}^{-1}\cdot\text{mg}^{-1}, \qquad \hat{K}_m = 0.842 \pm 0.045\,\text{mM}
+  \end{equation*}
+  Calculez l'Intervalle de Confiance à 95\% de $K_m$ ($df = n - 2 = 4$, avec $t_{0.05, \, 4} = 2.776$).
+  \item Quelle est la signification biochimique de $K_m$ ? Une mutation enzymatique qui fait passer $K_m$ de $0.84\,\text{mM}$ à $5.20\,\text{mM}$ traduit-elle une hausse ou une perte d'affinité pour le substrat ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Coopérativité Allostérique \& Modélisation par l'Équation de Hill}
+La Phosphofructokinase-1 (PFK-1), enzyme régulatrice clé de la glycolyse, présente une cinétique sigmoïde en présence d'ATP. Sa vitesse initiale $v$ obéit au modèle de Hill :
+\begin{equation*}
+  v = \frac{V_{max} \cdot [S]^{n_H}}{K_{0.5}^{n_H} + [S]^{n_H}}
+\end{equation*}
+L'ajustement expérimental chez des hépatocytes de rat fournit : $\hat{V}_{max} = 120\,\text{U/mg}$, $\hat{K}_{0.5} = 1.80\,\text{mM}$ et un coefficient de Hill $\hat{n}_H = 2.85 \pm 0.15$.
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Quelle est l'interprétation biologique d'un coefficient de Hill $n_H > 1$ ? Qu'aurait signifié $n_H = 1$ et $n_H < 1$ ?
+  \item Calculez la vitesse initiale prédite à $[S] = 0.90\,\text{mM}$ (demi-$K_{0.5}$) et à $[S] = 1.80\,\text{mM}$ ($[S] = K_{0.5}$).
+  \item Pourquoi une cinétique sigmoïde permet-elle à l'hépatocyte de réagir comme un « interrupteur biochimique ultrasensible » face à de faibles variations physiologiques de substrat ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Dosage Immunologique ELISA \& Modèle Sigmoïde Logistique 4PL}
+Pour doser l'interleukine-6 (IL-6, pg/mL) dans le sérum de patients inflammatoires, la gamme étalon ELISA est modélisée par une régression logistique à 4 paramètres (4PL) :
+\begin{equation*}
+  y = D + \frac{A - D}{1 + \left(\frac{x}{C}\right)^B}
+\end{equation*}
+Les paramètres estimés par NLLS sont :
+\begin{itemize}
+  \item $A = 0.045\,\text{OD}$ (Asymptote inférieure / bruit de fond optique)
+  \item $D = 2.450\,\text{OD}$ (Asymptote supérieure / saturation du chromogène)
+  \item $C = 62.5\,\text{pg/mL}$ (Point d'inflexion / concentration médiane $EC_{50}$)
+  \item $B = 1.15$ (Facteur de pente de Hill)
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Un sérum de patient donne une absorbance $y = 1.2475\,\text{OD}$ (valeur exactement à mi-chemin entre $A$ et $D$). Déterminez sans calcul complexe la concentration en IL-6 de ce patient.
+  \item Donnez l'équation analytique inverse permettant de calculer la concentration $x$ pour n'importe quelle absorbance observée $y \in ]A, D[$ :
+  \begin{equation*}
+    x = C \cdot \left(\frac{A - y}{y - D}\right)^{1/B}
+  \end{equation*}
+  \item Pour un patient présentant une absorbance $y = 0.650\,\text{OD}$, calculez sa concentration sérique en IL-6.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Sélection de Modèles par les Critères d'Akaike (AIC) et BIC}
+Pour modéliser l'inhibition d'une kinase d'intérêt thérapeutique par une molécule candidate, deux modèles concurrents sont testés sur $N = 18$ points expérimentaux :
+\begin{itemize}
+  \item \textbf{Modèle 1 (Inhibition Compétitive simple) :} $p_1 = 2$ paramètres ($V_{max}, K_m$), Somme des Carrés Résiduels $\text{SCR}_1 = 4.250$.
+  \item \textbf{Modèle 2 (Inhibition Mixte / Allostérique) :} $p_2 = 3$ paramètres ($V_{max}, K_m, \alpha$), Somme des Carrés Résiduels $\text{SCR}_2 = 2.110$.
+\end{itemize}
+Le critère d'information d'Akaike corrigé pour petits échantillons est donné par :
+\begin{equation*}
+  \text{AICc} = N \cdot \ln\left(\frac{\text{SCR}}{N}\right) + 2p + \frac{2p(p+1)}{N - p - 1}
+\end{equation*}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez $\text{AICc}_1$ pour le Modèle 1.
+  \item Calculez $\text{AICc}_2$ pour le Modèle 2.
+  \item Déterminez la différence $\Delta\text{AICc} = \text{AICc}_1 - \text{AICc}_2$. Quel modèle doit être retenu par le biochimiste ?
+  \item Expliquez le principe du « rasoir d'Ockham » incarné par les critères AIC et BIC : pourquoi pénalisent-ils l'ajout de paramètres supplémentaires ?
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

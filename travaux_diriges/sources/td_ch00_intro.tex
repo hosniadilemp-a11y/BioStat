@@ -1,0 +1,87 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 00}{Introduction aux Biostatistiques \& Rappels Fondamentaux}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Typologie des Variables en Biochimie Clinique}
+Dans le cadre d'un bilan métabolique réalisé sur une cohorte de 60 patients suivis pour stéatose hépatique, l'équipe hospitalière relève les paramètres suivants :
+\begin{enumerate}
+  \item Le sexe du patient (Masculin / Féminin).
+  \item La concentration sérique en triglycérides (en g/L).
+  \item Le stade de fibrose hépatique évalué par biopsie (F0 : absence, F1 : minime, F2 : modérée, F3 : sévère, F4 : cirrhose).
+  \item Le nombre d'épisodes d'ictère enregistrés au cours des 5 dernières années.
+  \item L'absorbance spectrophotométrique à $540\,\text{nm}$ lors du dosage colorimétrique de la bilirubine.
+  \item La présence ou absence de la mutation polymorphique du gène \textit{PNPLA3} (Sauvage / Hétérozygote / Homozygote muté).
+\end{enumerate}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Pour chacune de ces 6 variables, précisez sa nature exacte : qualitative (nominale ou ordinale) ou quantitative (discrète ou continue).
+  \item Précisez pour chaque variable l'indicateur de tendance centrale (Moyenne, Médiane, Mode) et de dispersion (Écart-type, Écart interquartile) le plus pertinent à calculer.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Variabilité Expérimentale \& Mesures de Dispersion (Albumine Sérique)}
+Le dosage de la concentration sérique en albumine (en g/L) a été réalisé en sextuplicat ($N = 6$ réplicats biologiques indépendants) chez des rats témoins sains :
+\begin{center}
+  \textbf{Valeurs observées :} \quad $38.2, \quad 41.5, \quad 39.8, \quad 42.0, \quad 37.5, \quad 41.0 \quad (\text{en g/L})$
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la moyenne empirique $\bar{x}$, la variance corrigée $s^2$ et l'écart-type $s$ de cet échantillon.
+  \item Déterminez le coefficient de variation ($CV = s / \bar{x} \times 100$). Ce dosage présente-t-il une bonne répétabilité analytique (critère usuel : $CV < 5\%$) ?
+  \item Expliquez la différence fondamentale entre la variance brute ($N$ au dénominateur) et la variance d'échantillon sans biais ($N-1$ au dénominateur).
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : SD versus SEM \& Intervalle de Confiance à 95\%}
+Une équipe étudie l'activité spécifique de la catalase érythrocytaire (en U/mg de protéine) chez des sujets exposés à un polluant environnemental.
+\begin{itemize}
+  \item Sur un groupe de $N = 25$ patients, la moyenne observée est $\bar{x} = 142.0\,\text{U/mg}$ avec un écart-type $s = 20.0\,\text{U/mg}$.
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez l'erreur standard de la moyenne ($SEM = s / \sqrt{N}$).
+  \item Quelle est la différence biologique majeure entre rapporter un résultat sous la forme $\bar{x} \pm SD$ versus $\bar{x} \pm SEM$ ? Lequel reflète la variabilité biologique des patients ?
+  \item En supposant la distribution normale, calculez l'Intervalle de Confiance à 95\% (IC 95\%) de la moyenne vraie de la population ($\mu$) sachant que $t_{0.05, \, 24} = 2.064$.
+  \item Si l'équipe avait mesuré $N = 100$ patients avec la même dispersion ($s=20.0$), quelle aurait été la nouvelle valeur du $SEM$ et comment évoluerait la largeur de l'IC 95\% ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Logique du Test d'Hypothèse \& Démystification de la $p$-value}
+Un extrait aqueux de plante médicinale est testé pour son potentiel hypoglycémiant chez le rat rendu diabétique.
+\begin{itemize}
+  \item La glycémie moyenne du groupe non traité (Témoin, $N_1 = 10$) est de $3.20\,\text{g/L}$ ($s_1 = 0.40$).
+  \item Le groupe recevant l'extrait ($N_2 = 10$) présente une glycémie moyenne de $2.65\,\text{g/L}$ ($s_2 = 0.35$).
+  \item Le test $t$ de Student bilatéral fournit une $p$-value de $p = 0.0042$.
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Formulez clairement l'hypothèse nulle ($H_0$) et l'hypothèse alternative ($H_1$).
+  \item Que signifie précisément l'affirmation « $p = 0.0042$ » ? Donnez sa définition probabiliste rigoureuse.
+  \item Est-il exact de dire que « l'extrait a 99.58\% de chances d'être efficace » ? Expliquez pourquoi cette interprétation est erronée.
+  \item Au seuil de risque $\alpha = 0.05$, quelle conclusion biologique et statistique doit-on formuler ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Contrôle de Normalité \& Détection d'Outliers}
+Lors d'une cinétique d'hémolyse induite par un détergent, les pourcentages d'hémolyse mesurés sur 8 tubes préparés identiquement sont :
+\begin{center}
+  $22.1, \quad 23.4, \quad 21.8, \quad 22.9, \quad 48.7, \quad 24.1, \quad 23.0, \quad 22.5 \quad (\%)$
+\end{center}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Déterminez la médiane, le premier quartile ($Q_1$), le troisième quartile ($Q_3$) et l'écart interquartile ($IQR = Q_3 - Q_1$).
+  \item Appliquez la règle de Tukey pour identifier les valeurs aberrantes (outliers) : $[Q_1 - 1.5 \cdot IQR, \, Q_3 + 1.5 \cdot IQR]$. La valeur $48.7\%$ est-elle un outlier ?
+  \item Quelle attitude le biochimiste doit-il adopter face à cette valeur aberrante avant de décider de la conserver ou de l'exclure ?
+  \item Si l'échantillon ne suit pas une loi normale, quel test d'hypothèse non-paramétrique doit remplacer le test $t$ de Student pour comparer deux groupes ?
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

@@ -1,0 +1,109 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 07}{Interprétation d'une Analyse Expérimentale, DoE \& Bonnes Pratiques}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Calcul de Puissance Statistique ($1-\beta$) \& Détermination d'Effectif ($N$)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Taille d'effet de Cohen ($d$) :}
+  \begin{equation*}
+    d = \frac{|\mu_1 - \mu_2|}{s} = \frac{|8.5 - 6.5|}{2.0} = \frac{2.0}{2.0} = \mathbf{1.00}
+  \end{equation*}
+  Selon la classification de Cohen ($0.2$ : faible, $0.5$ : modéré, $0.8$ : fort), un $d = 1.00$ correspond à un **effet biologique de grande amplitude** (la différence entre groupes est égale à un écart-type entier de dispersion).
+
+  \item \textbf{Nombre d'animaux requis par groupe ($n$) :}
+  Avec $\alpha = 0.05$ bilatéral ($Z_{\alpha/2} = 1.960$) et $1 - \beta = 0.80$ ($Z_\beta = 0.842$) :
+  \begin{equation*}
+    n = \frac{2 \cdot (1.960 + 0.842)^2}{1.00^2} = \frac{2 \cdot (2.802)^2}{1.00} = 2 \times 7.851 = 15.7 \approx \mathbf{16\text{ rats par groupe}}
+  \end{equation*}
+  Il faut donc au minimum **16 animaux par groupe** (soit 32 rats au total) pour avoir 80\% de chances de détecter cette réduction significative du MDA.
+
+  \item \textbf{Conséquence d'un sous-dimensionnement à $n = 3$ :}
+  Avec $n = 3$ et $d = 1.0$, la valeur du paramètre non central est $\delta = d \sqrt{n/2} = 1.0 \times \sqrt{1.5} \approx 1.22$. La puissance statistique réelle tombe en dessous de **$20\%$**.
+  \par Il y a plus de 4 chances sur 5 ($> 80\%$) de conclure faussement à l'absence d'effet du traitement (erreur de type II / faux négatif), gaspillant inutilement des animaux et du temps de recherche.
+
+  \item \textbf{La malédiction du vainqueur (\textit{Winner's Curse}) :}
+  Dans une étude sous-puissante (puissance $20\%$), une différence ne peut franchir le seuil $p < 0.05$ que si, par pur hasard d'échantillonnage, la différence observée dans l'échantillon est beaucoup plus grande que la vraie différence de la population. L'effet publié est donc systématiquement **exagéré de 2 à 4 fois** par rapport à la réalité biologique. Lorsque d'autres laboratoires tentent de reproduire l'expérience avec des effectifs adéquats, l'effet s'effondre (crise de réplication).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Détection des Pratiques Douteuses ($p$-hacking, HARKing, Arrêt Précoce)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Inflation du risque de faux positif ($\alpha_{\text{global}}$) :}
+  \begin{equation*}
+    \alpha_{\text{global}} = 1 - (1 - 0.05)^{20} = 1 - (0.95)^{20} = 1 - 0.3585 = \mathbf{0.6415} \quad (\mathbf{64.15\%})
+  \end{equation*}
+  En testant 20 paramètres sans correction, il y a **près de 2 chances sur 3** de découvrir au moins une variable faussement significative ($p < 0.05$) sur du pur bruit aléatoire !
+
+  \item \textbf{Le HARKing (\textit{Hypothesizing After Results are Known}) :}
+  Consiste à présenter une observation fortuite découverte lors de l'exploration des données comme si elle résultait d'une hypothèse formulée \textit{a priori}.
+  \par *Danger :* Cette pratique transforme une fluctuation aléatoire en fausse théorie physiologique. Elle induit en erreur la communauté scientifique qui consacrera des années de travail à tenter d'élucider un mécanisme moléculaire inexistant.
+
+  \item \textbf{Biais d'arrêt précoce (\textit{Data Peeking}) :}
+  Vérifier la significativité de manière séquentielle après chaque sujet et stopper l'expérience dès que $p < 0.05$ gonfle le risque $\alpha$ réel de 5\% à plus de **25--30\%**. La trajectoire d'une $p$-value fluctue aléatoirement et finira presque toujours par traverser le seuil $0.05$ à un moment donné.
+
+  \item \textbf{Ajustement pour tests multiples :}
+  \begin{itemize}
+    \item **Correction de Bonferroni :** Seuil ajusté très strict $\alpha' = \frac{0.05}{20} = 0.0025$.
+    \item **Procédure de Benjamini-Hochberg (FDR) :** Contrôle le taux de fausses découvertes (\textit{False Discovery Rate}), standard moderne en métabolomique et transcriptomique omique.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Transparence Graphique \& Remplacement des Barplots « Dynamite »}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Pourquoi bannir les barplots (« dynamite plots ») :}
+  Une barre pleine de hauteur $\bar{x}$ avec une tige $SD$ masque la distribution réelle des données. Elle cache la présence d'asymétrie, d'outliers majeurs et de distributions multimodales. De plus, elle gaspille de l'encre pour représenter l'espace entre 0 et le bas de la distribution au lieu de montrer les observations réelles.
+
+  \item \textbf{Illustration des deux cas avec $\bar{x} = 25, SD = 5$ :}
+  \begin{itemize}
+    \item **Cas 1 (Homogène) :** Les points s'échelonnent régulièrement entre 18 et 32. La moyenne résume fidèlement la population.
+    \item **Cas 2 (Bimodal) :** La moitié des animaux est à 15 (non-répondeurs) et l'autre moitié est à 35 (répondeurs complets). Aucun animal n'a une valeur proche de 25 ! Le barplot présente une « moyenne » fictive qui n'a aucun sens biologique, masquant une découverte médicale majeure : l'existence de deux sous-populations phénotypiques.
+  \end{itemize}
+
+  \item \textbf{Anatomie d'un Boxplot de Tukey :}
+  \begin{itemize}
+    \item **Ligne centrale :** La Médiane ($Q_2$, 50\textsuperscript{e} percentile).
+    \item **Boîte :** Délimitée par le 1\textsuperscript{er} quartile ($Q_1$, bas) et le 3\textsuperscript{e} quartile ($Q_3$, haut) ; sa hauteur représente l'écart interquartile ($IQR$).
+    \item **Moustaches :** S'étendent jusqu'à la valeur la plus éloignée dans la limite de $1.5 \times IQR$.
+    \item **Points isolés :** Toute valeur au-delà de $1.5 \times IQR$ est tracée individuellement comme outlier.
+  \end{itemize}
+
+  \item \textbf{Standard moderne (Boxplot + Scatter/Jitter plot) :}
+  Superposer chaque point expérimental individuel (avec un léger décalage horizontal aléatoire / jitter pour éviter les chevauchements) permet au relecteur de vérifier immédiatement la taille d'échantillon $N$, la dispersion et l'absence d'artefact.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Audit de Conformité aux Directives SAMPL \& ARRIVE 2.0}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Manquements selon le guide SAMPL :}
+  \begin{enumerate}
+    \item Aucun test statistique nommé (Student ? ANOVA ? Test non-paramétrique ?).
+    \item Aucune métrique de dispersion fournie (ni Moyenne $\pm$ SD, ni Médiane).
+    \item Aucune indication sur la vérification de la normalité ou de l'homogénéité des variances.
+    \item Absence de $p$-value exacte (seuil vague « $p < 0.05$ » sans intervalle de confiance ni taille d'effet).
+  \end{enumerate}
+
+  \item \textbf{Manquements selon les directives ARRIVE 2.0 :}
+  \begin{itemize}
+    \item Aucune précision sur l'effectif animal ($N$ par groupe non précisé).
+    \item Méthode de randomisation non décrite (simple tirage au sort ? blocs ?).
+    \item Absence de mention de mise en aveugle (\textit{blinding}) lors des injections et mesures.
+    \item Aucune justification éthique du calcul d'effectif selon la règle des 3R.
+  \end{itemize}
+
+  \item \textbf{Nécessité de la $p$-value exacte et de la taille d'effet :}
+  La notation $p < 0.05$ masque la force de la preuve ($p = 0.049$ est marginal, alors que $p = 0.0002$ est hautement concluant). De plus, avec un échantillon immense, un effet minuscule sans pertinence biologique peut être « $p < 0.05$ ». Seules la taille d'effet et son intervalle de confiance à 95\% permettent de juger de la portée thérapeutique réelle.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Rédaction d'un Paragraphe « Analyses Statistiques » pour Mémoire}
+\begin{tcolorbox}[colback=BioNavyLight, colframe=BioNavy, title={\faEdit\quad Modèle de Rédaction Conforme aux Standards Internationaux}, width=\linewidth, boxrule=0.8pt]
+\small
+\textit{« Les données quantitatives sont présentées sous forme de Moyenne $\pm$ Écart-Type ($SD$) pour $N = 6$ réplicats biologiques indépendants par groupe. La normalité des distributions a été confirmée à l'aide du test de Shapiro-Wilk et l'homogénéité des variances par le test de Levene. Les concentrations en protéines ont été déterminées par régression linéaire des moindres carrés ordinaires ($R^2 \ge 0.995$). Les effets du statut génétique, du traitement antioxydant et de leur interaction potentielle sur la peroxydation lipidique (MDA) ont été évalués par une analyse de variance (ANOVA) à deux facteurs croisés équilibrée. En cas d'effet ou d'interaction statistiquement significatif, les comparaisons multiples entre moyennes de groupes ont été effectuées par le test post-hoc de Tukey HSD en contrôlant le taux d'erreur par famille à 5\%. L'exploration non supervisée du profil métabolomique a été réalisée par Analyse en Composantes Principales (ACP) normée sur données centrées-réduites ($Z$-scores). Les différences ont été considérées comme statistiquement significatives pour une valeur bilatérale de $p < 0.05$. L'ensemble des analyses biostatistiques et des représentations graphiques (boxplots avec superposition des données individuelles) a été exécuté sous environnement Python 3.11 avec les bibliothèques SciPy (v1.11), Statsmodels (v0.14), Scikit-Learn (v1.3) et Seaborn (v0.13). »}
+\end{tcolorbox}
+\end{solutionbox}
+
+\end{document}

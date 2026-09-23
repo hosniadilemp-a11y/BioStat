@@ -1,0 +1,87 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Travaux Dirigés : Série 07}{Interprétation d'une Analyse Expérimentale, DoE \& Bonnes Pratiques}{\textcolor{BioNavy}{\textbf{SÉRIE D'EXERCICES}}}
+
+\begin{exercicebox}{Exercice 1 : Calcul de Puissance Statistique ($1-\beta$) \& Détermination d'Effectif ($N$)}
+Une équipe de biochimie souhaite tester l'effet hépatoprotecteur d'une nouvelle molécule antioxydante chez le rat.
+D'après les données de la littérature :
+\begin{itemize}
+  \item Le taux moyen de MDA hépatique chez les animaux témoins est $\mu_1 = 8.5\,\mu\text{mol/g}$, avec un écart-type $s = 2.0\,\mu\text{mol/g}$.
+  \item L'équipe considère qu'une baisse du MDA à $\mu_2 = 6.5\,\mu\text{mol/g}$ ($\Delta = 2.0\,\mu\text{mol/g}$) représente une amélioration biologique cliniquement pertinente.
+  \item Le risque d'erreur de première espèce est fixé à $\alpha = 0.05$ (test bilatéral, $Z_{\alpha/2} = 1.960$).
+  \item La puissance statistique souhaitée est de $1 - \beta = 80\%$ ($Z_\beta = 0.842$).
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la taille d'effet standardisée ($d$ de Cohen) : $d = \frac{|\mu_1 - \mu_2|}{s}$. S'agit-il d'un effet faible ($0.2$), modéré ($0.5$) ou fort ($0.8$) ?
+  \item Calculez le nombre d'animaux requis par groupe ($n$) selon la formule standard :
+  \begin{equation*}
+    n = \frac{2 \cdot (Z_{\alpha/2} + Z_\beta)^2}{d^2}
+  \end{equation*}
+  \item Si l'expérimentateur décide arbitrairement de n'utiliser que $n = 3$ rats par groupe (pour économiser des animaux), quelle sera approximativement la puissance statistique de son étude ($< 25\%$) ?
+  \item Expliquez le concept de la « malédiction du vainqueur » (\textit{winner's curse}) : pourquoi les rares études sous-dimensionnées qui franchissent par hasard le seuil $p < 0.05$ surestiment-elles dramatiquement l'efficacité réelle du traitement ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 2 : Détection des Pratiques Douteuses ($p$-hacking, HARKing, Arrêt Précoce)}
+Dans un laboratoire de recherche, un jeune chercheur teste l'effet d'une cytokine sur 20 paramètres métaboliques chez 8 souris traitées et 8 souris témoins.
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Si les 20 paramètres sont testés indépendamment par des tests $t$ au seuil $\alpha = 0.05$, quelle est la probabilité d'obtenir au moins un résultat « significatif » par pur hasard sous $H_0$ : $\alpha_{\text{global}} = 1 - (1 - 0.05)^{20}$ ?
+  \item Le chercheur constate que seule la variable n°14 a un $p = 0.038$. Il décide d'écrire son article en faisant comme si cette variable était son unique hypothèse de départ. Quel nom donne-t-on à cette pratique trompeuse (HARKing) et quel est son danger ?
+  \item Un autre chercheur analyse ses données après 4 souris : $p = 0.08$. Il ajoute 2 souris : $p = 0.06$. Il ajoute 2 souris : $p = 0.045$, et s'arrête immédiatement en publiant. Quel est le biais d'« arrêt précoce » (\textit{data peeking}) ?
+  \item Quelle correction classique (Bonferroni ou Benjamini-Hochberg FDR) doit être appliquée lorsqu'on analyse simultanément de multiples métabolites ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 3 : Transparence Graphique \& Remplacement des Barplots « Dynamite »}
+Pendant des décennies, la littérature biologique a représenté les données quantitatives sous forme d'histogrammes en barres pleines surmontées d'une barre d'erreur (« dynamite plots »).
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Pour quelles raisons scientifiques majeures les revues internationales de premier rang (\textit{Nature}, \textit{Cell}, \textit{PLOS Biology}) interdisent-elles désormais les barplots pour les échantillons continus de petite taille ($n < 30$) ?
+  \item Montrez qu'une barre pleine avec $\bar{x} = 25$ et $SD = 5$ peut dissimuler deux distributions biologiques radicalement différentes :
+  \begin{itemize}
+    \item Cas 1 : Distribution normale symétrique homogène.
+    \item Cas 2 : Distribution bimodale (deux sous-populations distinctes : non-répondeurs à $15$ et hyper-répondeurs à $35$).
+  \end{itemize}
+  \item Quels sont les éléments anatomiques clés d'un **Boxplot de Tukey** (ligne médiane, boîte interquartile, moustaches, points aberrants) ?
+  \item Pourquoi la superposition de tous les points réels (\textit{Scatter / Jitter plot}) par-dessus le boxplot est-elle le standard absolu de transparence ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 4 : Audit de Conformité aux Directives SAMPL \& ARRIVE 2.0}
+On vous soumet pour relecture critique le paragraphe suivant extrait d'un manuscrit soumis à une revue de biochimie :
+\begin{quote}
+  \textit{« Les souris ont été divisées en lots. L'activité enzymatique a été mesurée. Les résultats montrent une augmentation significative sous traitement ($p < 0.05$). Les données ont été analysées avec le logiciel GraphPad. »}
+\end{quote}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Selon le guide **SAMPL** (Statistiques dans la littérature biomédicale), relevez au moins 4 manquements graves dans ce paragraphe.
+  \item Selon les directives **ARRIVE 2.0** (expérimentation animale \textit{in vivo}), quelles informations obligatoires sur la randomisation, la mise en aveugle et la taille des groupes font défaut ?
+  \item Pourquoi l'expression « $p < 0.05$ » doit-elle être bannie au profit de la valeur numérique exacte (ex: $p = 0.023$) et assortie de la taille d'effet et de l'intervalle de confiance à 95\% ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 5 : Rédaction d'un Paragraphe « Analyses Statistiques » pour Mémoire}
+Vous finalisez votre mémoire de Master 2 portant sur l'évaluation d'un antioxydant naturel dans un modèle de stéatose hépatique chez le rat. Votre travail combine :
+\begin{itemize}
+  \item Dosage des protéines par la méthode de Bradford (gamme étalon linéaire).
+  \item Mesure du stress oxydatif (MDA) par ANOVA à deux facteurs croisés (Statut $\times$ Traitement, $n=6$) suivie du test de Tukey HSD.
+  \item Analyse non supervisée du profil de 8 métabolites sériques par ACP normée.
+  \item Vérification de la normalité (Shapiro-Wilk) et de l'homogénéité des variances (Levene).
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Rédigez un paragraphe complet (15 à 20 lignes), rigoureux, clair et publiable pour la section « Matériels \& Méthodes » de votre mémoire.
+  \item Précisez la manière exacte dont les données seront présentées dans les tableaux et figures (ex: Moyenne $\pm$ SD ou Médiane [IQR]).
+  \item Mentionnez les outils logiciels utilisés pour le traitement des données (Python, bibliothèques scientifiques).
+\end{enumerate}
+\end{exercicebox}
+
+\end{document}

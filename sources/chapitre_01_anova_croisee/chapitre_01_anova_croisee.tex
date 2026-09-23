@@ -1,0 +1,244 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\usepackage{../common/beamer_theme_bio}
+
+\title{\textbf{Biostatistiques Appliquées}}
+\subtitle{Chapitre I : Analyse de Variance (ANOVA) à Deux Facteurs Croisés \& Interactions}
+\author{\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}}
+\institute{
+  Faculté des Sciences --- Département de Biologie\\
+  Master 2 : Biochimie Appliquée\\
+  \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
+}
+\date{Année Universitaire 2024 -- 2025}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan Détaillé du Chapitre I}
+  \tableofcontents
+\end{frame}
+
+% ========================================================
+\section{Motivation \& Concepts des Plans Factoriels}
+% ========================================================
+
+\begin{frame}{Pourquoi Passer à Deux Facteurs Simultanés ?}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{warnbox}{Le Piège du « Un Facteur à la Fois » (OFAT)}
+        Historiquement, les biologistes testaient souvent :
+        \begin{enumerate}
+          \item L'effet de la molécule antioxydante seule.
+          \item Puis l'effet de la souche de souris séparément.
+        \end{enumerate}
+        \textbf{Limites critiques :}
+        \begin{itemize}
+          \item Ignore l'effet combiné (\textbf{synergie} ou \textbf{antagonisme}).
+          \item Multiplie les tests et gonfle le risque de faux positif $\alpha$.
+          \item Coûte plus cher en animaux de laboratoire !
+        \end{itemize}
+      \end{warnbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Le Plan Factoriel Croisé}
+        Dans un \textbf{plan croisé ($A \times B$)}, chaque modalité du facteur A est testée en combinaison avec \textbf{toutes} les modalités du facteur B.
+        \begin{equation*}
+          3\ \text{Traitements} \times 2\ \text{Génotypes} = 6\ \text{Conditions}
+        \end{equation*}
+        \textbf{Bénéfice décisif :} Permet d'isoler l'effet propre de chaque facteur tout en mesurant avec exactitude leur \textbf{Interaction biologique}.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Modélisation Mathématique Approfondie}
+% ========================================================
+
+\begin{frame}{Structure Mathématique du Modèle Linéaire}
+  \begin{conceptbox}{Équation Fondamentale}
+    Pour l'individu biologique $k$ appartenant au niveau $i$ du facteur A et au niveau $j$ du facteur B :
+    \begin{equation*}
+      Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}
+    \end{equation*}
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \textbf{\color{BioNavy}Composantes Déterministes :}
+      \begin{itemize}
+        \item $\mu$ : Moyenne générale globale.
+        \item $\alpha_i$ : Effet différentiel du niveau $i$ du \textbf{Facteur A} ($\sum_{i=1}^I \alpha_i = 0$).
+        \item $\beta_j$ : Effet différentiel du niveau $j$ du \textbf{Facteur B} ($\sum_{j=1}^J \beta_j = 0$).
+        \item $(\alpha\beta)_{ij}$ : Terme d'\textbf{Interaction} spécifique ($\sum_i (\alpha\beta)_{ij} = \sum_j (\alpha\beta)_{ij} = 0$).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \textbf{\color{BioTeal}Résidu Aléatoire ($\varepsilon_{ijk}$) :}
+      \begin{equation*}
+        \varepsilon_{ijk} \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2)
+      \end{equation*}
+      Représente la somme des bruits biologiques intrinsèques et techniques non expliqués par le modèle.\\
+      \textbf{Postulats :} Normalité, indépendance et variance constante $\sigma^2$ (homoscédasticité).
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{La Notion Cruciale d'Interaction}
+% ========================================================
+
+\begin{frame}{Qu'est-ce qu'une Interaction Biologique ?}
+  \begin{conceptbox}{Définition Statistique \& Biologique}
+    Il y a \textbf{interaction} entre deux facteurs lorsque l'effet d'un facteur A sur la réponse biologique \textbf{dépend de la modalité} prise par le facteur B.
+  \end{conceptbox}
+  \begin{center}
+    \includegraphics[width=0.88\linewidth]{../figures/fig01_interaction_profiles.png}
+  \end{center}
+  \vspace{-2mm}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      {\footnotesize \textbf{À gauche (Additivité) :} Les profils sont rigoureusement parallèles. L'effet de la dose est identique chez les animaux WT et mutés.}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      {\footnotesize \textbf{À droite (Interaction) :} Les profils se croisent. La molécule est efficace chez le WT mais inactive ou toxique chez le mutant !}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La Règle d'Or d'Interprétation en Présence d'Interaction}
+  \begin{warnbox}{Ne Jamais Conclure sur les Effets Principaux si l'Interaction est Significative !}
+    Si le test de l'interaction $(\alpha\beta)_{ij}$ donne $p \le 0.05$ :
+    \begin{itemize}
+      \item Il est \textbf{scientifiquement faux} de déclarer : « Le traitement a globalement un effet significatif ».
+      \item En effet, l'effet du traitement dépend du génotype !
+    \end{itemize}
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{La Démarche Correcte : L'Analyse des Effets Simples}
+    Décomposer l'analyse globale en sous-analyses :
+    \begin{enumerate}
+      \item Tester l'effet du traitement spécifiquement chez les animaux Sauvages (WT).
+      \item Tester l'effet du traitement spécifiquement chez les animaux Modèles Diabétiques ($db/db$).
+    \end{enumerate}
+  \end{takeawaybox}
+\end{frame}
+
+% ========================================================
+\section{Partition des Variances \& Table ANOVA}
+% ========================================================
+
+\begin{frame}{Décomposition Mathématique des Sommes de Carrés}
+  \begin{equation*}
+    \mathbf{SS_{\text{Total}}} = \mathbf{SS_A} + \mathbf{SS_B} + \mathbf{SS_{AB}} + \mathbf{SS_{\text{Résiduelle}}}
+  \end{equation*}
+  \begin{table}[h]
+    \centering
+    \footnotesize
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lcccc}
+      \toprule
+      \textbf{Source de Variation} & \textbf{Degrés de liberté ($ddl$)} & \textbf{Somme des Carrés ($SS$)} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} \\
+      \midrule
+      Facteur A (Traitement) & $I - 1$ & $SS_A = JK \sum (\bar{Y}_{i\cdot\cdot} - \bar{Y})^2$ & $MS_A = \frac{SS_A}{I-1}$ & $F_A = \frac{MS_A}{MS_{\text{res}}}$ \\
+      Facteur B (Génotype) & $J - 1$ & $SS_B = IK \sum (\bar{Y}_{\cdot j\cdot} - \bar{Y})^2$ & $MS_B = \frac{SS_B}{J-1}$ & $F_B = \frac{MS_B}{MS_{\text{res}}}$ \\
+      \textbf{Interaction $A \times B$} & $(I-1)(J-1)$ & $SS_{AB} = K \sum (\bar{Y}_{ij\cdot} - \bar{Y}_{i\cdot\cdot} - \bar{Y}_{\cdot j\cdot} + \bar{Y})^2$ & $MS_{AB} = \frac{SS_{AB}}{(I-1)(J-1)}$ & \cellcolor{BioTeal!20}\textbf{$F_{AB} = \frac{MS_{AB}}{MS_{\text{res}}}$} \\
+      Résiduelle (Bruit biologique) & $IJ(K - 1)$ & $SS_{\text{res}} = \sum (Y_{ijk} - \bar{Y}_{ij\cdot})^2$ & $MS_{\text{res}} = \frac{SS_{\text{res}}}{IJ(K-1)}$ & --- \\
+      \midrule
+      \textbf{Total} & $IJK - 1$ & $SS_{\text{Total}} = \sum (Y_{ijk} - \bar{Y})^2$ & --- & --- \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{table}
+  {\scriptsize Avec $I$ : nombre de traitements, $J$ : nombre de génotypes, $K$ : nombre d'animaux par condition ($N = I \cdot J \cdot K$).}
+\end{frame}
+
+% ========================================================
+\section{Étude de Cas Réel : Péroxydation Lipidique Hépatique}
+% ========================================================
+
+\begin{frame}{Étude Préclinique sur le Stress Oxydatif Hépatique}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Contexte Expérimental}
+        On étudie l'effet protecteur d'un polyphénol extrait de plante sur le taux hépatique de **Malondialdéhyde (MDA)** :
+        \begin{itemize}
+          \item \textbf{Facteur A (Traitement) :} Témoin, Dose $50\,\text{mg/kg}$, Dose $100\,\text{mg/kg}$ ($I = 3$).
+          \item \textbf{Facteur B (Génotype) :} Souris Sauvages WT vs Diabétiques $db/db$ ($J = 2$).
+          \item $K = 5$ souris par groupe ($N = 30$ animaux).
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \includegraphics[width=\linewidth]{../figures/fig01_mda_two_way_anova.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Table Numérique ANOVA \& Interprétation Biologique}
+  \begin{table}[h]
+    \centering
+    \small
+    \begin{tabular}{lccccc}
+      \toprule
+      \textbf{Source de Variation} & \textbf{$ddl$} & \textbf{Somme des Carrés ($SS$)} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$p$-value} \\
+      \midrule
+      Traitement (A) & 2 & 142.30 & 71.15 & 35.58 & $< 0.0001$ \\
+      Génotype (B) & 1 & 88.50 & 88.50 & 44.25 & $< 0.0001$ \\
+      \textbf{Interaction A $\times$ B} & \textbf{2} & \textbf{31.20} & \textbf{15.60} & \textbf{7.80} & \textbf{0.0025} \\
+      Résiduelle & 24 & 48.00 & 2.00 & --- & --- \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \vspace{1mm}
+  \begin{takeawaybox}{Conclusion Scientifique \& Clinique}
+    $F_{\text{Interaction}} = 7.80$ avec $p = 0.0025 < 0.01$ :
+    \begin{itemize}
+      \item L'interaction est hautement significative !
+      \item Le test post-hoc de Tukey révèle que le polyphénol réduit le MDA de \textbf{58\% chez les souris diabétiques}, alors qu'il n'induit qu'une variation marginale non significative de 11\% chez les témoins sains.
+      \item $\implies$ \textbf{Conclusion biologique :} La molécule cible sélectivement les cascades enzymatiques pro-oxydantes dérégulées dans l'état diabétique.
+    \end{itemize}
+  \end{takeawaybox}
+\end{frame}
+
+% ========================================================
+\section{Validation des Postulats \& Tests Post-Hoc}
+% ========================================================
+
+\begin{frame}{Vérification Rigoureuse des Hypothèses du Modèle}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{1. Diagnostic des Résidus}
+        Avant de valider l'ANOVA :
+        \begin{itemize}
+          \item \textbf{Normalité des résidus :} Test de Shapiro-Wilk ($p > 0.05$) et diagramme Q-Q plot.
+          \item \textbf{Homoscédasticité :} Égalité des variances par le test de Levene ($p > 0.05$).
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{2. Choix du Test Post-Hoc}
+        \begin{itemize}
+          \item \textbf{Tukey's HSD :} Idéal pour comparer toutes les paires possibles de groupes tout en maintenant le risque $\alpha$ global à 5\%.
+          \item \textbf{Dunnett :} À choisir si toutes les comparaisons se font uniquement par rapport au groupe Véhicule/Témoin.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[plain]
+  \begin{center}
+    \vspace{1.8cm}
+    {\Huge\color{BioNavy}\textbf{Fin du Chapitre I}}\\[0.8cm]
+    {\large Prochaine étape : L'ANOVA Hiérarchisée (Plans Emboîtés)}\\[1.2cm]
+    \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
+    \small Faculté des Sciences --- Département de Biologie\\
+    \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
+  \end{center}
+\end{frame}
+
+\end{document}

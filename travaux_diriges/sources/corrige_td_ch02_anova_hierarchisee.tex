@@ -1,0 +1,131 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 02}{ANOVA Hiérarchisée (Nested ANOVA)}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Reconnaissance des Structures Emboîtées \& Pseudoréplication}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Caractère emboîté de la structure ($B \subset A$) :}
+  Le bioréacteur n°1 cultivé avec la Lignée 1 est physiquement distinct et n'a aucune relation avec le bioréacteur n°1 de la Lignée 2. Il est impossible de combiner la Lignée 1 avec les cuves de la Lignée 2 : chaque niveau du facteur B n'existe qu'\textit{à l'intérieur} d'un seul niveau du facteur A. Les facteurs ne sont donc pas croisés mais \textbf{hiérarchisés} : $B \subset A$ (« Bioréacteurs emboîtés dans Lignées »).
+
+  \item \textbf{La faute méthodologique de la pseudoréplication :}
+  Considérer $N = 24$ unités indépendantes traite les 4 flacons issus d'une même cuve comme des réplicats biologiques distincts. Or, ces 4 flacons partagent exactement le même milieu, la même température et les mêmes métabolites : ils ne sont que des **réplicats techniques** de mesure.
+  \begin{itemize}
+    \item Cette erreur gonfle artificiellement les degrés de liberté ($df = 22$ au lieu de $df = 4$).
+    \item Elle rétrécit artificiellement l'erreur standard et produit un taux de faux positifs massif ($p < 0.05$ illusoire).
+  \end{itemize}
+
+  \item \textbf{Véritable unité expérimentale indépendante :}
+  C'est le **bioréacteur** ($b = 3$ par groupe, soit $N = 6$ réplicats biologiques réels). Pour comparer les deux lignées, l'unité de randomisation et d'indépendance biologique est la cuve de culture.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Arborescence \& Calcul des Degrés de Liberté}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Description de l'arborescence :}
+  \begin{itemize}
+    \item Sommet : Expérience globale.
+    \item Niveau 1 (Facteur A) : 3 Traitements ($a = 3$).
+    \item Niveau 2 (Facteur $B \subset A$) : 4 Rats par traitement ($b = 4$, soit $3 \times 4 = 12$ rats).
+    \item Niveau 3 (Sous-échantillons) : 3 Dosages techniques par rat ($n = 3$).
+  \end{itemize}
+
+  \item \textbf{Nombre d'animaux et total de mesures :}
+  \begin{itemize}
+    \item Nombre total de rats : $a \times b = 3 \times 4 = \mathbf{12\text{ animaux}}$.
+    \item Nombre total de dosages : $N = a \times b \times n = 3 \times 4 \times 3 = \mathbf{36\text{ mesures}}$.
+  \end{itemize}
+
+  \item \textbf{Calcul des degrés de liberté ($df$) :}
+  \begin{itemize}
+    \item Effet Traitement : $df_A = a - 1 = 3 - 1 = \mathbf{2}$.
+    \item Effet Rats dans Traitements : $df_{B(A)} = a(b - 1) = 3 \times (4 - 1) = 3 \times 3 = \mathbf{9}$.
+    \item Erreur résiduelle (intra-rat) : $df_{\text{Résiduelle}} = ab(n - 1) = 3 \times 4 \times (3 - 1) = 12 \times 2 = \mathbf{24}$.
+    \item Degrés de liberté totaux : $df_{\text{Total}} = N - 1 = 36 - 1 = \mathbf{35}$.
+  \end{itemize}
+  \textit{Vérification d'additivité :} $2 + 9 + 24 = 35$.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Tableau d'ANOVA Hiérarchisée \& Calcul Complet}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Somme des Carrés Totale :}
+  $\text{SCE}_{\text{Total}} = \text{SCE}_A + \text{SCE}_{B(A)} + \text{SCE}_{\text{Résiduelle}} = 128.00 + 48.00 + 36.00 = \mathbf{212.00}$.
+
+  \item \textbf{Calcul des Carrés Moyens ($CM$) :}
+  \begin{itemize}
+    \item $df_A = a - 1 = 2 - 1 = 1 \implies CM_A = \frac{128.00}{1} = \mathbf{128.00}$.
+    \item $df_{B(A)} = a(b - 1) = 2 \times (3 - 1) = 4 \implies CM_{B(A)} = \frac{48.00}{4} = \mathbf{12.00}$.
+    \item $df_{\text{Résiduelle}} = ab(n - 1) = 2 \times 3 \times (4 - 1) = 18 \implies CM_{\text{Résiduel}} = \frac{36.00}{18} = \mathbf{2.00}$.
+  \end{itemize}
+
+  \item \textbf{Tableau d'ANOVA Hiérarchisée ($N = 24$) :}
+  \begin{center}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lcccccc}
+      \toprule
+      \textbf{Source de Variation} & \textbf{SCE} & \textbf{$df$} & \textbf{Carré Moyen ($CM$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{crit}}(5\%)$} & \textbf{Significativité} \\
+      \midrule
+      \textbf{Procédés (Facteur A)}   & 128.00 & 1  & 128.00 & $\frac{128.00}{12.00} = \mathbf{10.67}$ & $F(1, 4) = 7.71$ & $p < 0.05$ (Signif.) \\
+      \textbf{Lots dans Procédés $B(A)$} & 48.00  & 4  & 12.00  & $\frac{12.00}{2.00} = \mathbf{6.00}$   & $F(4, 18) = 2.93$ & $p < 0.01$ (Signif.) \\
+      \textbf{Résiduelle (Flacons)}   & 36.00  & 18 & 2.00   & --- & --- & --- \\
+      \midrule
+      \textbf{Total}                  & 212.00 & 23 & ---    & --- & --- & --- \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{center}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Le Choix Crucial du Dénominateur du Test $F$}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Test $F$ théoriquement valide :}
+  \begin{equation*}
+    F_{\text{obs}}(A) = \frac{CM_A}{CM_{B(A)}} = \frac{128.00}{12.00} = \mathbf{10.67}
+  \end{equation*}
+  On compare à $F_{\text{crit}}(1, 4) = 7.71$. Puisque $10.67 > 7.71$, l'effet procédé est \textbf{statistiquement significatif} au seuil $\alpha = 0.05$.
+
+  \item \textbf{Calcul avec le dénominateur erroné (pseudoréplication) :}
+  \begin{equation*}
+    F_{\text{faux}}(A) = \frac{CM_A}{CM_{\text{Résiduel}}} = \frac{128.00}{2.00} = \mathbf{64.00}
+  \end{equation*}
+  Comparé à $F_{\text{crit}}(1, 18) = 4.41$, on obtiendrait $p < 0.0001$. Le test est artificiellement gonflé d'un facteur 6 ! Dans une expérience réelle avec un effet modéré, cela conduit à déclarer « révolutionnaire » un procédé qui n'est en fait pas reproductible d'un lot à l'autre.
+
+  \item \textbf{Justification biologique :}
+  Si un nouveau procédé donne un meilleur rendement, cette supériorité doit être démontrée \textbf{par-dessus la variabilité naturelle de fabrication entre les différents lots}. Si les lots sont très hétérogènes, on ne peut pas imputer la différence au procédé. C'est donc la variance inter-lots $CM_{B(A)}$ qui constitue le bruit de fond biologique pertinent.
+
+  \item \textbf{Test de variabilité inter-lots :}
+  $F_{\text{obs}}(B(A)) = \frac{CM_{B(A)}}{CM_{\text{Résiduel}}} = \frac{12.00}{2.00} = 6.00 > F_{\text{crit}}(4, 18) = 2.93$ ($p < 0.01$).
+  Il existe une \textbf{hétérogénéité significative entre lots industriels}, confirmant la nécessité absolue de ce terme d'erreur intermédiaire.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Estimation des Composantes de la Variance \& Décision Industrielle}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Variance analytique pure ($s_e^2$) :}
+  \begin{equation*}
+    s_e^2 = CM_{\text{Résiduel}} = \mathbf{2.00}
+  \end{equation*}
+
+  \item \textbf{Variance inter-lots ($s_B^2$) :}
+  Puisque $E(CM_{B(A)}) = \sigma_e^2 + n \cdot \sigma_B^2$ avec $n = 4$ :
+  \begin{equation*}
+    s_B^2 = \frac{CM_{B(A)} - CM_{\text{Résiduel}}}{n} = \frac{12.00 - 2.00}{4} = \frac{10.00}{4} = \mathbf{2.50}
+  \end{equation*}
+
+  \item \textbf{Part de variance attribuable aux lots :}
+  \begin{equation*}
+    \% \text{ Variance Lots} = \frac{s_B^2}{s_B^2 + s_e^2} \times 100 = \frac{2.50}{2.50 + 2.00} \times 100 = \frac{2.50}{4.50} \times 100 = \mathbf{55.56\%}
+  \end{equation*}
+  Plus de $55\%$ de la variabilité non expliquée par le procédé provient de l'inconstance entre les lots de fabrication !
+
+  \item \textbf{Recommandation qualité industrielle :}
+  L'entreprise doit prioritairement **standardiser la préparation des lots de fermentation** (matières premières, ensemencement, régulation de pH/température).
+  \textit{Raisonnement :} Même avec un appareil HPLC infiniment précis ($s_e^2 \to 0$), la variance totale ne baisserait que de 44\%. En revanche, stabiliser les lots de fermentation élimine la source de dispersion prépondérante ($55.6\%$).
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

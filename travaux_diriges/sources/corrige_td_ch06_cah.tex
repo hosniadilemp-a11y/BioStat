@@ -1,0 +1,147 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 06}{Classification Ascendante Hiérarchique (CAH)}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Métriques de Distance \& Matrice de Dissimilarité (RT-qPCR)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Formules des distances :}
+  \begin{itemize}
+    \item Distance euclidienne (distance géométrique en ligne droite) : $d_E(A, B) = \sqrt{(x_{A1} - x_{B1})^2 + (x_{A2} - x_{B2})^2}$.
+    \item Distance de Manhattan (somme des valeurs absolues des écarts) : $d_M(A, B) = |x_{A1} - x_{B1}| + |x_{A2} - x_{B2}|$.
+  \end{itemize}
+
+  \item \textbf{Calcul des distances euclidiennes pas-à-pas :}
+  \begin{itemize}
+    \item $d(S_1, S_2) = \sqrt{(1.0 - 2.0)^2 + (2.0 - 1.0)^2} = \sqrt{(-1)^2 + 1^2} = \sqrt{2} \approx \mathbf{1.414}$.
+    \item $d(S_1, S_3) = \sqrt{(1.0 - 5.0)^2 + (2.0 - 5.0)^2} = \sqrt{(-4)^2 + (-3)^2} = \sqrt{16 + 9} = \sqrt{25} = \mathbf{5.000}$.
+    \item $d(S_1, S_4) = \sqrt{(1.0 - 6.0)^2 + (2.0 - 4.0)^2} = \sqrt{(-5)^2 + (-2)^2} = \sqrt{25 + 4} = \sqrt{29} \approx \mathbf{5.385}$.
+    \item $d(S_2, S_3) = \sqrt{(2.0 - 5.0)^2 + (1.0 - 5.0)^2} = \sqrt{(-3)^2 + (-4)^2} = \sqrt{9 + 16} = \sqrt{25} = \mathbf{5.000}$.
+    \item $d(S_2, S_4) = \sqrt{(2.0 - 6.0)^2 + (1.0 - 4.0)^2} = \sqrt{(-4)^2 + (-3)^2} = \sqrt{16 + 9} = \sqrt{25} = \mathbf{5.000}$.
+    \item $d(S_3, S_4) = \sqrt{(5.0 - 6.0)^2 + (5.0 - 4.0)^2} = \sqrt{(-1)^2 + 1^2} = \sqrt{2} \approx \mathbf{1.414}$.
+  \end{itemize}
+
+  \item \textbf{Matrice de dissimilarité $D_0$ ($4 \times 4$) :}
+  \begin{center}
+    \small
+    \begin{tabular}{lcccc}
+      \toprule
+      & \textbf{$S_1$} & \textbf{$S_2$} & \textbf{$S_3$} & \textbf{$S_4$} \\
+      \midrule
+      \textbf{$S_1$} & 0 & & & \\
+      \textbf{$S_2$} & 1.414 & 0 & & \\
+      \textbf{$S_3$} & 5.000 & 5.000 & 0 & \\
+      \textbf{$S_4$} & 5.385 & 5.000 & 1.414 & 0 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+  \item \textbf{Première étape de fusion :}
+  La plus petite distance minimale dans la matrice est $d = 1.414$. Deux paires sont candidates : $(S_1, S_2)$ et $(S_3, S_4)$. Elles sont fusionnées en deux clusters initiaux homogènes.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Stratégies de Liaison \& Critère de Ward}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Définitions des stratégies de liaison :}
+  \begin{itemize}
+    \item \textbf{Single Linkage :} Distance entre les deux points les plus proches (plus court chemin).
+    \item \textbf{Complete Linkage :} Distance entre les deux points les plus éloignés (diamètre maximal).
+    \item \textbf{Average Linkage (UPGMA) :} Moyenne arithmétique de toutes les distances croisées.
+    \item \textbf{Critère de Ward :} Fusionne les deux groupes dont l'union minimise l'augmentation de l'inertie intra-classe ($\Delta I$).
+  \end{itemize}
+
+  \item \textbf{Calcul de la distance entre $C_1 = \{S_1, S_2\}$ et $C_2 = \{S_3, S_4\}$ :}
+  Les 4 distances croisées sont : $d(S_1, S_3) = 5.00$, $d(S_1, S_4) = 5.385$, $d(S_2, S_3) = 5.00$, $d(S_2, S_4) = 5.00$.
+  \begin{itemize}
+    \item $D_{\text{Single}}(C_1, C_2) = \min(5.00, 5.385, 5.00, 5.00) = \mathbf{5.000}$.
+    \item $D_{\text{Complete}}(C_1, C_2) = \max(5.00, 5.385, 5.00, 5.00) = \mathbf{5.385}$.
+    \item $D_{\text{Average}}(C_1, C_2) = \frac{5.00 + 5.385 + 5.00 + 5.00}{4} = \frac{20.385}{4} = \mathbf{5.096}$.
+  \end{itemize}
+
+  \item \textbf{Défaut du Single Linkage (Effet de chaînage) :}
+  Le lien simple a tendance à agréger les individus un par un en formant de longues chaînes sinueuses et peu informatives, au lieu de dégager des classes denses et sphériques. Il est très sensible au bruit de fond et aux points aberrants intermédiaires.
+
+  \item \textbf{Avantages majeurs du critère de Ward :}
+  C'est l'analogue de l'ANOVA en classification non supervisée : il maximise l'inertie inter-classes (séparation nette entre phénotypes) tout en minimisant l'inertie intra-classe (homogénéité maximale au sein de chaque groupe biologique). Il génère des clusters très compacts et réguliers.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Fusion Pas-à-Pas \& Construction du Dendrogramme}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Étape 1 (Fusion $S_1$ et $S_2$, $n_1=1, n_2=1$) :}
+  \begin{equation*}
+    \Delta I(S_1, S_2) = \frac{1 \times 1}{1 + 1} \times d_E^2(S_1, S_2) = \frac{1}{2} \times 2.0 = \mathbf{1.00}
+  \end{equation*}
+
+  \item \textbf{Étape 2 (Fusion $S_3$ et $S_4$, $n_3=1, n_4=1$) :}
+  \begin{equation*}
+    \Delta I(S_3, S_4) = \frac{1 \times 1}{1 + 1} \times d_E^2(S_3, S_4) = \frac{1}{2} \times 2.0 = \mathbf{1.00}
+  \end{equation*}
+
+  \item \textbf{Coordonnées des barycentres $g_1$ et $g_2$ :}
+  \begin{itemize}
+    \item $g_1 = \left( \frac{1.0 + 2.0}{2}, \, \frac{2.0 + 1.0}{2} \right) = \mathbf{(1.5, \, 1.5)}$.
+    \item $g_2 = \left( \frac{5.0 + 6.0}{2}, \, \frac{5.0 + 4.0}{2} \right) = \mathbf{(5.5, \, 4.5)}$.
+  \end{itemize}
+
+  \item \textbf{Étape 3 (Fusion finale des deux clusters $C_1$ et $C_2$, $n_{C1}=2, n_{C2}=2$) :}
+  Distance au carré entre barycentres :
+  \begin{equation*}
+    d_E^2(g_1, g_2) = (5.5 - 1.5)^2 + (4.5 - 1.5)^2 = 4.0^2 + 3.0^2 = 16.0 + 9.0 = 25.0
+  \end{equation*}
+  Saut d'inertie :
+  \begin{equation*}
+    \Delta I(C_1, C_2) = \frac{2 \times 2}{2 + 2} \times 25.0 = \frac{4}{4} \times 25.0 = \mathbf{25.00}
+  \end{equation*}
+
+  \item \textbf{Structure du Dendrogramme :}
+  \begin{itemize}
+    \item À la hauteur $h = 1.00$ : Branche reliant $S_1$ et $S_2$, et branche reliant $S_3$ et $S_4$.
+    \item À la hauteur $h = 25.00$ : Le tronc central fusionne le groupe $(S_1, S_2)$ avec le groupe $(S_3, S_4)$.
+    \item La branche verticale médiane est immense ($25.0 - 1.0 = 24.0$ unités), illustrant une séparation biologique très marquée.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Détermination du Seuil de Coupure \& Profilage des Classes}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Positionnement du seuil de coupure :}
+  La ligne de coupure horizontale doit être tracée au niveau de la plus longue branche verticale avant le regroupement suivant, c'est-à-dire dans l'intervalle d'inertie $\mathbf{h \in [2.0, \, 24.0]}$ (par exemple à $h = 10.0$).
+
+  \item \textbf{Nombre optimal de clusters ($k$) :}
+  Le saut d'inertie spectaculaire de $1.0$ à $25.0$ indique qu'au-delà de 2 classes, on agrège des populations fondamentalement dissemblables. Le nombre optimal de groupes est donc sans ambiguïté : $\mathbf{k = 2\text{ clusters}}$.
+
+  \item \textbf{Profils biologiques moyens des classes :}
+  \begin{itemize}
+    \item \textbf{Classe 1 ($S_1, S_2$) :} $\bar{G}_1 = 1.50$, $\bar{G}_2 = 1.50$ (Niveaux basaux d'expression).
+    \item \textbf{Classe 2 ($S_3, S_4$) :} $\bar{G}_1 = 5.50$, $\bar{G}_2 = 4.50$ (Expression massivement surexprimée, multipliée par $\sim 3.5$).
+  \end{itemize}
+
+  \item \textbf{Caractérisation clinique bactériologique :}
+  \begin{itemize}
+    \item **Classe 1 ($S_1, S_2$) :** Souches bactériennes **sauvages / sensibles** aux antibiotiques (faible efflux et quasi-absence d'activité $\beta$-lactamase).
+    \item **Classe 2 ($S_3, S_4$) :** Souches nosocomiales **hautement multi-résistantes (BMR)**, surexprimant simultanément une pompe d'efflux actif ($G_1$) et une enzyme d'inactivation des $\beta$-lactamines ($G_2$). Ces souches requièrent un isolement strict en milieu hospitalier.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Lecture \& Interprétation d'une Clustermap}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Raison de la présence des deux dendrogrammes :}
+  Une Clustermap réalise simultanément deux CAH mathématiquement indépendantes : l'une sur les colonnes (variables / métabolites) et l'autre sur les lignes (observations / patients). Elle permet d'ordonner la matrice de données selon ces deux hiérarchies croisées.
+
+  \item \textbf{Rôle du dendrogramme en colonnes (Variables) :}
+  Il identifie les **réseaux et voies métaboliques co-régulées**. Les métabolites ou gènes fusionnant à basse hauteur ont des cinétiques d'expression synchronisées (ex: enzymes d'une même cascade enzymatique).
+
+  \item \textbf{Rôle du dendrogramme en lignes (Échantillons) :}
+  Il regroupe les patients présentant des **signatures phénotypiques similaires** (sous-types pathologiques, répondeurs vs non-répondeurs à un médicament).
+
+  \item \textbf{Conclusion physiopathologique sur le bloc rouge :}
+  La surexpression synchrone et exclusive d'ALAT, ASAT et PAL chez le cluster de patients 2 signe formellement un profil de **cytolyse hépatique aiguë associée à une cholestase** (atteinte cellulaire et biliaire hépatique sévère).
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

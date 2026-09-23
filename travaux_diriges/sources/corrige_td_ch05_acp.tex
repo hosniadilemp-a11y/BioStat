@@ -1,0 +1,136 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/td_style}
+
+\begin{document}
+
+\makeuniversityheader{Corrigé des Travaux Dirigés : Série 05}{Analyse en Composantes Principales (ACP) en Biologie}{\textcolor{BioTeal}{\textbf{CORRIGÉ DÉTAILLÉ}}}
+
+\begin{solutionbox}{Exercice 1 : Centrage-Réduction \& Nécessité de la Standardisation}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Formule du Z-score :}
+  \begin{equation*}
+    z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j}
+  \end{equation*}
+  Cette transformation soustrait la moyenne (centrage) et divise par l'écart-type (réduction), donnant une variable adimensionnelle de moyenne 0 et de variance 1.
+
+  \item \textbf{Calcul des coordonnées centrées-réduites du patient :}
+  \begin{itemize}
+    \item Glycémie : $z_{i1} = \frac{1.60 - 1.10}{0.25} = \frac{0.50}{0.25} = \mathbf{+2.00}$.
+    \item Transaminases ALAT : $z_{i2} = \frac{105.0 - 45.0}{30.0} = \frac{60.0}{30.0} = \mathbf{+2.00}$.
+    \item Cholestérol : $z_{i3} = \frac{6.80 - 5.20}{0.80} = \frac{1.60}{0.80} = \mathbf{+2.00}$.
+  \end{itemize}
+  \textit{Interprétation :} Le patient se situe exactement à $+2$ écarts-types de la moyenne pour les 3 paramètres. En termes d'anomalie relative standardisée, les trois déviations sont rigoureusement équivalentes (environ 97.7\textsuperscript{e} percentile de la population normale).
+
+  \item \textbf{Effet catastrophique d'une ACP non normée :}
+  La variance brute de l'ALAT est de $s_2^2 = 900\,\text{UI}^2/\text{L}^2$, alors que celle de la glycémie n'est que de $s_1^2 = 0.0625\,\text{g}^2/\text{L}^2$.
+  \par Le rapport de variance est de $\frac{900}{0.0625} = 14\,400$ !
+  L'ACP non normée maximiserait la variance brute : le premier axe factoriel serait confondu à $99.9\%$ avec l'ALAT simplement à cause du choix arbitraire de l'unité de mesure (UI/L vs g/L). La glycémie et le cholestérol seraient totalement écrasés et ignorés.
+
+  \item \textbf{Conclusion biologique :}
+  En biologie médicale et en métabolomique omique, les variables mesurent des grandeurs physiques aux échelles incomparables. L'**ACP normée (sur matrice de corrélation)** est impérative car elle attribue à chaque biomarqueur une variance égale à 1, garantissant un poids analytique équilibré.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 2 : Matrice de Corrélation, Valeurs Propres \& Éboulis de Kaiser}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Somme totale des valeurs propres :}
+  \begin{equation*}
+    \sum_{j=1}^5 \lambda_j = 2.65 + 1.25 + 0.60 + 0.35 + 0.15 = \mathbf{5.00}
+  \end{equation*}
+  Dans une ACP normée de dimension $p$, la matrice de corrélation a des 1 sur sa diagonale principale. La trace de $R$ vaut : $\text{Tr}(R) = \sum r_{jj} = p \times 1 = p = 5$. Comme la somme des valeurs propres est égale à la trace de la matrice, on retrouve exactement $\sum \lambda_j = 5$.
+
+  \item \textbf{Proportions de variance expliquée et pourcentages cumulés :}
+  \begin{center}
+    \small
+    \begin{tabular}{lccc}
+      \toprule
+      \textbf{Composante (Axe)} & \textbf{Valeur propre ($\lambda_k$)} & \textbf{\% Inertie ($\lambda_k / 5 \times 100$)} & \textbf{\% Cumulé} \\
+      \midrule
+      \textbf{PC1 ($F_1$)} & 2.65 & $\frac{2.65}{5} \times 100 = \mathbf{53.0\%}$ & $53.0\%$ \\
+      \textbf{PC2 ($F_2$)} & 1.25 & $\frac{1.25}{5} \times 100 = \mathbf{25.0\%}$ & $\mathbf{78.0\%}$ \\
+      \textbf{PC3 ($F_3$)} & 0.60 & $\frac{0.60}{5} \times 100 = 12.0\%$ & $90.0\%$ \\
+      \textbf{PC4 ($F_4$)} & 0.35 & $\frac{0.35}{5} \times 100 = 7.0\%$  & $97.0\%$ \\
+      \textbf{PC5 ($F_5$)} & 0.15 & $\frac{0.15}{5} \times 100 = 3.0\%$  & $100.0\%$ \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+  \item \textbf{Application du critère de Kaiser ($\lambda \ge 1.0$) :}
+  On ne retient que les axes dont la valeur propre est supérieure ou égale à 1 (ceux qui expliquent plus de variance qu'une variable individuelle standardisée).
+  Ici, seuls $\lambda_1 = 2.65$ et $\lambda_2 = 1.25$ sont $\ge 1$. On retient donc exactement **$k = 2$ axes factoriels**.
+
+  \item \textbf{Inertie du premier plan factoriel (PC1 -- PC2) :}
+  Le plan factoriel (PC1, PC2) capture $53.0\% + 25.0\% = \mathbf{78.0\%}$ de l'information totale. Réduire 5 dimensions à un plan 2D préserve l'essentiel de la structure biologique tout en éliminant le bruit expérimental résiduel ($22\%$).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 3 : Interprétation du Cercle des Corrélations \& Métriques}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Tableau complété des qualités de représentation ($\cos^2$) :}
+  \begin{center}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lccccc}
+      \toprule
+      \textbf{Biomarqueur} & \textbf{PC1} & \textbf{PC2} & \textbf{$\cos^2(\text{PC1})$} & \textbf{$\cos^2(\text{PC2})$} & \textbf{Qualité Globale ($\cos^2_{1+2}$)} \\
+      \midrule
+      \textbf{MDA}          & $+0.88$ & $-0.20$ & $0.88^2 = \mathbf{0.774}$ & $(-0.20)^2 = \mathbf{0.040}$ & $0.774 + 0.040 = \mathbf{0.814}$ \\
+      \textbf{IL-6}         & $+0.92$ & $-0.15$ & $0.92^2 = \mathbf{0.846}$ & $(-0.15)^2 = \mathbf{0.023}$ & $0.846 + 0.023 = \mathbf{0.869}$ \\
+      \textbf{TNF-$\alpha$} & $+0.85$ & $-0.25$ & $0.85^2 = \mathbf{0.723}$ & $(-0.25)^2 = \mathbf{0.063}$ & $0.723 + 0.063 = \mathbf{0.786}$ \\
+      \textbf{Catalase}     & $-0.80$ & $-0.45$ & $(-0.80)^2 = \mathbf{0.640}$ & $(-0.45)^2 = \mathbf{0.203}$ & $0.640 + 0.203 = \mathbf{0.843}$ \\
+      \textbf{SOD}          & $-0.10$ & $+0.85$ & $(-0.10)^2 = \mathbf{0.010}$ & $0.85^2 = \mathbf{0.723}$    & $0.010 + 0.723 = \mathbf{0.733}$ \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{center}
+  Toutes les variables ont un $\cos^2_{1+2} > 0.70$ : elles sont toutes très bien projetées dans ce plan factoriel.
+
+  \item \textbf{Variables directrices des axes :}
+  \begin{itemize}
+    \item **Axe PC1 :** Directement tiré par l'**IL-6** ($\cos^2 = 0.846$) et le **MDA** ($\cos^2 = 0.774$) d'un côté, et par la **Catalase** ($\cos^2 = 0.640$) de l'autre.
+    \item **Axe PC2 :** Presque exclusivement dominé par la **Superoxyde Dismutase (SOD)** ($\cos^2 = 0.723$).
+  \end{itemize}
+
+  \item \textbf{Relation IL-6 et MDA (Angle très aigu) :}
+  L'angle $\theta \approx 0^\circ$ signifie une corrélation linéaire positive très forte ($r \approx \cos(0^\circ) = +1$). Biologiquement, l'inflammation cytokinique (IL-6) et la peroxydation lipidique membranaire (MDA) évoluent de concert : l'orage cytokinique stimule la production d'espèces réactives de l'oxygène (ROS) qui dégradent les lipides polyinsaturés.
+
+  \item \textbf{Opposition MDA/IL-6 vs Catalase (Angle de $180^\circ$) \& Dénomination :}
+  La Catalase est en opposition diamétrale ($r \approx -1$) avec les biomarqueurs de stress oxydatif : plus le tissu s'enflamme et peroxyle, plus ses défenses enzymatiques antioxydantes s'épuisent.
+  \par **Dénomination biologique de PC1 :** « \textbf{Axe du Stress Oxydatif \& de l'Épuisement Antioxydant} ».
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 4 : Plan des Individus \& Discrimination Clinique}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Nature non supervisée de l'ACP :}
+  L'ACP n'a jamais reçu les étiquettes de diagnostic (Témoins / Diabète / NASH) lors du calcul : elle a simplement cherché les directions de variance maximale dans le nuage de points.
+  \par Le fait que les trois groupes cliniques se séparent spontanément et de manière ordonnée le long de PC1 (Témoins à gauche $\to$ Diabète au centre $\to$ NASH à droite) démontre que les altérations métaboliques mesurées reflètent fidèlement la progression physiopathologique de la maladie.
+
+  \item \textbf{Profil du nouveau patient $(\text{PC1} = +2.40, \, \text{PC2} = -0.30)$ :}
+  Avec un score $\text{PC1} = +2.40$ très élevé, ce patient se situe dans la région extrême des patients atteints de **Stéato-Hépatite Non Alcoolique (NASH sévère)** avec stress oxydatif massif et effondrement des défenses antioxydantes.
+  \par *Examens de confirmation recommandés :* Élastographie hépatique (FibroScan) pour quantifier la fibrose, bilan hépatique complet (ALAT/ASAT, $\gamma$-GT) et biopsie hépatique de contrôle.
+
+  \item \textbf{Différenciation par l'axe PC2 :}
+  Pour un même niveau d'atteinte globale ($\text{PC1} = +1.80$), le patient à $\text{PC2} = +1.50$ possède une activité **SOD très élevée** (réponse adaptative de protection encore active), tandis que le patient à $\text{PC2} = -1.20$ souffre d'un épuisement enzymatique complet en superoxyde dismutase (pronostic hépatique plus sévère).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 5 : Sélection de Biomarqueurs \& Élimination de la Redondance}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Redondance analytique entre IL-6 et TNF-$\alpha$ :}
+  Les deux vecteurs sont quasi-superposés sur le cercle des corrélations (angle $< 5^\circ$), ce qui indique une corrélation colinéaire proche de $r = 0.95$. Doser les deux revient à payer deux fois le coût d'anticorps ELISA pour mesurer exactement la même information biologique sous-jacente.
+
+  \item \textbf{Choix entre IL-6 et TNF-$\alpha$ :}
+  On choisit sans hésiter l'**IL-6**, car sa qualité de représentation sur l'axe principal est supérieure : $\cos^2(\text{PC1})_{\text{IL-6}} = 0.846$ contre $0.723$ pour le TNF-$\alpha$. L'IL-6 est plus informative et plus discriminante pour le phénotypage des patients.
+
+  \item \textbf{Panel minimal optimal (2 ou 3 biomarqueurs) :}
+  Pour capturer l'ensemble des 2 axes indépendants ($78\%$ de la variance) :
+  \begin{enumerate}
+    \item **IL-6** (ou MDA) : pour capturer l'axe inflammatoire majeur PC1.
+    \item **Catalase** : pour mesurer la capacité de détoxification antioxydante (pôle opposé de PC1).
+    \item **SOD** : indispensable car c'est la seule variable qui capture l'axe orthogonal PC2.
+  \end{enumerate}
+  Ce panel à 3 marqueurs permet de reconstituer l'intégralité du profil factoriel du patient à une fraction du coût d'un profilage complet.
+\end{enumerate}
+\end{solutionbox}
+
+\end{document}

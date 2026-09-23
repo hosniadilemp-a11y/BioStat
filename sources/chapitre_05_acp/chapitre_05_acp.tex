@@ -1,0 +1,157 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\usepackage{../common/beamer_theme_bio}
+
+\title{\textbf{Biostatistiques Appliquées}}
+\subtitle{Chapitre V : Analyse en Composantes Principales (ACP) \& Profilage Multivarié}
+\author{\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}}
+\institute{
+  Faculté des Sciences --- Département de Biologie\\
+  Master 2 : Biochimie Appliquée\\
+  \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
+}
+\date{Année Universitaire 2024 -- 2025}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan Détaillé du Chapitre V}
+  \tableofcontents
+\end{frame}
+
+% ========================================================
+\section{L'Ère des Données Omiques \& Multivariées}
+% ========================================================
+
+\begin{frame}{Le Défi de la Haute Dimensionnalité}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{La Matrice Biologique ($n \times p$)}
+        En biochimie médicale et biotechnologie moderne :
+        \begin{itemize}
+          \item $n$ échantillons ou patients (lignes).
+          \item $p$ biomarqueurs dosés simultanément (colonnes).
+        \end{itemize}
+        Un spectromètre de masse quantifie 40 à 200 métabolites par goutte de sérum. Impossible de regarder 40 graphiques un par un !
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Mission de l'ACP}
+        \textbf{Réduction non supervisée de dimension :}
+        \begin{itemize}
+          \item Projeter le nuage de points de $\mathbb{R}^p$ vers un plan à 2 dimensions ($\mathbb{R}^2$).
+          \item Conserver le \textbf{maximum de la variance biologique totale} (inertie).
+          \item Identifier des signatures métaboliques caractéristiques d'états pathologiques.
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{L'Étape Obligatoire : Centrage et Réduction}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{warnbox}{L'Hétérogénéité des Unités de Mesure}
+        Si l'on analyse dans un même tube :
+        \begin{itemize}
+          \item Cholestérol total ($\sim 2.1\,\text{g/L}$).
+          \item ALAT ($\sim 45\,\text{UI/L}$).
+          \item BCAA ($\sim 450\,\mu\text{M}$).
+        \end{itemize}
+        Les acides aminés BCAA écraseraient numériquement les autres variables sans raison biologique valable !
+      \end{warnbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{La Transformation Standardisée ($Z$)}
+        Chaque valeur est centrée et réduite :
+        \begin{equation*}
+          Z_{ij} = \frac{X_{ij} - \bar{X}_j}{s_j}
+        \end{equation*}
+        $\implies$ Chaque biomarqueur a désormais une moyenne égale à $0$ et une variance égale à $1$.
+        Toutes les variables ont le \textbf{même poids de départ} dans l'ACP. On diagonalise la \textbf{matrice des corrélations}.
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Axes Principaux \& Inertie Expliquée}
+% ========================================================
+
+\begin{frame}{Valeurs Propres ($\lambda_k$) \& Choix du Nombre d'Axes}
+  \begin{conceptbox}{Propriétés Mathématiques Clés}
+    \begin{itemize}
+      \item Les composantes principales sont orthogonales (non corrélées entre elles).
+      \item Chaque axe capte une quantité de variance appelée \textbf{valeur propre} $\lambda_k$.
+      \item Inertie totale = nombre de variables $p$.
+      \item Pourcentage de variance expliquée par l'axe $k$ : $\frac{\lambda_k}{p} \times 100$.
+    \end{itemize}
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \textbf{\color{BioNavy}Critère de Kaiser :}
+      Conserver uniquement les axes ayant $\lambda_k \ge 1$ (c'est-à-dire les axes qui expliquent plus de variance qu'une variable unitaire isolée).
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \textbf{\color{BioTeal}Règle du Coude (Scree plot) :}
+      Identifier le point d'inflexion où la chute d'inertie se stabilise (le « coude » géologique).
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Interprétation Conjointe des Graphiques}
+% ========================================================
+
+\begin{frame}{Cercle des Corrélations \& Plan des Patients}
+  \begin{center}
+    \includegraphics[width=0.96\linewidth]{../figures/fig05_pca_correlation_and_scores.png}
+  \end{center}
+  \vspace{-2mm}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      {\footnotesize \textbf{À gauche (Cercle des Corrélations) :} Flèches proches = variables fortement corrélées (Glucose \& Lactate). Flèches opposées = corrélations négatives (Glucose vs HDL).}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      {\footnotesize \textbf{À droite (Plan des Patients) :} Séparation parfaite des Témoins (vert), Diabétiques (bleu sur l'Axe 1) et des atteintes hépatiques NASH (orange sur l'Axe 2).}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Règles d'Or de Lecture du Cercle des Corrélations}
+  \begin{table}[h]
+    \centering
+    \small
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{llp{7cm}}
+      \toprule
+      \textbf{Configuration Géométrique} & \textbf{Lien Statistique} & \textbf{Interprétation Biologique Concrète} \\
+      \midrule
+      \textbf{Angle aigu ($< 90^\circ$)} & $r > 0$ (Forte corrélation positive) & Biomarqueurs régulés de concert par la même voie métabolique (ex: Glucose et Triglycérides). \\
+      \midrule
+      \textbf{Angle droit ($\approx 90^\circ$)} & $r \approx 0$ (Indépendance) & Mécanismes physiopathologiques totalement distincts (ex: Transaminases ALAT et Glycémie à jeun). \\
+      \midrule
+      \textbf{Angle plat ($\approx 180^\circ$)} & $r < 0$ (Forte corrélation négative) & Relation d'antagonisme ou compensation métabolique (ex: Baisse du HDL protecteur quand le glucose s'envole). \\
+      \midrule
+      \textbf{Longueur de flèche ($\cos^2 \to 1$)} & Qualité de représentation maximale & La variable est parfaitement interprétable sur ce plan factoriel. \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{table}
+\end{frame}
+
+\begin{frame}[plain]
+  \begin{center}
+    \vspace{1.8cm}
+    {\Huge\color{BioNavy}\textbf{Fin du Chapitre V}}\\[0.8cm]
+    {\large Prochaine étape : Classification Hiérarchique Ascendante (CAH)}\\[1.2cm]
+    \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
+    \small Faculté des Sciences --- Département de Biologie\\
+    \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
+  \end{center}
+\end{frame}
+
+\end{document}
