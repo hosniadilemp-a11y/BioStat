@@ -65,15 +65,27 @@ def compile_latex(src_dir, tex_file, dest_pdf_name, is_course=True, is_enonce=Tr
         target = os.path.join(BASE_DIR, "website", "downloads", "cours", dest_pdf_name)
         os.makedirs(os.path.dirname(target), exist_ok=True)
         shutil.copy2(src_pdf_path, target)
+        try:
+            os.remove(src_pdf_path)
+        except OSError:
+            pass
     else:
         if is_enonce:
             target = os.path.join(BASE_DIR, "website", "downloads", "td_enonces", dest_pdf_name)
             os.makedirs(os.path.dirname(target), exist_ok=True)
             shutil.copy2(src_pdf_path, target)
+            try:
+                os.remove(src_pdf_path)
+            except OSError:
+                pass
         else:
-            target = os.path.join(BASE_DIR, "travaux_diriges", "td_pdf", dest_pdf_name)
+            target = os.path.join(BASE_DIR, "website", "downloads", "td_corriges_enseignant", dest_pdf_name)
             os.makedirs(os.path.dirname(target), exist_ok=True)
             shutil.copy2(src_pdf_path, target)
+            try:
+                os.remove(src_pdf_path)
+            except OSError:
+                pass
             
     return True, f"Succès : {dest_pdf_name} généré."
 

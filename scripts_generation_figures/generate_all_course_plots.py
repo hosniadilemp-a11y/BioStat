@@ -26,6 +26,7 @@ BioTeal = '#0D9488'
 BioGreen = '#2E7D32'
 BioAmber = '#D97706'
 BioRed = '#E11D48'
+BioDark = '#1E293B'
 
 print(f"Génération des figures dans : {OUTPUT_DIR}")
 
@@ -222,6 +223,186 @@ axes[2].grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_central_limit_theorem.png'))
+plt.close()
+
+# Fig 0.6 : Théorème de Bayes & Diagnostic ELISA (VPP vs Prévalence & Matrice)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.2), dpi=300)
+
+# Panel A : Arbre / Matrice pour N = 10 000 (Prévalence 1%, Se 99%, Sp 95%)
+prev = 0.01
+se = 0.99
+sp = 0.95
+n_total = 10000
+malades = n_total * prev
+sains = n_total * (1 - prev)
+vp = malades * se
+fn = malades * (1 - se)
+fp = sains * (1 - sp)
+vn = sains * sp
+
+categories = ['Vrais Positifs\n(Malades)', 'Faux Positifs\n(Sains testés +)', 'Faux Négatifs\n(Malades testés -)']
+values = [vp, fp, fn]
+colors_cat = [BioTeal, BioRed, BioAmber]
+bars = ax1.bar(categories, values, color=colors_cat, width=0.55, edgecolor=BioNavy, lw=1.2)
+for bar in bars:
+    yval = bar.get_height()
+    ax1.text(bar.get_x() + bar.get_width()/2, yval + 10, f'{int(yval)}', ha='center', va='bottom', fontsize=9.5, fontweight='bold')
+
+vpp_example = vp / (vp + fp) * 100
+ax1.set_title(f"A. Diagnostic Maladie Rare (N = 10 000)\nPrévalence 1%, Se=99%, Sp=95% $\\rightarrow$ VPP = {vpp_example:.1f}%", fontweight='bold', fontsize=9.5, color=BioNavy)
+ax1.set_ylabel("Nombre d'individus", fontsize=9.5)
+ax1.set_ylim(0, max(values) * 1.25)
+ax1.grid(True, axis='y', alpha=0.3)
+
+# Panel B : Courbe VPP en fonction de la Prévalence
+prevalences = np.linspace(0.001, 0.20, 500)
+for sp_val, col, ls in zip([0.90, 0.95, 0.99, 0.999], [BioAmber, BioNavy, BioTeal, BioGreen], ['--', '-.', '-', ':']):
+    vpp_curve = (0.99 * prevalences) / (0.99 * prevalences + (1 - sp_val) * (1 - prevalences)) * 100
+    ax2.plot(prevalences * 100, vpp_curve, label=f'Spécificité = {sp_val*100:.1f}%', color=col, linestyle=ls, lw=2.2)
+
+ax2.set_title("B. Valeur Prédictive Positive (VPP)\nselon la Prévalence (Sensibilité = 99%)", fontweight='bold', fontsize=9.5, color=BioNavy)
+ax2.set_xlabel("Prévalence réelle dans la population (%)", fontsize=9.5)
+ax2.set_ylabel("VPP : P(Malade | Test +) (%)", fontsize=9.5)
+ax2.legend(frameon=True, facecolor='white', loc='lower right', fontsize=8.5)
+ax2.grid(True, alpha=0.3)
+ax2.set_xlim(0.1, 20)
+ax2.set_ylim(0, 105)
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_bayes_diagnostic_elisa.png'))
+plt.close()
+
+
+# Fig 0.7 : Lois Discrètes (Binomiale vs Poisson en Microbiologie)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.0), dpi=300)
+
+# Binomiale : viabilité cellulaire ou puits positifs PCR
+n_binom, p_binom = 20, 0.35
+k_vals_binom = np.arange(0, 16)
+pmf_binom = stats.binom.pmf(k_vals_binom, n_binom, p_binom)
+
+ax1.bar(k_vals_binom, pmf_binom, color=BioTeal, alpha=0.7, edgecolor=BioNavy, lw=1.2, width=0.6)
+ax1.set_title("A. Loi Binomiale $\\mathcal{B}(n=20, p=0.35)$\nSuccès/Échec (ex: Puits qPCR Positifs)", fontweight='bold', fontsize=10, color=BioNavy)
+ax1.set_xlabel("Nombre de succès $k$ (puits amplifiés)", fontsize=9.5)
+ax1.set_ylabel("Probabilité $P(X = k)$", fontsize=9.5)
+ax1.axvline(n_binom * p_binom, color=BioRed, linestyle='--', lw=2, label=f'Espérance $\\mu = np = {n_binom*p_binom:.1f}$')
+ax1.legend(frameon=True, facecolor='white', loc='upper right', fontsize=8.5)
+ax1.grid(True, alpha=0.3)
+
+# Poisson : comptage d'UFC en boîte de Pétri
+lambda_poisson = 4.2
+k_vals_poisson = np.arange(0, 14)
+pmf_poisson = stats.poisson.pmf(k_vals_poisson, lambda_poisson)
+
+ax2.bar(k_vals_poisson, pmf_poisson, color=BioAmber, alpha=0.7, edgecolor=BioNavy, lw=1.2, width=0.6)
+ax2.set_title("B. Loi de Poisson $\\mathcal{P}(\\lambda=4.2)$\nÉvénements Rares (ex: Colonies UFC / Boîte)", fontweight='bold', fontsize=10, color=BioNavy)
+ax2.set_xlabel("Nombre de colonies observées $k$", fontsize=9.5)
+ax2.set_ylabel("Probabilité $P(X = k)$", fontsize=9.5)
+ax2.axvline(lambda_poisson, color=BioRed, linestyle='--', lw=2, label=f'Espérance = Variance = $\\lambda = {lambda_poisson}$')
+ax2.legend(frameon=True, facecolor='white', loc='upper right', fontsize=8.5)
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_poisson_binomial.png'))
+plt.close()
+
+
+# Fig 0.8 : Simulation de 25 Intervalles de Confiance à 95%
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.3), dpi=300)
+
+np.random.seed(42)
+mu_true = 100.0
+sigma_true = 15.0
+n_samples = 25
+sample_size = 12
+
+ci_lowers, ci_uppers, means = [], [], []
+covers = []
+
+for i in range(n_samples):
+    sample = np.random.normal(mu_true, sigma_true, sample_size)
+    m = np.mean(sample)
+    s = np.std(sample, ddof=1)
+    sem = s / np.sqrt(sample_size)
+    t_crit = stats.t.ppf(0.975, df=sample_size-1)
+    lower = m - t_crit * sem
+    upper = m + t_crit * sem
+    means.append(m)
+    ci_lowers.append(lower)
+    ci_uppers.append(upper)
+    covers.append(lower <= mu_true <= upper)
+
+y_indices = np.arange(1, n_samples + 1)
+for i in range(n_samples):
+    col = BioTeal if covers[i] else BioRed
+    lw_val = 1.8 if covers[i] else 2.6
+    ax1.plot([ci_lowers[i], ci_uppers[i]], [y_indices[i], y_indices[i]], color=col, lw=lw_val)
+    ax1.plot(means[i], y_indices[i], marker='o', markersize=4, color=col)
+
+ax1.axvline(mu_true, color=BioNavy, linestyle='--', lw=2, label=f'Vraie moyenne $\\mu = {mu_true}$')
+ax1.set_title("A. 25 Intervalles de Confiance à 95%\nVert = Couvre $\\mu$ | Rouge = Manque $\\mu$", fontweight='bold', fontsize=9.5, color=BioNavy)
+ax1.set_xlabel("Valeur estimée du paramètre", fontsize=9.5)
+ax1.set_ylabel("Numéro de l'expérience indépendante", fontsize=9.5)
+ax1.set_ylim(0.5, n_samples + 0.5)
+ax1.legend(frameon=True, facecolor='white', loc='upper right', fontsize=8.5)
+ax1.grid(True, alpha=0.3)
+
+# Panel B : Effet de la taille de l'échantillon N sur la largeur de l'IC 95%
+n_sizes = np.array([3, 6, 12, 25, 50, 100])
+ci_widths = [2 * stats.t.ppf(0.975, df=n-1) * (sigma_true / np.sqrt(n)) for n in n_sizes]
+
+ax2.plot(n_sizes, ci_widths, marker='s', color=BioNavy, lw=2.2, markersize=6)
+ax2.fill_between(n_sizes, ci_widths, color=BioTeal, alpha=0.2)
+ax2.set_title("B. Rétrécissement de l'IC 95%\navec la taille d'échantillon ($1/\\sqrt{N}$)", fontweight='bold', fontsize=9.5, color=BioNavy)
+ax2.set_xlabel("Nombre de réplicats biologiques $N$", fontsize=9.5)
+ax2.set_ylabel("Largeur totale de l'IC 95%", fontsize=9.5)
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_confidence_intervals_simulation.png'))
+plt.close()
+
+
+# Fig 0.9 : Arbre Décisionnel des Tests Biostatistiques
+fig, ax = plt.subplots(figsize=(10, 4.2), dpi=300)
+ax.axis('off')
+
+# Dessin vectoriel clair de l'arbre
+boxes_info = [
+    # Niveau 1 : Question Racine
+    (0.50, 0.90, "Quel est l'objectif de l'analyse ?", BioNavy, 0.40, 0.12),
+    # Niveau 2 : Deux Branches
+    (0.25, 0.65, "Comparer des Groupes\n(Moyennes / Médianes)", BioTeal, 0.35, 0.14),
+    (0.75, 0.65, "Analyser des Relations\n(Corrélation / Régression)", BioAmber, 0.35, 0.14),
+    # Niveau 3 : Groupes
+    (0.12, 0.35, "2 Groupes\n• Paramétrique : Student $t$\n• Non-param. : Mann-Whitney", BioNavy, 0.23, 0.22),
+    (0.38, 0.35, "$\\geq 3$ Groupes\n• Paramétrique : ANOVA\n• Non-param. : Kruskal-Wallis", BioNavy, 0.23, 0.22),
+    # Niveau 3 : Relations
+    (0.64, 0.35, "Liaison Linéaire\n• Paramétrique : Pearson $r$\n• Non-param. : Spearman $\\rho$", BioNavy, 0.23, 0.22),
+    (0.88, 0.35, "Modélisation\n• Linéaire : MCO ($y=ax+b$)\n• Non Linéaire : Michaelis-Menten", BioNavy, 0.23, 0.22),
+]
+
+for xc, yc, txt, col, w, h in boxes_info:
+    rect = plt.Rectangle((xc - w/2, yc - h/2), w, h, facecolor=col, alpha=0.15, edgecolor=col, lw=2, transform=ax.transAxes, zorder=2)
+    ax.add_patch(rect)
+    ax.text(xc, yc, txt, ha='center', va='center', fontsize=8.5, fontweight='bold', color=BioDark, transform=ax.transAxes, zorder=3)
+
+# Flèches de connexion
+arrows = [
+    ((0.45, 0.84), (0.30, 0.72)),
+    ((0.55, 0.84), (0.70, 0.72)),
+    ((0.20, 0.58), (0.15, 0.46)),
+    ((0.30, 0.58), (0.35, 0.46)),
+    ((0.70, 0.58), (0.66, 0.46)),
+    ((0.80, 0.58), (0.86, 0.46)),
+]
+for p1, p2 in arrows:
+    ax.annotate('', xy=p2, xytext=p1, xycoords='axes fraction', textcoords='axes fraction',
+                arrowprops=dict(arrowstyle="->", color=BioNavy, lw=1.8))
+
+ax.set_title("Arbre Décisionnel Fondamental en Biostatistiques (Master 2)", fontweight='bold', fontsize=12, color=BioNavy, pad=15)
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_decision_tree_tests.png'))
 plt.close()
 
 # ==============================================================================

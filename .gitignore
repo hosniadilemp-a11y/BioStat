@@ -11,6 +11,8 @@
 *.fdb_latexmk
 *.bbl
 *.blg
+sources/**/*.pdf
+travaux_diriges/**/*.pdf
 
 # Python & Jupyter cache
 __pycache__/
