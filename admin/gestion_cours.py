@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import webbrowser
 from datetime import datetime
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 
 PORT = 8000
 ADMIN_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -53,22 +53,28 @@ def compile_latex(src_dir, tex_file, dest_pdf_name, is_course=True, is_enonce=Tr
     pdf_base = os.path.splitext(tex_file)[0] + ".pdf"
     
     cmd = ["pdflatex", "-interaction=nonstopmode", tex_file]
-    proc = subprocess.run(cmd, cwd=abs_src_dir, capture_output=True, text=True)
+    # errors="replace" évite les plantages 'utf-8' codec can't decode byte sur la sortie TeX
+    proc = subprocess.run(cmd, cwd=abs_src_dir, capture_output=True, text=True, errors="replace")
     
     src_pdf_path = os.path.join(abs_src_dir, pdf_base)
     if not os.path.exists(src_pdf_path):
-        return False, f"Erreur de compilation pour {tex_file}:\n{proc.stdout[-500:]}"
+        stdout_tail = (proc.stdout or "")[-500:]
+        return False, f"Erreur de compilation pour {tex_file}:\n{stdout_tail}"
         
     if is_course:
         target1 = os.path.join(BASE_DIR, "courses_pdf", dest_pdf_name)
         target2 = os.path.join(BASE_DIR, "website", "downloads", "cours", dest_pdf_name)
+        os.makedirs(os.path.dirname(target1), exist_ok=True)
+        os.makedirs(os.path.dirname(target2), exist_ok=True)
         shutil.copy2(src_pdf_path, target1)
         shutil.copy2(src_pdf_path, target2)
     else:
         target1 = os.path.join(BASE_DIR, "travaux_diriges", "td_pdf", dest_pdf_name)
+        os.makedirs(os.path.dirname(target1), exist_ok=True)
         shutil.copy2(src_pdf_path, target1)
         if is_enonce:
             target2 = os.path.join(BASE_DIR, "website", "downloads", "td_enonces", dest_pdf_name)
+            os.makedirs(os.path.dirname(target2), exist_ok=True)
             shutil.copy2(src_pdf_path, target2)
             
     return True, f"Succès : {dest_pdf_name} généré."
@@ -89,7 +95,7 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length).decode("utf-8")
+        body = self.rfile.read(content_length).decode("utf-8", errors="replace")
         payload = json.loads(body) if body else {}
 
         response_data = {"success": False, "message": "Action inconnue"}
@@ -140,19 +146,21 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
 
             elif self.path == "/api/generate_figures":
                 script_path = os.path.join(BASE_DIR, "scripts_generation_figures", "generate_all_course_plots.py")
-                proc = subprocess.run([sys.executable, script_path], cwd=BASE_DIR, capture_output=True, text=True)
+                proc = subprocess.run([sys.executable, script_path], cwd=BASE_DIR, capture_output=True, text=True, errors="replace")
                 
                 # Copie automatique vers le site
                 src_fig_dir = os.path.join(BASE_DIR, "sources", "figures")
                 dst_fig_dir = os.path.join(BASE_DIR, "website", "assets", "figures")
-                for f in os.listdir(src_fig_dir):
-                    if f.endswith(".png"):
-                        shutil.copy2(os.path.join(src_fig_dir, f), os.path.join(dst_fig_dir, f))
+                os.makedirs(dst_fig_dir, exist_ok=True)
+                if os.path.exists(src_fig_dir):
+                    for f in os.listdir(src_fig_dir):
+                        if f.endswith(".png"):
+                            shutil.copy2(os.path.join(src_fig_dir, f), os.path.join(dst_fig_dir, f))
                         
                 response_data = {
                     "success": proc.returncode == 0,
                     "message": "Les 13 figures scientifiques HD 300 DPI ont été recalculées et tracées !",
-                    "details": proc.stdout[-500:] if proc.returncode == 0 else proc.stderr
+                    "details": (proc.stdout or "")[-500:] if proc.returncode == 0 else (proc.stderr or proc.stdout or "")
                 }
 
             elif self.path == "/api/publish_github":
@@ -163,17 +171,17 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
                 subprocess.run(["git", "add", "."], cwd=BASE_DIR, check=True)
                 
                 # Check if there are changes to commit
-                status_res = subprocess.run(["git", "status", "--porcelain"], cwd=BASE_DIR, capture_output=True, text=True)
-                if status_res.stdout.strip():
-                    subprocess.run(["git", "commit", "-m", commit_msg], cwd=BASE_DIR, check=True)
+                status_res = subprocess.run(["git", "status", "--porcelain"], cwd=BASE_DIR, capture_output=True, text=True, errors="replace")
+                if status_res.stdout and status_res.stdout.strip():
+                    subprocess.run(["git", "commit", "-m", commit_msg], cwd=BASE_DIR, capture_output=True, text=True, errors="replace", check=True)
                     
-                push_res = subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, capture_output=True, text=True)
+                push_res = subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, capture_output=True, text=True, errors="replace")
                 
                 if push_res.returncode == 0:
                     response_data = {
                         "success": True,
                         "message": "Publication réussie sur GitHub ! Le site en ligne s'actualise en moins de 60 secondes.",
-                        "details": f"Commit : {commit_msg}\n{push_res.stderr}"
+                        "details": f"Commit : {commit_msg}\n{push_res.stderr or push_res.stdout or ''}"
                     }
                 else:
                     response_data = {
@@ -197,7 +205,8 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
 
 def run_server():
     server_address = ("", PORT)
-    httpd = HTTPServer(server_address, CourseManagementHandler)
+    ThreadingHTTPServer.allow_reuse_address = True
+    httpd = ThreadingHTTPServer(server_address, CourseManagementHandler)
     url = f"http://localhost:{PORT}/"
     print("=" * 70)
     print(f"🎓 Serveur de Gestion du Cours de Biostatistiques démarré !")
