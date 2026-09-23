@@ -14,13 +14,13 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- KaTeX pour le Rendu Mathématique Typographique Haute Définition -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <!-- KaTeX Local (100% Hors-Ligne, Zéro Dépendance Externe & Haute Définition) -->
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <script src="vendor/katex/katex.min.js"></script>
+  <script src="vendor/katex/auto-render.min.js"></script>
   
   <!-- Feuille de Style Personnalisée -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2.2">
 </head>
 <body>
 
@@ -1788,7 +1788,7 @@
   </footer>
 
   <!-- Scripts applicatifs -->
-  <script src="simulator.js"></script>
-  <script src="app.js"></script>
+  <script src="simulator.js?v=2.2"></script>
+  <script src="app.js?v=2.2"></script>
 </body>
 </html>

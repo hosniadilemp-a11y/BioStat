@@ -45,19 +45,22 @@
     return { ctx, width, height, dpr };
   }
 
-  // Utilitaire d'appel KaTeX sécurisé
+  // Utilitaire d'appel KaTeX sécurisé et universel
   function triggerKatex(container) {
-    if (window.renderAllLatex) {
-      window.renderAllLatex(container);
-    } else if (typeof window.renderMathInElement === 'function') {
-      window.renderMathInElement(container || document.body, {
-        delimiters: [
-          { left: '$$', right: '$$', display: true },
-          { left: '$', right: '$', display: false }
-        ],
-        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-        throwOnError: false
-      });
+    const target = container || document.body;
+    if (typeof window.renderMathInElement === 'function') {
+      try {
+        window.renderMathInElement(target, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+          throwOnError: false
+        });
+      } catch (err) {
+        console.warn('KaTeX auto-render warning:', err);
+      }
     }
   }
 
@@ -1547,16 +1550,29 @@
   // ==========================================================================
   // INITIALISATION
   // ==========================================================================
-  document.addEventListener('DOMContentLoaded', () => {
+  function runSimulatorInit() {
     initSimulatorTabs();
     attachSimulatorEvents();
 
+    const activeBtn = document.querySelector('.sim-tab-btn.active');
+    const firstTab = activeBtn ? activeBtn.getAttribute('data-tab') : 'sim-skew';
+    triggerDraw(firstTab);
+
+    // Rendu mathématique immédiat et après léger délai pour s'assurer du rendu complet
+    triggerKatex(document.body);
     setTimeout(() => {
-      const activeBtn = document.querySelector('.sim-tab-btn.active');
-      const firstTab = activeBtn ? activeBtn.getAttribute('data-tab') : 'sim-skew';
-      triggerDraw(firstTab);
-      triggerKatex(document.querySelector('.sim-section'));
-    }, 250);
+      triggerKatex(document.body);
+    }, 150);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runSimulatorInit);
+  } else {
+    runSimulatorInit();
+  }
+
+  window.addEventListener('load', () => {
+    triggerKatex(document.body);
   });
 
   // Exposer les méthodes d'accès si besoin

@@ -570,24 +570,9 @@ function initSmoothScroll() {
 // ==========================================================================
 // Rendu Typographique Mathématique Global KaTeX (Auto-Render)
 // ==========================================================================
-function initKatexAutoRender() {
-  function tryRender() {
-    if (typeof window.renderMathInElement === "function") {
-      window.renderMathInElement(document.body, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false }
-        ],
-        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
-        throwOnError: false
-      });
-    } else {
-      setTimeout(tryRender, 150);
-    }
-  }
-
-  window.renderAllLatex = function(element) {
-    if (typeof window.renderMathInElement === "function") {
+window.renderAllLatex = function(element) {
+  if (typeof window.renderMathInElement === "function") {
+    try {
       window.renderMathInElement(element || document.body, {
         delimiters: [
           { left: "$$", right: "$$", display: true },
@@ -596,14 +581,23 @@ function initKatexAutoRender() {
         ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"],
         throwOnError: false
       });
+    } catch (err) {
+      console.warn("KaTeX render error:", err);
     }
-  };
+  }
+};
+
+function initKatexAutoRender() {
+  function tryRender() {
+    window.renderAllLatex(document.body);
+  }
+
+  tryRender();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", tryRender);
-  } else {
-    tryRender();
   }
+  window.addEventListener("load", tryRender);
 }
 
 initKatexAutoRender();
