@@ -9,88 +9,87 @@
   Master 2 : Biochimie Appliquée\\
   \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
 }
-% Intercalaire automatique de transition entre sections
+
+% Intercalaire automatique de transition entre sections (Plein écran sans débordement)
 \AtBeginSection[]{
   \begin{frame}[plain]
     \vspace{1mm}
-    \begin{tcolorbox}[colback=BioNavy,coltext=white,boxrule=0pt,arc=2mm,left=6pt,right=6pt,top=3pt,bottom=3pt]
-      \centering\bfseries\normalsize Progression Pédagogique du Cours
+    \begin{tcolorbox}[colback=BioNavy,coltext=white,boxrule=0pt,arc=2mm,left=6pt,right=6pt,top=2pt,bottom=2pt]
+      \centering\bfseries\small Progression Pédagogique du Cours
     \end{tcolorbox}
-    \vspace{1mm}
-    {\small\tableofcontents[currentsection, hideothersubsections]}
+    \vspace{0.5mm}
+    {\scriptsize\tableofcontents[currentsection, hideothersubsections]}
   \end{frame}
 }
 
 \begin{document}
 
-% --- Titre ---
+% --- Page de Titre ---
 \begin{frame}[plain]
   \titlepage
 \end{frame}
 
-% --- Sommaire ---
+% --- Sommaire Général ---
 \begin{frame}{Plan Détaillé du Chapitre I}
   \tableofcontents
 \end{frame}
 
 % ========================================================
-\section{Motivation \& Démarche des Plans Factoriels}
+\section{Motivation \& Démarche des Plans Factoriels Croisés}
 % ========================================================
 
 \begin{frame}{Pourquoi Passer à Deux Facteurs Simultanés ?}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{warnbox}{Le Piège du « Un Facteur à la Fois » (OFAT)}
-        Historiquement, les biologistes testaient souvent :
-        \begin{enumerate}
-          \item L'effet d'une molécule antioxydante seule sur un groupe.
-          \item Puis l'effet de la souche génétique de souris dans une autre expérience séparée.
-        \end{enumerate}
-        \textbf{Faiblesses méthodologiques majeures :}
+        \small
+        L'approche historique testait séparément la molécule antioxydante puis le génotype.\\
+        \textbf{Limites majeures :}
         \begin{itemize}
-          \item Ignore totalement l'effet combiné (\textbf{synergie} ou \textbf{antagonisme}).
-          \item Multiplie les expérimentations et augmente le coût en animaux de laboratoire.
-          \item Gonfle le risque global de faux positif $\alpha$.
+          \item Ignore l'effet combiné (\textbf{synergie} ou \textbf{antagonisme}).
+          \item Multiplie les animaux sacrifiés (contraire aux 3R).
+          \item Gonfle le risque d'erreur globale $\alpha$.
         \end{itemize}
       \end{warnbox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{La Richesse du Plan Factoriel}
-        En recherche biomédicale, les phénomènes ne sont jamais isolés :
+        \small
+        En recherche biomédicale, les mécanismes sont intriqués :
         \begin{itemize}
-          \item L'efficacité d'un médicament dépend souvent du \textbf{sexe} ou du \textbf{génotype}.
-          \item L'activité d'une enzyme dépend conjointement du \textbf{pH} et de la \textbf{température}.
-          \item La réponse cellulaire dépend de la \textbf{dose} et du \textbf{temps d'exposition}.
+          \item Efficacité dépendant du \textbf{sexe} ou du \textbf{génotype}.
+          \item Activité enzymatique liant \textbf{pH} et \textbf{température}.
+          \item Survie cellulaire fonction de la \textbf{dose} et du \textbf{temps}.
         \end{itemize}
-        $\implies$ L'ANOVA à deux facteurs permet de tester \textbf{simultanément} deux variables et leur synergie dans une seule expérience optimisée.
+        $\implies$ L'ANOVA à deux facteurs teste \textbf{simultanément} les variables et leur synergie dans un plan unique optimisé.
       \end{conceptbox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Structure d'un Plan Factoriel Croisé Complet ($I \times J$)}
+\begin{frame}{Structure d'un Plan Factoriel Croisé Équilibré ($I \times J$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Définition du Plan Croisé Équilibré}
+        \small
         Dans un \textbf{plan factoriel croisé ($A \times B$)} :
         \begin{itemize}
-          \item Le facteur A possède $I$ modalités (niveaux).
-          \item Le facteur B possède $J$ modalités.
-          \item \textbf{Chaque niveau de A est combiné avec chaque niveau de B} ($I \times J$ conditions expérimentales au total).
-          \item \textbf{Plan équilibré :} Chaque lot reçoit un nombre identique de réplicats biologiques ($K$ individus).
-          \item Effectif total : $N = I \cdot J \cdot K$.
+          \item Facteur A : $I$ modalités ; Facteur B : $J$ modalités.
+          \item \textbf{Croisement complet :} $I \times J$ combinaisons testées.
+          \item \textbf{Plan équilibré :} $K$ réplicats identiques par lot.
+          \item \textbf{Effectif total :} $N = I \cdot J \cdot K$ individus.
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{biobox}{Exemple Concret au Laboratoire}
-        Étude préclinique d'un extrait hépatoprotecteur :
+        \small
+        Étude préclinique d'un hépatoprotecteur :
         \begin{itemize}
-          \item \textbf{Facteur A (Traitement) :} $I = 3$ niveaux : Témoin, Dose Faible ($50\,\text{mg/kg}$), Dose Forte ($100\,\text{mg/kg}$).
-          \item \textbf{Facteur B (Génotype) :} $J = 2$ niveaux : Souris Sauvages (WT) vs Souris Diabétiques ($db/db$).
-          \item $K = 5$ souris indépendantes par condition.
-          \item Nombre total de conditions : $3 \times 2 = 6$ lots.
-          \item Effectif total : $N = 3 \times 2 \times 5 = 30$ souris.
+          \item \textbf{Facteur A (Dose) :} $I = 3$ (Témoin, 50, 100 mg/kg).
+          \item \textbf{Facteur B (Génotype) :} $J = 2$ (WT vs $db/db$).
+          \item $K = 5$ souris par condition $\implies 6$ lots.
+          \item \textbf{Effectif total :} $N = 3 \times 2 \times 5 = 30$ souris.
         \end{itemize}
       \end{biobox}
     \end{column}
@@ -101,84 +100,81 @@
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Définition Statistique}
-        L'\textbf{Effet Principal} du facteur A mesure l'impact moyen des différentes modalités de A, \textbf{en faisant la moyenne sur l'ensemble des modalités du facteur B} :
+        \small
+        L'\textbf{Effet Principal} de A mesure l'impact moyen de A en moyennant sur toutes les modalités de B :
         \begin{equation*}
-          \alpha_i = \bar{Y}_{i\cdot\cdot} - \bar{Y}_{\dots}
+          \alpha_i = \bar{Y}_{i\cdot\cdot} - \bar{Y}_{\dots} \quad \left(\sum_{i=1}^I \alpha_i = 0\right)
         \end{equation*}
-        Où $\bar{Y}_{i\cdot\cdot}$ est la moyenne marginale du niveau $i$ de A et $\bar{Y}_{\dots}$ est la moyenne générale de toute l'étude.
-        \begin{itemize}
-          \item Contrainte d'identifiabilité : $\sum_{i=1}^I \alpha_i = 0$.
-        \end{itemize}
+        \textbf{Hypothèse nulle testée :}
+        \begin{equation*}
+          H_0^{(A)} : \alpha_1 = \dots = \alpha_I = 0
+        \end{equation*}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{biobox}{Interprétation Biologique}
-        \textbf{Question posée :} \textit{« Globalement, le traitement médicamenteux modifie-t-il la réponse biologique, quel que soit le génotype des souris ? »}\\
-        \vspace{1mm}
-        Si $\alpha_1 = \alpha_2 = \dots = 0$, le traitement n'a aucun effet moyen sur l'organisme.
+        \small
+        \textbf{Question posée :} \textit{« Globalement, le traitement modifie-t-il la peroxydation lipidique, quel que soit le statut génétique ? »}
+        \begin{itemize}
+          \item Si $H_0^{(A)}$ est vraie : aucun effet moyen du traitement.
+          \item Si $H_0^{(A)}$ est rejetée ($p \le 0.05$) : au moins une dose diffère significativement des autres.
+        \end{itemize}
       \end{biobox}
     \end{column}
   \end{columns}
-  \vspace{1mm}
-  \begin{takeawaybox}{Hypothèse Nulle Testée pour le Facteur A}
-    \begin{equation*}
-      H_0^{(A)} : \alpha_1 = \alpha_2 = \dots = \alpha_I = 0 \quad (\text{Aucun effet principal du Traitement})
-    \end{equation*}
-  \end{takeawaybox}
 \end{frame}
 
 \begin{frame}{Notion 2 : L'Effet Principal du Facteur B}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Définition Statistique}
-        L'\textbf{Effet Principal} du facteur B quantifie la déviation moyenne propre aux niveaux du facteur B, moyennée sur tous les niveaux du facteur A :
+        \small
+        L'\textbf{Effet Principal} de B quantifie la déviation moyenne propre au facteur B :
         \begin{equation*}
-          \beta_j = \bar{Y}_{\cdot j\cdot} - \bar{Y}_{\dots}
+          \beta_j = \bar{Y}_{\cdot j\cdot} - \bar{Y}_{\dots} \quad \left(\sum_{j=1}^J \beta_j = 0\right)
         \end{equation*}
-        Où $\bar{Y}_{\cdot j\cdot}$ est la moyenne marginale du niveau $j$ de B.
-        \begin{itemize}
-          \item Contrainte d'identifiabilité : $\sum_{j=1}^J \beta_j = 0$.
-        \end{itemize}
+        \textbf{Hypothèse nulle testée :}
+        \begin{equation*}
+          H_0^{(B)} : \beta_1 = \dots = \beta_J = 0
+        \end{equation*}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{biobox}{Interprétation Biologique}
-        \textbf{Question posée :} \textit{« Indépendamment du traitement reçu, les animaux diabétiques présentent-ils un taux de base différent des animaux sauvages ? »}\\
-        \vspace{1mm}
-        Si $\beta_1 = \beta_2 = \dots = 0$, la mutation génétique ne modifie pas le niveau de base du biomarqueur.
+        \small
+        \textbf{Question posée :} \textit{« Indépendamment du traitement, les souris diabétiques ont-elles un stress oxydatif basal différent des souris saines ? »}
+        \begin{itemize}
+          \item Si $H_0^{(B)}$ est vraie : la mutation n'altère pas le niveau moyen du biomarqueur.
+          \item Si $H_0^{(B)}$ est rejetée ($p \le 0.05$) : le génotype crée une différence basale significative.
+        \end{itemize}
       \end{biobox}
     \end{column}
   \end{columns}
-  \vspace{1mm}
-  \begin{takeawaybox}{Hypothèse Nulle Testée pour le Facteur B}
-    \begin{equation*}
-      H_0^{(B)} : \beta_1 = \beta_2 = \dots = \beta_J = 0 \quad (\text{Aucun effet principal du Génotype})
-    \end{equation*}
-  \end{takeawaybox}
 \end{frame}
 
 \begin{frame}{Notion 3 : La Notion Clé d'Interaction Biologique ($A \times B$)}
-  \begin{conceptbox}{Définition Fondamentale}
-    Il existe une \textbf{interaction} entre le facteur A et le facteur B lorsque :\\
-    \textbf{L'effet du facteur A sur la réponse biologique n'est pas le même selon la modalité prise par le facteur B.}
-  \end{conceptbox}
-
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Traduction Mathématique}
-        L'effet conjoint n'est pas simplement l'addition des deux effets séparés :
+      \begin{conceptbox}{Définition \& Formule}
+        \small
+        Il existe une \textbf{interaction} lorsque l'effet du facteur A \textbf{dépend de la modalité de B} :
         \begin{equation*}
           (\alpha\beta)_{ij} = \bar{Y}_{ij\cdot} - (\bar{Y}_{\dots} + \alpha_i + \beta_j)
         \end{equation*}
-        $(\alpha\beta)_{ij}$ mesure le « surplus » ou le « déficit » de réponse non expliqué par l'addition des effets simples.
+        $(\alpha\beta)_{ij}$ quantifie l'écart non expliqué par la simple addition des effets simples.
+        \begin{equation*}
+          H_0^{(AB)} : \text{Tous les } (\alpha\beta)_{ij} = 0
+        \end{equation*}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Exemple Parlant en Pharmacologie}
+      \begin{biobox}{Exemple en Pharmacologie}
+        \small
         \begin{itemize}
-          \item L'administration d'un polyphénol abaisse la peroxydation lipidique de $58\%$ chez les souris diabétiques.
-          \item Mais il n'a aucun effet mesurable ($0\%$) chez les souris saines.
-          \item $\implies$ L'efficacité thérapeutique \textbf{interagit} avec l'état pathologique !
+          \item Un extrait polyphénolique réduit le MDA de $58\%$ chez les diabétiques ($db/db$).
+          \item Mais il n'a aucun effet mesurable ($0\%$) chez les témoins sains (WT).
+          \item $\implies$ L'efficacité thérapeutique \textbf{interagit} avec l'état pathologique.
+          \item La simple addition $A + B$ échoue à prédire la réponse !
         \end{itemize}
       \end{biobox}
     \end{column}
@@ -189,27 +185,29 @@
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{biobox}{1. La Synergie (Interaction Positive)}
-        L'effet combiné des deux facteurs est \textbf{strictement supérieur} à la somme de leurs effets isolés :
+        \small
+        L'effet combiné est \textbf{supérieur} à la somme des effets isolés :
         \begin{equation*}
           \text{Effet}(A + B) > \text{Effet}(A) + \text{Effet}(B)
         \end{equation*}
         \textbf{Exemple biomédical :}
         \begin{itemize}
-          \item Antibiotique $\beta$-lactamine seul : lyse bactérienne modérée ($20\%$).
-          \item Inhibiteur de $\beta$-lactamase seul : lyse nulle ($0\%$).
-          \item Association des deux : lyse totale de $95\%$ !
+          \item $\beta$-lactamine seule : lyse de $20\%$.
+          \item Inhibiteur d'enzymes seul : lyse $0\%$.
+          \item Association des deux : lyse de $95\%$ !
         \end{itemize}
       \end{biobox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{warnbox}{2. L'Antagonisme (Interaction Négative)}
-        La présence d'un facteur \textbf{inhibe ou annule} l'action de l'autre facteur :
+        \small
+        La présence d'un facteur \textbf{inhibe} l'action de l'autre facteur :
         \begin{equation*}
           \text{Effet}(A + B) < \text{Effet}(A) + \text{Effet}(B)
         \end{equation*}
         \textbf{Exemple biochimique :}
         \begin{itemize}
-          \item Une molécule activatrice allostérique perd totalement son action stimulatrice si un inhibiteur compétitif est présent sur le site actif.
+          \item Une molécule activatrice allostérique perd son action stimulatrice si un inhibiteur compétitif bloque le site actif.
         \end{itemize}
       \end{warnbox}
     \end{column}
@@ -218,20 +216,20 @@
 
 \begin{frame}{Notion 5 : Lecture Graphique des Profils d'Interaction}
   \begin{center}
-    \includegraphics[width=0.88\linewidth]{../figures/fig01_interaction_profiles.png}
+    \includegraphics[width=0.62\linewidth, height=3.2cm, keepaspectratio]{../figures/fig01_interaction_profiles.png}
   \end{center}
   \vspace{-2mm}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \textbf{\color{BioNavy}Profils Parallèles $\implies$ Additivité Pure}
-      \begin{itemize}
+      \textbf{\small\color{BioNavy}Profils Parallèles $\implies$ Additivité Pure}
+      \begin{itemize}\small
         \item L'effet de la dose est identique quel que soit le génotype.
-        \item Absence d'interaction ($p > 0.05$).
+        \item Absence formelle d'interaction ($p > 0.05$).
       \end{itemize}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \textbf{\color{BioRed}Profils Croisés ou Sécants $\implies$ Interaction Forte}
-      \begin{itemize}
+      \textbf{\small\color{BioRed}Profils Croisés $\implies$ Interaction Forte}
+      \begin{itemize}\small
         \item La réponse à la dose diffère selon le génotype.
         \item Interaction hautement significative ($p \le 0.05$).
       \end{itemize}
@@ -239,56 +237,43 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 6 : La Règle d'Or de l'ANOVA Croisée}
-  \begin{warnbox}{Règle Impérative : Ne Jamais Conclure sur les Effets Principaux si l'Interaction est Significative !}
-    Lorsque le test de l'interaction $A \times B$ donne $p \le 0.05$ :
-    \begin{itemize}
-      \item Il est \textbf{scientifiquement erroné} d'affirmer de manière globale : « Le traitement a un effet significatif ».
-      \item En effet, l'effet du traitement \textbf{dépend} du génotype ou du sexe de l'animal ! Dire qu'il est efficace de façon générale masquerait son inefficacité chez un sous-groupe.
-    \end{itemize}
-  \end{warnbox}
-  \vspace{1mm}
-  \begin{takeawaybox}{Ordre Strict d'Interprétation de la Table ANOVA}
-    \begin{enumerate}
-      \item Regarder \textbf{toujours en premier} la ligne de l'\textbf{Interaction $A \times B$}.
-      \item \textbf{Si $p_{AB} > 0.05$ (Pas d'interaction) :} On peut interpréter les effets principaux A et B en toute sécurité.
-      \item \textbf{Si $p_{AB} \le 0.05$ (Interaction présente) :} On neutralise l'interprétation des effets principaux et on procède immédiatement à l'\textbf{Analyse des Effets Simples}.
-    \end{enumerate}
-  \end{takeawaybox}
-\end{frame}
-
-\begin{frame}{Notion 7 : La Méthode des Effets Simples (\textit{Simple Effects})}
-  \begin{conceptbox}{Définition \& Stratégie Déductive}
-    Face à une interaction significative, la seule démarche scientifique rigoureuse consiste à \textbf{découper l'analyse globale en sous-analyses univariées conditionnelles} :
-  \end{conceptbox}
-
+\begin{frame}{Notion 6 : Typologie des Modèles (Fixe, Aléatoire, Mixte)}
   \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Étape 1 : Effet de A dans chaque niveau de B}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{Modèle I : Effets Fixes}
         \begin{itemize}
-          \item Analyser l'effet du traitement \textbf{uniquement chez les souris Sauvages (WT)} (ANOVA à 1 facteur sur le sous-groupe WT).
-          \item Analyser l'effet du traitement \textbf{uniquement chez les souris Diabétiques ($db/db$)}.
+          \item L'expérimentateur choisit délibérément les modalités (ex: Doses $0, 50, 100\,\text{mg/kg}$).
+          \item Les conclusions s'appliquent \textbf{exclusivement} à ces niveaux précis.
+          \item \textbf{C'est le cas standard en biochimie.}
         \end{itemize}
-      \end{biobox}
+      \end{conceptbox}
     \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Étape 2 : Effet de B dans chaque niveau de A}
+    \begin{column}{0.34\linewidth}
+      \begin{conceptbox}{Modèle II : Effets Aléatoires}
         \begin{itemize}
-          \item Comparer WT vs $db/db$ au niveau Témoin (état basal de la pathologie).
-          \item Comparer WT vs $db/db$ au niveau Forte Dose (le traitement normalise-t-il la glycémie des malades au niveau des sains ?).
+          \item Les modalités sont un tirage au sort parmi une infinité (ex: 4 lots de sérum bovin tirés d'un cheptel).
+          \item Objectif : Estimer les composantes de variance.
         \end{itemize}
-      \end{biobox}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{Modèle III : Modèle Mixte}
+        \begin{itemize}
+          \item Un facteur fixe (ex: Traitement) croisé avec un facteur aléatoire (ex: Opérateur ou Hôpital).
+          \item Le dénominateur des tests $F$ change !
+        \end{itemize}
+      \end{conceptbox}
     \end{column}
   \end{columns}
 \end{frame}
 
 % ========================================================
-\section{Modélisation Mathématique \& Partition des Variances}
+\section{Modélisation Mathématique \& Équations du Modèle}
 % ========================================================
 
-\begin{frame}{Notion 8 : L'Équation Fondamentale du Modèle Linéaire}
+\begin{frame}{Notion 7 : L'Équation Linéaire Fondamentale de l'ANOVA Croisée}
   \begin{conceptbox}{Formulation Mathématique Complète}
-    Chaque mesure individuelle $Y_{ijk}$ (réplicat biologique $k$ recevant le niveau $i$ de A et le niveau $j$ de B) est modélisée par :
+    Chaque mesure individuelle $Y_{ijk}$ (réplicat biologique $k$ recevant le niveau $i$ de A et le niveau $j$ de B) est décomposée par :
     \begin{equation*}
       Y_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}
     \end{equation*}
@@ -299,7 +284,7 @@
     \begin{column}{0.48\linewidth}
       \textbf{\color{BioNavy}Partie Déterministe (Structurelle) :}
       \begin{itemize}
-        \item $\mu$ : Moyenne générale de référence.
+        \item $\mu$ : Grande moyenne biologique de référence.
         \item $\alpha_i$ : Effet spécifique du traitement $i$.
         \item $\beta_j$ : Effet spécifique du génotype $j$.
         \item $(\alpha\beta)_{ij}$ : Interaction spécifique entre $i$ et $j$.
@@ -309,21 +294,45 @@
       \textbf{\color{BioTeal}Partie Aléatoire (Stochastique) :}
       \begin{itemize}
         \item $\varepsilon_{ijk}$ : Erreur résiduelle biologique.
-        \item Capture les micro-fluctuations propres à chaque animal individuel.
-        \item \textbf{Postulat clé :} $\varepsilon_{ijk} \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2)$.
+        \item Capture les micro-variations propres à chaque animal individuel.
+        \item \textbf{Postulat fondamental :} $\varepsilon_{ijk} \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2)$.
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 9 : Le Résidu Biologique $\varepsilon_{ijk}$ et sa Variance $\sigma^2$}
+\begin{frame}{Notion 8 : Contraintes d'Identifiabilité (Pourquoi Somme = 0 ?)}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Le Problème Mathématique}
+        Sans contrainte, l'équation linéaire possède une infinité de solutions. Pour fixer des estimateurs uniques, on impose les \textbf{contraintes de centrage} :
+        \begin{align*}
+          \sum_{i=1}^I \alpha_i &= 0, \quad \sum_{j=1}^J \beta_j = 0 \\
+          \sum_{i=1}^I (\alpha\beta)_{ij} &= 0 \; (\forall j), \quad \sum_{j=1}^J (\alpha\beta)_{ij} = 0 \; (\forall i)
+        \end{align*}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Interprétation Biologique Simple}
+        \begin{itemize}
+          \item Les paramètres $\alpha_i$ et $\beta_j$ sont des \textbf{écarts relatifs à la moyenne générale}.
+          \item Si un traitement augmente la réponse de $+4\,\mu\text{mol/g}$, les autres doivent compenser pour que la somme soit nulle.
+          \item Les $(\alpha\beta)_{ij}$ mesurent les déviations par rapport au plan additif.
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Notion 9 : L'Erreur Résiduelle Biologique $\varepsilon_{ijk}$ \& le Bruit de Fond}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Nature Mathématique du Résidu}
-        Le résidu $\varepsilon_{ijk}$ représente la différence entre la valeur observée $Y_{ijk}$ et la moyenne théorique du groupe $\mu_{ij}$ :
-        \begin{equation*}
-          \varepsilon_{ijk} = Y_{ijk} - \mu_{ij}
-        \end{equation*}
+        Distance entre la valeur mesurée sur un animal $Y_{ijk}$ et la moyenne théorique de son groupe $\mu_{ij}$ :
+        \begin{align*}
+          \varepsilon_{ijk} &= Y_{ijk} - \mu_{ij} \\
+          &= Y_{ijk} - (\mu + \alpha_i + \beta_j + (\alpha\beta)_{ij})
+        \end{align*}
         \begin{itemize}
           \item Centré sur zéro : $\mathbb{E}(\varepsilon_{ijk}) = 0$.
           \item Variance constante : $\mathrm{Var}(\varepsilon_{ijk}) = \sigma^2$.
@@ -331,11 +340,11 @@
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Interprétation Biologique}
-        Même dans une même cage, chez des souris de même âge, même sexe et recevant la même dose de polyphénol :
+      \begin{biobox}{Sens Expérimental à la Paillasse}
+        Même dans la même cage, avec des souris de même âge, sexe et dose :
         \begin{itemize}
-          \item Leurs taux de MDA ne sont pas rigoureusement identiques !
-          \item Cette divergence intra-groupe est le \textbf{bruit biologique inhérent}.
+          \item Leurs taux de MDA ne sont jamais rigoureusement identiques !
+          \item Cette divergence intra-groupe est le \textbf{bruit biologique incompressible}.
           \item L'ANOVA estime ce bruit par le carré moyen résiduel $MS_{\text{res}}$.
         \end{itemize}
       \end{biobox}
@@ -343,8 +352,51 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 10 : L'Équation Générale de Partition des Variances}
-  \begin{conceptbox}{Le Principe Fondamental de l'ANOVA}
+\begin{frame}{Notion 10 : Les Trois Hypothèses Nulles Testées Simultanément}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{1. Effet Traitement}
+        \scriptsize
+        \begin{align*}
+          H_0^{(A)} &: \alpha_1 = \dots = \alpha_I = 0 \\
+          H_1^{(A)} &: \exists i, \, \alpha_i \neq 0
+        \end{align*}
+        Aucun effet moyen des différentes doses.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.34\linewidth}
+      \begin{conceptbox}{2. Effet Génotype}
+        \scriptsize
+        \begin{align*}
+          H_0^{(B)} &: \beta_1 = \dots = \beta_J = 0 \\
+          H_1^{(B)} &: \exists j, \, \beta_j \neq 0
+        \end{align*}
+        Aucune différence moyenne WT vs $db/db$.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{3. Interaction}
+        \scriptsize
+        \begin{align*}
+          H_0^{(AB)} &: (\alpha\beta)_{ij} = 0 \; (\forall i, j) \\
+          H_1^{(AB)} &: \exists (i, j), \, (\alpha\beta)_{ij} \neq 0
+        \end{align*}
+        Effets strictement additifs (parallèles).
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{takeawaybox}{Orthogonalité Totale}
+    \small L'ANOVA teste ces trois hypothèses de façon \textbf{indépendante} dans une seule expérience optimisée !
+  \end{takeawaybox}
+\end{frame}
+
+% ========================================================
+\section{Partition des Sommes de Carrés ($SS$) \& Calculs Pas-à-Pas}
+% ========================================================
+
+\begin{frame}{Notion 11 : L'Équation Générale de Partition des Variances}
+  \begin{conceptbox}{Le Principe d'Additivité Parfaite des Sommes de Carrés ($SS$)}
     La variabilité totale mesurée sur l'ensemble des animaux de l'expérience se partitionne de manière \textbf{rigoureusement additive} en 4 sources indépendantes :
     \begin{equation*}
       \mathbf{SS_{\text{Total}}} = \mathbf{SS_A} + \mathbf{SS_B} + \mathbf{SS_{AB}} + \mathbf{SS_{\text{Résiduelle}}}
@@ -361,43 +413,47 @@
       \end{itemize}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \textbf{\color{BioAmber}Variabilité Inexpliquée (Bruit) :}
+      \textbf{\color{BioAmber}Variabilité Inexpliquée (Bruit Biologique) :}
       \begin{itemize}
-        \item $SS_{\text{Résiduelle}}$ : Bruit biologique intra-condition et imprécision analytique.
+        \item $SS_{\text{Résiduelle}}$ : Bruit biologique intra-groupe et imprécision technique.
         \item C'est le dénominateur de comparaison pour tous les tests de Fisher !
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 11 : La Somme des Carrés Totale ($SS_{\text{Total}}$)}
+\begin{frame}{Notion 12 : La Somme des Carrés Totale ($SS_{\text{Total}}$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Formule Mathématique}
+      \begin{conceptbox}{Formule Théorique}
+        \small
         \begin{equation*}
           SS_{\text{Total}} = \sum_{i=1}^I \sum_{j=1}^J \sum_{k=1}^K (Y_{ijk} - \bar{Y}_{\dots})^2
         \end{equation*}
         \begin{itemize}
-          \item Somme des carrés des écarts entre chaque mesure individuelle et la grande moyenne générale $\bar{Y}_{\dots}$.
-          \item Nombre d'observations total : $N = IJK$.
-          \item Degrés de liberté associés : $ddl_{\text{Total}} = N - 1 = IJK - 1$.
+          \item Carrés des écarts entre chaque mesure et la moyenne générale $\bar{Y}_{\dots}$.
+          \item Effectif global : $N = I \cdot J \cdot K$.
+          \item Degrés de liberté : $ddl_{\text{Total}} = N - 1$.
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Signification Biologique}
-        Mesure la \textbf{dispersion totale absolue} observée sur l'ensemble de la cohorte animale, sans tenir compte des facteurs expérimentaux.\\
-        \vspace{1mm}
-        Si tous les animaux de l'étude avaient exactement la même valeur de biomarqueur, $SS_{\text{Total}} = 0$.
-      \end{biobox}
+      \begin{takeawaybox}{Formule Pratique de Calcul Rapide}
+        \small
+        On utilise le terme de correction $C$ :
+        \begin{equation*}
+          C = \frac{T_{\dots}^2}{N}, \qquad SS_{\text{Total}} = \sum_{i, j, k} Y_{ijk}^2 - C
+        \end{equation*}
+        Où $T_{\dots} = \sum Y_{ijk}$ est la somme de toutes les valeurs de l'étude.
+      \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 12 : La Somme des Carrés du Facteur A ($SS_A$)}
+\begin{frame}{Notion 13 : La Somme des Carrés du Facteur A ($SS_A$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Formule Mathématique}
+      \begin{conceptbox}{Formule Théorique}
         \begin{equation*}
           SS_A = J \cdot K \cdot \sum_{i=1}^I (\bar{Y}_{i\cdot\cdot} - \bar{Y}_{\dots})^2
         \end{equation*}
@@ -409,90 +465,107 @@
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Sens Biologique}
-        Quantifie la part de la variabilité totale \textbf{directement attribuable à l'efficacité du médicament}.\\
-        \vspace{1mm}
-        Plus les différentes doses créent des réponses moyennes éloignées les unes des autres, plus $SS_A$ est élevée !
-      \end{biobox}
+      \begin{takeawaybox}{Formule Pratique par les Totaux}
+        Soit $T_{i\cdot\cdot}$ le total des mesures pour le traitement $i$ :
+        \begin{equation*}
+          SS_A = \frac{\sum_{i=1}^I T_{i\cdot\cdot}^2}{J \cdot K} - C
+        \end{equation*}
+        \textbf{Sens biologique :} Quantifie la part de variabilité directement attribuable à l'efficacité globale du traitement.
+      \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 13 : La Somme des Carrés du Facteur B ($SS_B$)}
+\begin{frame}{Notion 14 : La Somme des Carrés du Facteur B ($SS_B$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Formule Mathématique}
+      \begin{conceptbox}{Formule Théorique}
         \begin{equation*}
           SS_B = I \cdot K \cdot \sum_{j=1}^J (\bar{Y}_{\cdot j\cdot} - \bar{Y}_{\dots})^2
         \end{equation*}
         \begin{itemize}
           \item Évalue l'écart entre la moyenne de chaque génotype $\bar{Y}_{\cdot j\cdot}$ et la moyenne globale.
-          \item Pondéré par le nombre d'animaux appartenant à chaque génotype ($I \cdot K$).
+          \item Pondéré par le nombre d'animaux de chaque génotype ($I \cdot K$).
           \item Degrés de liberté : $ddl_B = J - 1$.
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Sens Biologique}
-        Quantifie la part de variabilité expliquée par le \textbf{fond génétique ou le statut pathologique} des souris.\\
-        \vspace{1mm}
-        Reflète l'ampleur du déséquilibre métabolique de base entre souris malades et souris témoins.
-      \end{biobox}
+      \begin{takeawaybox}{Formule Pratique par les Totaux}
+        Soit $T_{\cdot j\cdot}$ le total des mesures pour le génotype $j$ :
+        \begin{equation*}
+          SS_B = \frac{\sum_{j=1}^J T_{\cdot j\cdot}^2}{I \cdot K} - C
+        \end{equation*}
+        \textbf{Sens biologique :} Quantifie la part de variabilité expliquée par le statut génétique de base des animaux.
+      \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 14 : La Somme des Carrés de l'Interaction ($SS_{AB}$)}
+\begin{frame}{Notion 15 : La Somme des Carrés de l'Interaction ($SS_{AB}$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Formule Mathématique}
+      \begin{conceptbox}{Formule Théorique}
         \begin{equation*}
           SS_{AB} = K \sum_{i=1}^I \sum_{j=1}^J (\bar{Y}_{ij\cdot} - \bar{Y}_{i\cdot\cdot} - \bar{Y}_{\cdot j\cdot} + \bar{Y}_{\dots})^2
         \end{equation*}
         \begin{itemize}
-          \item Mesure l'écart entre la moyenne observée de chaque sous-groupe $\bar{Y}_{ij\cdot}$ et celle prédite par le modèle additif sans interaction.
+          \item Mesure l'écart entre la moyenne observée d'un lot $\bar{Y}_{ij\cdot}$ et celle prédite par le modèle additif sans interaction.
           \item Degrés de liberté : $ddl_{AB} = (I - 1)(J - 1)$.
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Sens Biologique}
-        Quantifie la quantité de variation liée à la \textbf{synergie ou à l'antagonisme} spécifique entre les molécules et le génotype.\\
-        \vspace{1mm}
-        Si les courbes de réponse sont strictement parallèles, $SS_{AB} = 0$.
-      \end{biobox}
+      \begin{takeawaybox}{Formule Pratique par Soustraction}
+        On calcule d'abord la somme des carrés entre les $I \times J$ sous-groupes ($SS_{\text{Sous-groupes}}$) :
+        \begin{equation*}
+          SS_{\text{Sous-groupes}} = \frac{\sum_{i, j} T_{ij\cdot}^2}{K} - C
+        \end{equation*}
+        Puis on soustrait les effets principaux :
+        \begin{equation*}
+          SS_{AB} = SS_{\text{Sous-groupes}} - SS_A - SS_B
+        \end{equation*}
+      \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 15 : La Somme des Carrés Résiduelle ($SS_{\text{res}}$)}
+\begin{frame}{Notion 16 : La Somme des Carrés Résiduelle ($SS_{\text{res}}$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Formule Mathématique}
+      \begin{conceptbox}{Formule Théorique}
         \begin{equation*}
           SS_{\text{res}} = \sum_{i=1}^I \sum_{j=1}^J \sum_{k=1}^K (Y_{ijk} - \bar{Y}_{ij\cdot})^2
         \end{equation*}
         \begin{itemize}
-          \item Somme des carrés des écarts entre chaque mesure individuelle et la moyenne de son propre lot expérimental $\bar{Y}_{ij\cdot}$.
+          \item Somme des carrés des écarts entre chaque animal individuel et la moyenne de son propre groupe $\bar{Y}_{ij\cdot}$.
           \item Degrés de liberté : $ddl_{\text{res}} = I \cdot J \cdot (K - 1)$.
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Sens Biologique}
-        Représente la somme cumulée des \textbf{variances internes à chaque groupe} :
+      \begin{takeawaybox}{Calcul Pratique par Soustraction Finale}
+        Par additivité stricte des variances :
         \begin{equation*}
-          SS_{\text{res}} = \sum_{i, j} (K - 1) \cdot s_{ij}^2
+          SS_{\text{res}} = SS_{\text{Total}} - SS_{\text{Sous-groupes}}
         \end{equation*}
-        C'est le bruit biologique pur, non attribuable au traitement ni au génotype.
-      \end{biobox}
+        Ou de manière équivalente :
+        \begin{equation*}
+          SS_{\text{res}} = SS_{\text{Total}} - (SS_A + SS_B + SS_{AB})
+        \end{equation*}
+        \textbf{Sens biologique :} C'est le bruit biologique pur, non attribuable aux traitements.
+      \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 16 : Les Degrés de Liberté ($ddl$) Expliqués Intuitivement}
+% ========================================================
+\section{Degrés de Liberté, Carrés Moyens \& Tests $F$ de Fisher}
+% ========================================================
+
+\begin{frame}{Notion 17 : Les Degrés de Liberté ($ddl$) Expliqués aux Biologistes}
   \begin{conceptbox}{Qu'est-ce qu'un Degré de Liberté ($ddl$) ?}
-    Nombre de valeurs libres de varier dans une somme après que des contraintes (moyennes fixées) ont été appliquées.
+    Nombre d'informations indépendantes restant disponibles dans un calcul après estimation des paramètres de moyenne.
   \end{conceptbox}
 
   \begin{table}[h]
@@ -501,12 +574,12 @@
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{lll}
       \toprule
-      \textbf{Composante} & \textbf{Formule $ddl$} & \textbf{Exemple Numérique ($I=3$ Traitements, $J=2$ Génotypes, $K=5$ Souris)} \\
+      \textbf{Composante} & \textbf{Formule $ddl$} & \textbf{Exemple ($I=3$ Traitements, $J=2$ Génotypes, $K=5$ Souris)} \\
       \midrule
-      Facteur A (Traitement) & $I - 1$ & $3 - 1 = \mathbf{2}$ comparaisons possibles entre 3 doses. \\
-      Facteur B (Génotype) & $J - 1$ & $2 - 1 = \mathbf{1}$ comparaison entre WT et $db/db$. \\
+      Facteur A (Traitement) & $I - 1$ & $3 - 1 = \mathbf{2}$ comparaisons indépendantes entre 3 doses. \\
+      Facteur B (Génotype) & $J - 1$ & $2 - 1 = \mathbf{1}$ comparaison binaire entre WT et $db/db$. \\
       Interaction $A \times B$ & $(I - 1)(J - 1)$ & $2 \times 1 = \mathbf{2}$ degrés de liberté pour l'interaction. \\
-      Résiduelle (Erreur) & $IJ(K - 1)$ & $3 \times 2 \times (5 - 1) = 6 \times 4 = \mathbf{24}$ degrés de liberté pour le bruit. \\
+      Résiduelle (Erreur) & $IJ(K - 1)$ & $3 \times 2 \times (5 - 1) = 6 \times 4 = \mathbf{24}$ degrés de liberté de bruit. \\
       \midrule
       \textbf{Total} & $IJK - 1$ & $3 \times 2 \times 5 - 1 = 30 - 1 = \mathbf{29}$ degrés de liberté au total. \\
       \bottomrule
@@ -519,42 +592,42 @@
   \end{takeawaybox}
 \end{frame}
 
-\begin{frame}{Notion 17 : Les Carrés Moyens ($MS$) et le Lien avec la Variance ($S^2$)}
+\begin{frame}{Notion 18 : Les Carrés Moyens ($MS$) : La Vraie Notion de Variance}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Définition du Carré Moyen ($MS$)}
-        Une Somme des Carrés ($SS$) grandit mécaniquement avec le nombre d'animaux $N$. Pour obtenir une \textbf{variance d'échantillon}, on doit diviser par le nombre de degrés de liberté :
+        Une Somme des Carrés ($SS$) croît avec le nombre d'animaux. Pour obtenir une \textbf{variance}, on divise obligatoirement par ses degrés de liberté :
         \begin{equation*}
           MS = \frac{SS}{ddl}
         \end{equation*}
-        \textbf{Rappel fondamental du Chapitre 0 :}
+        \textbf{Rappel du Chapitre 0 :}
         \begin{equation*}
-          S^2 = \frac{\sum (X - \bar{X})^2}{n - 1} = \frac{SS}{ddl} \equiv MS
+          S^2 = \frac{\sum (X - \bar{X})^2}{n - 1} \equiv MS
         \end{equation*}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Un Carré Moyen EST une Variance !}
+      \begin{biobox}{Les 4 Variances de l'ANOVA Croisée}
         \begin{itemize}
           \item $MS_A = \frac{SS_A}{I-1}$ : Variance entre les traitements.
           \item $MS_B = \frac{SS_B}{J-1}$ : Variance entre les génotypes.
           \item $MS_{AB} = \frac{SS_{AB}}{(I-1)(J-1)}$ : Variance de l'interaction.
-          \item $MS_{\text{res}} = \frac{SS_{\text{res}}}{IJ(K-1)}$ : Variance résiduelle intra-groupe (bruit).
+          \item $MS_{\text{res}} = \frac{SS_{\text{res}}}{IJ(K-1)}$ : Variance résiduelle (bruit biologique interne).
         \end{itemize}
-        $\implies$ L'ANOVA compare donc des **variances** ($MS$), d'où son nom !
+        $\implies$ L'ANOVA compare des **variances** ($MS$).
       \end{biobox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 18 : Le Carré Moyen Résiduel ($MS_{\text{res}}$) : L'Étalon de Bruit}
+\begin{frame}{Notion 19 : Le Carré Moyen Résiduel ($MS_{\text{res}}$) : L'Étalon de Bruit}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Définition \& Formule}
         \begin{equation*}
           MS_{\text{res}} = s_{\text{pool}}^2 = \frac{SS_{\text{res}}}{IJ(K - 1)}
         \end{equation*}
-        C'est la moyenne pondérée des variances $s_{ij}^2$ observées dans les 6 conditions expérimentales.
+        C'est la moyenne pondérée des variances individuelles $s_{ij}^2$ observées dans les 6 lots expérimentaux.
         \begin{itemize}
           \item Fournit le \textbf{meilleur estimateur sans biais} de la variance biologique vraie $\sigma^2$.
           \item Écart-type résiduel combiné : $SD_{\text{res}} = \sqrt{MS_{\text{res}}}$.
@@ -562,18 +635,18 @@
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Rôle Clé de Dénominateur}
-        $MS_{\text{res}}$ sert de référence universelle de bruit pour toute l'analyse :
+      \begin{biobox}{Rôle Fondamental de Dénominateur}
+        $MS_{\text{res}}$ sert d'étalon universel de bruit pour toute l'analyse :
         \begin{itemize}
-          \item Si un traitement a un effet réel, sa variance ($MS_A$) doit être \textbf{nettement supérieure} au bruit de fond biologique ($MS_{\text{res}}$).
-          \item Tout test $F$ divise la variance de l'effet par ce $MS_{\text{res}}$.
+          \item Pour déclarer un traitement efficace, sa variance ($MS_A$) doit être \textbf{nettement supérieure} au bruit de fond ($MS_{\text{res}}$).
+          \item Tout test $F$ compare une variance d'effet à ce $MS_{\text{res}}$.
         \end{itemize}
       \end{biobox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 19 : La Statistique $F$ de Fisher-Snedecor (Rapport Signal / Bruit)}
+\begin{frame}{Notion 20 : La Statistique $F$ de Fisher-Snedecor (Rapport Signal / Bruit)}
   \begin{conceptbox}{Le Rapport de Variances de Fisher}
     La statistique $F$ compare la variance expliquée par le facteur biologique à la variance du bruit aléatoire résiduel :
     \begin{equation*}
@@ -588,7 +661,7 @@
           F_A = \frac{MS_A}{MS_{\text{res}}}
         \end{equation*}
         Sous $H_0^{(A)}$, $F_A \approx 1$.\\
-        Si $F_A \gg 1$, le traitement induit un effet très supérieur au bruit.
+        Si $F_A \gg 1$, effet traitement très supérieur au bruit.
       \end{conceptbox}
     \end{column}
     \begin{column}{0.34\linewidth}
@@ -612,17 +685,18 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 20 : La Règle Décisionnelle du Test $F$ ($F_{\text{crit}}$ et $p$-value)}
+\begin{frame}{Notion 21 : Règle de Décision \& Consultation de la Table de Fisher}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{La Loi de Distribution sous $H_0$}
-        Si l'hypothèse nulle est vraie (aucun effet), la statistique observée suit la loi de Fisher théorique :
+      \begin{conceptbox}{Distribution sous $H_0$ \& Valeur Critique}
+        Si $H_0$ est vraie, $F_{\text{obs}}$ suit la loi de Fisher théorique à deux degrés de liberté :
         \begin{equation*}
-          F_{\text{obs}} \sim \mathcal{F}(ddl_{\text{effet}}, \; ddl_{\text{res}})
+          F_{\text{obs}} \sim \mathcal{F}(ddl_{\text{numérateur}}, \; ddl_{\text{dénominateur}})
         \end{equation*}
-        On fixe le risque de première espèce $\alpha = 0.05$.
+        Au seuil $\alpha = 0.05$ :
         \begin{itemize}
-          \item La table de Fisher donne la valeur seuil critique $F_{\text{critique}}$.
+          \item Pour $A$ et $AB$ ($ddl_1 = 2, ddl_2 = 24$) : $F_{\text{crit}} = \mathbf{3.40}$.
+          \item Pour $B$ ($ddl_1 = 1, ddl_2 = 24$) : $F_{\text{crit}} = \mathbf{4.26}$.
         \end{itemize}
       \end{conceptbox}
     \end{column}
@@ -644,19 +718,19 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 21 : La Table ANOVA Complète Synthétique}
+\begin{frame}{Notion 22 : La Table d'ANOVA Complète Universelle}
   \begin{table}[h]
     \centering
     \small
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{lccccc}
       \toprule
-      \textbf{Source de Variation} & \textbf{Degrés de liberté ($ddl$)} & \textbf{Somme des Carrés ($SS$)} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} & \textbf{Décision ($p$-value)} \\
+      \textbf{Source de Variation} & \textbf{$ddl$} & \textbf{Somme des Carrés ($SS$)} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} & \textbf{Décision ($p$-value)} \\
       \midrule
       Facteur A (Traitement) & $I - 1$ & $SS_A$ & $MS_A = \frac{SS_A}{I-1}$ & $F_A = \frac{MS_A}{MS_{\text{res}}}$ & $P(\mathcal{F} > F_A)$ \\
       Facteur B (Génotype) & $J - 1$ & $SS_B$ & $MS_B = \frac{SS_B}{J-1}$ & $F_B = \frac{MS_B}{MS_{\text{res}}}$ & $P(\mathcal{F} > F_B)$ \\
       \textbf{Interaction $A \times B$} & $(I-1)(J-1)$ & $SS_{AB}$ & $MS_{AB} = \frac{SS_{AB}}{(I-1)(J-1)}$ & \cellcolor{BioTeal!20}\textbf{$F_{AB} = \frac{MS_{AB}}{MS_{\text{res}}}$} & \cellcolor{BioTeal!20}\textbf{$P(\mathcal{F} > F_{AB})$} \\
-      Résiduelle (Bruit) & $IJ(K - 1)$ & $SS_{\text{res}}$ & $MS_{\text{res}} = \frac{SS_{\text{res}}}{IJ(K-1)}$ & --- & --- \\
+      Résiduelle (Erreur) & $IJ(K - 1)$ & $SS_{\text{res}}$ & $MS_{\text{res}} = \frac{SS_{\text{res}}}{IJ(K-1)}$ & --- & --- \\
       \midrule
       \textbf{Total} & $IJK - 1$ & $SS_{\text{Total}}$ & --- & --- & --- \\
       \bottomrule
@@ -664,67 +738,95 @@
     }
   \end{table}
   \vspace{-1mm}
-  \begin{takeawaybox}{Clarté Absolue}
-    Chaque ligne teste une hypothèse scientifique indépendante en comparant son carré moyen $MS$ au carré moyen résiduel $MS_{\text{res}}$.
+  \begin{takeawaybox}{Clarté Didactique}
+    Chaque ligne évalue une hypothèse biologique indépendante en confrontant sa variance spécifique ($MS$) à la variance d'erreur résiduelle ($MS_{\text{res}}$).
   \end{takeawaybox}
 \end{frame}
 
-% ========================================================
-\section{Vérification des Postulats \& Diagnostic}
-% ========================================================
-
-\begin{frame}{Notion 22 : Postulat de Normalité des Résidus ($\varepsilon_{ijk}$)}
+\begin{frame}{Notion 23 : Mesure de la Taille de l'Effet ($\eta_p^2$ et $\omega^2$)}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Pourquoi Vérifier les Résidus ?}
-        L'ANOVA ne requiert pas que l'échantillon global brut soit normal !\\
-        Elle exige que \textbf{les résidus intra-groupes} $\varepsilon_{ijk} = Y_{ijk} - \bar{Y}_{ij\cdot}$ suivent une loi normale :
+      \begin{conceptbox}{Eta-Carré Partiel ($\eta_p^2$)}
+        \small
+        Quantifie la part de variance expliquée :
         \begin{equation*}
-          \varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)
+          \eta_p^2 = \frac{SS_{\text{effet}}}{SS_{\text{effet}} + SS_{\text{res}}}
         \end{equation*}
-        \textbf{Outils diagnostiques :}
+        \textbf{Seuils de Cohen :}
         \begin{itemize}
-          \item \textbf{Test de Shapiro-Wilk :} $p > 0.05 \implies$ Normalité validée.
-          \item \textbf{Diagramme Quantile-Quantile (Q-Q plot) :} Les points doivent s'aligner sur la droite diagonale à 45°.
+          \item $\eta_p^2 = 0.01$ : Faible $\cdot$ $0.06$ : Moyen.
+          \item $\eta_p^2 \ge 0.14$ : Effet fort (majeur en biochimie).
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Robustesse du Test $F$}
-        Grâce au Théorème Central Limite (TCL vu au Chapitre 0) :
+      \begin{takeawaybox}{Omega-Carré ($\omega^2$) : Non Biaisé}
+        \small
+        Sur petits échantillons, $\eta_p^2$ surestime l'effet. L'Omega-carré corrige ce biais :
+        \begin{equation*}
+          \omega^2 = \frac{SS_{\text{effet}} - ddl_{\text{effet}} \cdot MS_{\text{res}}}{SS_{\text{Total}} + MS_{\text{res}}}
+        \end{equation*}
+        Estimation non biaisée de la variance expliquée dans la population parente.
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Démarche Décisionnelle \& Analyse des Effets Simples}
+% ========================================================
+
+\begin{frame}{Notion 24 : L'Arbre Décisionnel Fondamental Post-ANOVA}
+  \begin{warnbox}{Règle d'Or Impérative}
+    \small
+    On ne conclut \textbf{jamais} sur les effets principaux si l'interaction est statistiquement significative ($p_{AB} \le 0.05$) !
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Si Interaction Non Sig. ($p > 0.05$)}
+        \small
         \begin{itemize}
-          \item L'ANOVA est remarquablement \textbf{robuste} aux légères déviations de normalité si le plan est équilibré ($K$ identique dans chaque lot) et $N \ge 30$.
-          \item Seules les asymétries sévères imposent une transformation.
+          \item Effets strictement additifs.
+          \item Interprétation des effets principaux globaux autorisée.
+          \item Test post-hoc de Tukey sur les moyennes marginales si $p \le 0.05$.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Si Interaction Significative ($p \le 0.05$)}
+        \small
+        \begin{itemize}
+          \item L'efficacité dépend du génotype !
+          \item Conclusions globales formellement interdites.
+          \item Scission de l'étude en \textbf{Effets Simples} (analyses conditionnelles).
         \end{itemize}
       \end{biobox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 23 : Postulat d'Homogénéité des Variances (Homoscédasticité)}
+\begin{frame}{Notion 25 : Décomposition en Effets Simples (\textit{Simple Effects})}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Définition \& Enjeu}
-        L'ANOVA suppose que la variabilité biologique intra-groupe $\sigma^2$ est identique dans toutes les conditions expérimentales :
-        \begin{equation*}
-          \sigma_{11}^2 = \sigma_{12}^2 = \dots = \sigma_{IJ}^2 = \sigma^2
-        \end{equation*}
-        \textbf{Tests statistiques dédiés :}
+      \begin{biobox}{A. Effet de la Dose chez chaque Génotype}
+        \small
+        On analyse la dose au sein de chaque statut génétique :
         \begin{itemize}
-          \item \textbf{Test de Levene :} Moins sensible aux déviations de normalité (fortement recommandé).
-          \item \textbf{Test de Bartlett :} Très puissant si la normalité est parfaite.
-          \item Règle : $p > 0.05 \implies$ Homoscédasticité acceptée.
+          \item \textbf{Chez WT (témoins sains) :} Témoin vs 50 vs 100 mg/kg $\implies$ Aucun changement métabolique ni toxicité ($p > 0.05$).
+          \item \textbf{Chez $db/db$ (diabétiques) :} Témoin vs 50 vs 100 mg/kg $\implies$ Chute spectaculaire dose-dépendante du MDA ($p < 0.001$).
         \end{itemize}
-      \end{conceptbox}
+      \end{biobox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{warnbox}{Que faire si les variances sont inégales ?}
-        Si $p_{\text{Levene}} \le 0.05$ (hétéroscédasticité) :
-        \begin{enumerate}
-          \item \textbf{Transformation logarithmique :} $Y' = \log_{10}(Y)$ stabilise la variance pour les biomarqueurs.
-          \item \textbf{Modèles Linéaires Mixtes (GLS) :} Sous Python (`statsmodels`) ou R (`nlme`), modéliser des variances résiduelles spécifiques par groupe via `weights = varIdent()`.
-        \end{enumerate}
-      \end{warnbox}
+      \begin{conceptbox}{B. Effet du Génotype à chaque Dose}
+        \small
+        On évalue le diabète conditionnellement à la dose :
+        \begin{itemize}
+          \item \textbf{À dose 0 (Témoin) :} Sévère hyper-stress oxydatif basal ($db/db$ vs WT).
+          \item \textbf{À dose 100 mg/kg :} Le traitement normalise le MDA du diabétique au niveau physiologique sain !
+        \end{itemize}
+      \end{conceptbox}
     \end{column}
   \end{columns}
 \end{frame}
@@ -733,176 +835,381 @@
 \section{Comparaisons Multiples Post-Hoc}
 % ========================================================
 
-\begin{frame}{Notion 24 : L'Inflation du Risque $\alpha$ Global}
+\begin{frame}{Notion 26 : Pourquoi les Tests $t$ Répétés sont Formellement Interdits ?}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{warnbox}{Le Danger des Tests $t$ Répétés}
-        L'ANOVA globale nous dit : \textit{« Il y a au moins une différence significative parmi les 6 groupes »}.\\
-        Mais elle ne précise pas \textbf{quelles paires} diffèrent !\\
-        \vspace{1mm}
-        Pourquoi ne pas faire simplement des tests $t$ de Student entre chaque paire ?\\
-        $\implies$ Avec 6 conditions, il y a $\binom{6}{2} = 15$ comparaisons par paires !
+      \begin{warnbox}{Le Fléau de l'Inflation du Risque $\alpha$}
+        Si on compare 3 doses par des tests $t$ de Student classiques deux à deux (3 paires), chaque test porte un risque d'erreur $\alpha = 0.05$.
+        Pour $m$ comparaisons indépendantes, le risque d'au moins un faux positif devient :
+        \begin{equation*}
+          \alpha_{\text{global}} = 1 - (1 - \alpha)^m
+        \end{equation*}
+        Pour 3 paires : $\alpha_{\text{global}} = 1 - (0.95)^3 = \mathbf{14.3\%}$ !\\
+        Pour 10 paires : $\alpha_{\text{global}} = 1 - (0.95)^{10} = \mathbf{40.1\%}$ !
       \end{warnbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{L'Explosion Mathématique de l'Erreur}
-        Si chaque test est mené à $\alpha = 0.05$, la probabilité d'avoir \textbf{au moins un faux positif} dans l'expérience est :
-        \begin{equation*}
-          \alpha_{\text{global}} = 1 - (1 - \alpha)^k = 1 - (0.95)^{15} \approx \mathbf{53.7\%} !
-        \end{equation*}
-        $\implies$ Plus d'une chance sur deux de publier un résultat faux !
+      \begin{conceptbox}{La Règle des Tests Post-Hoc}
+        Les tests post-hoc sont spécialement conçus pour comparer toutes les paires tout en \textbf{maintenant le risque global d'erreur $\alpha$ strictement borné à $5\%$}.
         \begin{itemize}
-          \item Les tests **Post-Hoc** corrigent cette inflation en ajustant les $p$-values.
+          \item \textbf{Test de Tukey HSD :} Comparaisons de toutes les paires entre elles.
+          \item \textbf{Test de Dunnett :} Comparaisons exclusives contre un seul groupe témoin.
+          \item \textbf{Bonferroni :} Ajustement conservateur $\alpha' = \alpha / m$.
         \end{itemize}
       \end{conceptbox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 25 : Le Test Post-Hoc de Tukey HSD (\textit{Honestly Significant Difference})}
-  \begin{conceptbox}{Principe Fondamental}
-    Le test de Tukey compare **toutes les paires de moyennes possibles** en maintenant strictement le risque d'erreur global de l'expérience à $\alpha = 0.05$ :
+\begin{frame}{Notion 27 : Le Test de Tukey HSD (Honestly Significant Difference)}
+  \begin{conceptbox}{Définition \& Formule du Seuil HSD}
+    Deux moyennes $\bar{Y}_i$ et $\bar{Y}_j$ sont déclarées significativement différentes si leur écart dépasse le seuil critique $HSD$ :
     \begin{equation*}
-      HSD = q_{\alpha, \, I, \, ddl_{\text{res}}} \times \sqrt{\frac{MS_{\text{res}}}{K}}
+      |\bar{Y}_i - \bar{Y}_j| \ge \text{HSD} = q_{\alpha, \, k, \, ddl_{\text{res}}} \times \sqrt{\frac{MS_{\text{res}}}{n}}
     \end{equation*}
-    Où $q$ est la statistique d'étendue studentisée (\textit{Studentized Range}).
   \end{conceptbox}
 
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Règle de Décision Simple}
-        Deux groupes $A$ et $B$ sont déclarés significativement différents si :
+      \begin{itemize}
+        \item $q_{\alpha}$ : Valeur critique de la loi de l'étendue studentisée (\textit{Studentized Range}).
+        \item $k$ : Nombre total de groupes comparés.
+        \item $ddl_{\text{res}}$ : Degrés de liberté de la résiduelle de l'ANOVA ($24$).
+        \item $n$ : Nombre de réplicats par groupe ($5$).
+        \item $MS_{\text{res}}$ : Bruit résiduel de l'ANOVA globale.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Avantage Majeur pour le Biologiste}
+        En utilisant $MS_{\text{res}}$ (issu de tous les animaux) plutôt que la variance restreinte aux deux groupes comparés, le test de Tukey bénéficie d'une \textbf{puissance statistique maximale} tout en éliminant les faux positifs.
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Notion 28 : Le Test de Dunnett (Comparaison vs Témoin Unique)}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Quand Utiliser le Test de Dunnett ?}
+        En pharmacologie, on ne souhaite souvent pas comparer la Dose 50 à la Dose 100, mais uniquement \textbf{chaque dose active par rapport au véhicule (Témoin)} :
+        \begin{itemize}
+          \item Dose 50 vs Témoin
+          \item Dose 100 vs Témoin
+        \end{itemize}
+        Nombre de comparaisons réduit à $k - 1$ (au lieu de $k(k-1)/2$).
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{Gain Important de Puissance Statistique}
+        Puisqu'il effectue moins de tests que Tukey, le test de Dunnett impose une correction moins sévère :
+        \begin{itemize}
+          \item Le seuil critique de significativité est plus bas.
+          \item Il est plus facile de détecter des molécules biologiquement actives sans risquer de faux négatifs.
+        \end{itemize}
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Vérification des Postulats \& Diagnostic des Résidus}
+% ========================================================
+
+\begin{frame}{Notion 29 : Les Trois Postulats Impératifs de l'ANOVA}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{1. Indépendance}
+        \small
+        Mesures indépendantes entre animaux :
+        \begin{itemize}
+          \item Pas d'influence mutuelle.
+          \item Randomisation rigoureuse de l'attribution des lots.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.34\linewidth}
+      \begin{conceptbox}{2. Normalité}
+        \small
+        Résidus gaussiens :
         \begin{equation*}
-          |\bar{Y}_A - \bar{Y}_B| \ge HSD
+          \varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)
         \end{equation*}
-        Ou de façon équivalente : $p_{\text{adj}} \le 0.05$.
+        Vérifiée par Shapiro-Wilk et Q-Q plot.
       \end{conceptbox}
     \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Quand l'Utiliser ?}
-        Idéal pour les études exploratoires où l'on souhaite tester toutes les paires : Dose Faible vs Témoin, Dose Forte vs Témoin, ET Dose Forte vs Dose Faible.
-      \end{biobox}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{3. Homoscédasticité}
+        \small
+        Égalité des variances :
+        \begin{equation*}
+          \sigma_{11}^2 = \dots = \sigma_{IJ}^2
+        \end{equation*}
+        Vérifiée par test de Levene ($p > 0.05$).
+      \end{conceptbox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Notion 26 : Le Test Post-Hoc de Dunnett (Comparaison au Témoin)}
+\begin{frame}{Notion 30 : Que Faire en Cas de Violation des Postulats ?}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Principe \& Spécificité}
-        Dans de nombreux essais pharmacologiques, on ne s'intéresse pas à comparer les différentes doses entre elles, mais uniquement à comparer \textbf{chaque traitement actif par rapport au lot Témoin/Véhicule} :
+      \begin{biobox}{1. Transformations de Variables Usuelles}
+        Pour restaurer normalité et égalité des variances :
         \begin{itemize}
-          \item Nombre de comparaisons réduit à $I - 1$ (au lieu de $\frac{I(I-1)}{2}$).
-          \item Moins de pénalisation statistique que Tukey.
-          \item \textbf{Puissance statistique supérieure} pour détecter un effet thérapeutique par rapport au contrôle !
-        \end{itemize}
-      \end{conceptbox}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Exemple en Criblage Moléculaire}
-        Si vous testez 5 nouvelles molécules candidates ($M_1$ à $M_5$) contre un solvant véhicule :
-        \begin{itemize}
-          \item Le test de Dunnett compare spécifiquement :
-            $M_1$ vs Véhicule, $M_2$ vs Véhicule, \dots, $M_5$ vs Véhicule ($5$ tests).
-          \item Tukey ferait $15$ comparaisons inutiles (ex : $M_2$ vs $M_4$).
+          \item \textbf{Logarithmique ($Y' = \log_{10}(Y)$) :} Efficace pour les concentrations d'enzymes, cytokines et données asymétriques positives.
+          \item \textbf{Racine carrée ($Y' = \sqrt{Y}$) :} Recommandée pour les comptages (colonies, cellules).
+          \item \textbf{Arc-sinus ($Y' = \arcsin\sqrt{p}$) :} Pour les pourcentages et proportions.
         \end{itemize}
       \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{warnbox}{2. Méthodes Non-Paramétriques \& Robustes}
+        Si les transformations échouent :
+        \begin{itemize}
+          \item \textbf{Test de Scheirer-Ray-Hare :} Extension non paramétrique de l'ANOVA à deux facteurs basée sur les rangs (analogue de Kruskal-Wallis).
+          \item \textbf{ANOVA par Permutations / Bootstrap :} Rééchantillonnage informatique sans hypothèse distributionnelle.
+        \end{itemize}
+      \end{warnbox}
     \end{column}
   \end{columns}
 \end{frame}
 
 % ========================================================
-\section{Étude de Cas Réel Pas-à-Pas (Stress Oxydatif \& Diabète)}
+\section{Étude de Cas Réelle Complète Pas-à-Pas}
 % ========================================================
 
-\begin{frame}{Étude Préclinique sur le Stress Oxydatif Hépatique}
+\begin{frame}{Étude Préclinique : Données Brutes Réelles (Stress Oxydatif MDA)}
   \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Contexte Expérimental Réel}
-        On étudie l'effet antioxydant protecteur d'un polyphénol naturel sur la peroxydation lipidique hépatique mesurée par le taux de **Malondialdéhyde (MDA, $\mu\text{mol/g}$)** :
+    \begin{column}{0.35\linewidth}
+      \begin{biobox}{Contexte Biologique}
+        On mesure la peroxydation lipidique hépatique par le dosage du Malondialdéhyde (**MDA, $\mu\text{mol/g}$ de tissu**) :
         \begin{itemize}
-          \item \textbf{Facteur A (Traitement) :} Témoin, Dose $50\,\text{mg/kg}$, Dose $100\,\text{mg/kg}$ ($I = 3$).
-          \item \textbf{Facteur B (Génotype) :} Souris Sauvages WT vs Diabétiques $db/db$ ($J = 2$).
-          \item $K = 5$ souris par groupe ($N = 30$ animaux au total).
+          \item Facteur A : Traitement ($I = 3$ : Témoin, Dose 50, Dose 100 mg/kg).
+          \item Facteur B : Génotype ($J = 2$ : WT vs $db/db$).
+          \item $K = 5$ souris par groupe ($N = 30$).
         \end{itemize}
       \end{biobox}
     \end{column}
-    \begin{column}{0.48\linewidth}
-      \includegraphics[width=\linewidth]{../figures/fig01_mda_two_way_anova.png}
+    \begin{column}{0.63\linewidth}
+      \begin{table}[h]
+        \centering
+        \scriptsize
+        \resizebox{\linewidth}{!}{%
+        \begin{tabular}{llcccccc}
+          \toprule
+          \textbf{Génotype (B)} & \textbf{Traitement (A)} & \textbf{S1} & \textbf{S2} & \textbf{S3} & \textbf{S4} & \textbf{S5} & \textbf{Total ($T_{ij}$)} \\
+          \midrule
+          \textbf{Souris WT} & Témoin & 5.0 & 5.5 & 4.8 & 5.4 & 5.3 & \textbf{26.0} \\
+          & Dose 50 & 4.6 & 5.0 & 4.7 & 5.1 & 4.6 & \textbf{24.0} \\
+          & Dose 100 & 4.5 & 4.8 & 4.4 & 4.7 & 4.6 & \textbf{23.0} \\
+          \midrule
+          \textbf{Souris $db/db$} & Témoin & 18.0 & 19.2 & 17.5 & 18.8 & 18.5 & \textbf{92.0} \\
+          & Dose 50 & 11.5 & 12.8 & 11.8 & 12.4 & 11.5 & \textbf{60.0} \\
+          & Dose 100 & 7.2 & 8.0 & 7.4 & 7.9 & 7.5 & \textbf{38.0} \\
+          \bottomrule
+        \end{tabular}%
+        }
+      \end{table}
+      \vspace{-2mm}
+      \begin{takeawaybox}{Totaux Marginaux}
+        $T_{\text{Témoin}} = 118.0$, $T_{\text{Dose 50}} = 84.0$, $T_{\text{Dose 100}} = 61.0$.\\
+        $T_{\text{WT}} = 73.0$, $T_{db/db} = 190.0 \implies \mathbf{T_{\dots} = 263.0\,\mu\text{mol/g}}$.
+      \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Table Numérique ANOVA \& Interprétation des Résultats}
+\begin{frame}{Étape 1 : Calcul du Facteur de Correction $C$ \& $SS_{\text{Total}}$}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{1. Terme de Correction ($C$)}
+        \small
+        Avec $N = 30$ souris et le grand total $T_{\dots} = 263.0$ :
+        \begin{align*}
+          C &= \frac{T_{\dots}^2}{N} = \frac{(263.0)^2}{30} \\
+          &= \frac{69169.0}{30} = \mathbf{2305.633}
+        \end{align*}
+        La moyenne générale de l'étude est :
+        \begin{equation*}
+          \bar{Y}_{\dots} = \frac{263.0}{30} = \mathbf{8.767\,\mu\text{mol/g}}
+        \end{equation*}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{2. Somme des Carrés Totale ($SS_{\text{Total}}$)}
+        \small
+        On élève au carré les 30 valeurs individuelles :
+        \begin{align*}
+          \sum Y_{ijk}^2 &= 5.0^2 + 5.5^2 + \dots \\
+          &= \mathbf{3062.04} \\[1mm]
+          SS_{\text{Total}} &= \sum Y_{ijk}^2 - C \\
+          &= 3062.04 - 2305.633 = \mathbf{756.407}
+        \end{align*}
+        Degrés de liberté : $ddl_{\text{Total}} = 30 - 1 = \mathbf{29}$.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Étape 2 : Calcul Détaillé de $SS_A$ (Traitement) \& $SS_B$ (Génotype)}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Somme des Carrés Facteur A (Dose)}
+        \small
+        Chaque dose regroupe $J \cdot K = 2 \times 5 = 10$ souris :
+        \begin{align*}
+          SS_A &= \frac{T_{\text{Tém}}^2 + T_{\text{D50}}^2 + T_{\text{D100}}^2}{10} - C \\
+          &= \frac{118^2 + 84^2 + 61^2}{10} - 2305.633 \\
+          &= \frac{24701}{10} - 2305.633 = \mathbf{164.467}
+        \end{align*}
+        $ddl_A = 3 - 1 = \mathbf{2}$.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Somme des Carrés Facteur B (Génotype)}
+        \small
+        Chaque génotype regroupe $I \cdot K = 3 \times 5 = 15$ souris :
+        \begin{align*}
+          SS_B &= \frac{T_{\text{WT}}^2 + T_{db/db}^2}{15} - C \\
+          &= \frac{73^2 + 190^2}{15} - 2305.633 \\
+          &= \frac{41429}{15} - 2305.633 = \mathbf{456.300}
+        \end{align*}
+        $ddl_B = 2 - 1 = \mathbf{1}$.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Étape 3 : Calcul de $SS_{AB}$ (Interaction) \& $SS_{\text{res}}$ (Résiduelle)}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Somme des Carrés d'Interaction ($SS_{AB}$)}
+        \small
+        Somme sur les 6 cellules ($K=5$, $\sum T_{ij}^2 = 15289$) :
+        \begin{align*}
+          SS_{\text{Cell}} &= \frac{\sum T_{ij}^2}{K} - C = \frac{15289}{5} - 2305.633 \\
+          &= 3057.80 - 2305.633 = \mathbf{752.167} \\[1mm]
+          SS_{AB} &= SS_{\text{Cell}} - SS_A - SS_B \\
+          &= 752.167 - 164.467 - 456.300 \\
+          &= \mathbf{131.400} \quad (ddl_{AB} = \mathbf{2})
+        \end{align*}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Somme des Carrés Résiduelle ($SS_{\text{res}}$)}
+        \small
+        Par différence par rapport au total :
+        \begin{align*}
+          SS_{\text{res}} &= SS_{\text{Total}} - SS_{\text{Cell}} \\
+          &= 756.407 - 752.167 = \mathbf{4.240}
+        \end{align*}
+        Degrés de liberté résiduels :
+        \begin{equation*}
+          ddl_{\text{res}} = 3 \times 2 \times (5 - 1) = 6 \times 4 = \mathbf{24}
+        \end{equation*}
+        \textbf{Carré Moyen Résiduel ($MS_{\text{res}}$) :}
+        \begin{equation*}
+          MS_{\text{res}} = \frac{4.240}{24} = \mathbf{0.1767}
+        \end{equation*}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Table Numérique Finale d'ANOVA \& Décisions Statistiques}
   \begin{table}[h]
     \centering
     \small
-    \begin{tabular}{lccccc}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lcccccc}
       \toprule
-      \textbf{Source de Variation} & \textbf{$ddl$} & \textbf{Somme des Carrés ($SS$)} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$p$-value} \\
+      \textbf{Source de Variation} & \textbf{$ddl$} & \textbf{Somme des Carrés ($SS$)} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{critique}}$ ($\alpha=0.05$)} & \textbf{$p$-value} \\
       \midrule
-      Traitement (A) & 2 & 142.30 & 71.15 & 35.58 & $< 0.0001$ \\
-      Génotype (B) & 1 & 88.50 & 88.50 & 44.25 & $< 0.0001$ \\
-      \textbf{Interaction A $\times$ B} & \textbf{2} & \textbf{31.20} & \textbf{15.60} & \textbf{7.80} & \textbf{0.0025} \\
-      Résiduelle & 24 & 48.00 & 2.00 & --- & --- \\
+      Traitement (A) & 2 & 164.467 & 82.233 & 465.47 & 3.40 & $< 0.0001$ \\
+      Génotype (B) & 1 & 456.300 & 456.300 & 2582.83 & 4.26 & $< 0.0001$ \\
+      \textbf{Interaction $A \times B$} & \textbf{2} & \textbf{131.400} & \textbf{65.700} & \cellcolor{BioTeal!25}\textbf{371.89} & \textbf{3.40} & \cellcolor{BioTeal!25}\textbf{$< 0.0001$} \\
+      Résiduelle & 24 & 4.240 & 0.1767 & --- & --- & --- \\
       \midrule
-      \textbf{Total} & 29 & 310.00 & --- & --- & --- \\
+      \textbf{Total} & 29 & 756.407 & --- & --- & --- & --- \\
       \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
   \end{table}
   \vspace{-1mm}
-  \begin{takeawaybox}{Analyse Étape par Étape}
-    \begin{enumerate}
-      \item $F_{\text{Interaction}} = 7.80$ avec $p = 0.0025 < 0.01$ : \textbf{L'interaction est hautement significative !}
-      \item On ne conclut pas sur les effets principaux globaux ; on lance l'analyse post-hoc de Tukey.
-    \end{enumerate}
+  \begin{takeawaybox}{Diagnostic Impératif}
+    \small
+    $F_{\text{Interaction}} = 371.89 \gg 3.40$ ($p < 0.0001$) : \textbf{L'interaction est massivement significative !}
+    $\implies$ Il est formellement interdit de conclure sur les effets principaux globaux. On applique l'analyse des effets simples et le test post-hoc de Tukey HSD.
   \end{takeawaybox}
 \end{frame}
 
-\begin{frame}{Résultats du Test Post-Hoc de Tukey HSD \& Décision Biologique}
+\begin{frame}{Calcul Pas-à-Pas du Test Post-Hoc de Tukey HSD}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Effet chez les Souris Diabétiques ($db/db$)}
-        \begin{itemize}
-          \item MDA Témoin : $18.4 \pm 1.4\,\mu\text{mol/g}$
-          \item MDA Dose $50$ : $12.1 \pm 1.3$ ($p < 0.01$ vs Témoin)
-          \item MDA Dose $100$ : $7.8 \pm 1.2$ ($p < 0.001$ vs Témoin)
-          \item $\implies$ \textbf{Baisse spectaculaire de 58\% du stress oxydatif} chez les souris malades !
-        \end{itemize}
-      \end{biobox}
+      \begin{conceptbox}{1. Calcul du Seuil Critique HSD}
+        \small
+        Avec $k = 3$ doses, $ddl_{\text{res}} = 24$, $MS_{\text{res}} = 0.1767$, $n = 5$ :
+        La table de Tukey donne $q_{0.05, \, 3, \, 24} = \mathbf{3.53}$.
+        \begin{align*}
+          \text{HSD} &= q \times \sqrt{\frac{MS_{\text{res}}}{n}} \\
+          &= 3.53 \times \sqrt{\frac{0.1767}{5}} \\
+          &= 3.53 \times 0.1880 = \mathbf{0.664}
+        \end{align*}
+        \textbf{Règle :} Différence significative si $|\bar{y}_i - \bar{y}_j| \ge 0.664$.
+      \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Effet chez les Souris Saines (WT)}
+      \begin{biobox}{2. Comparaisons chez les Souris Diabétiques ($db/db$)}
+        \small
         \begin{itemize}
-          \item MDA Témoin : $5.2 \pm 0.9\,\mu\text{mol/g}$
-          \item MDA Dose $50$ : $4.9 \pm 1.1$ ($p = 0.88$, non significatif)
-          \item MDA Dose $100$ : $4.6 \pm 1.0$ ($p = 0.72$, non significatif)
-          \item $\implies$ Aucun effet toxique ni modification significative du statut oxydatif basal sain.
+          \item $|\bar{y}_{\text{T}} - \bar{y}_{\text{D50}}| = 18.4 - 12.0 = \mathbf{6.40} \ge 0.664$ ($p < 0.001$).
+          \item $|\bar{y}_{\text{T}} - \bar{y}_{\text{D100}}| = 18.4 - 7.6 = \mathbf{10.80} \ge 0.664$ ($p < 0.001$).
+          \item $|\bar{y}_{\text{D50}} - \bar{y}_{\text{D100}}| = 12.0 - 7.6 = \mathbf{4.40} \ge 0.664$ ($p < 0.001$).
         \end{itemize}
+        $\implies$ Chute dose-dépendante majeure du MDA !
       \end{biobox}
     \end{column}
   \end{columns}
-  \vspace{1mm}
-  \begin{takeawaybox}{Conclusion Scientifique Majeure}
-    La molécule possède un profil thérapeutique remarquable : elle normalise spécifiquement les voies enzymatiques dérégulées dans l'état pathologique diabétique sans perturber l'homéostasie des animaux sains.
-  \end{takeawaybox}
 \end{frame}
 
-\begin{frame}{Comment Rédiger les Résultats dans un Article Scientifique}
-  \begin{conceptbox}{Format de Rédaction Standard (Recommandations Internationales)}
-    Dans un manuscrit scientifique (format Journal of Biological Chemistry / Elsevier), la synthèse de l'ANOVA croisée se rédige sous la forme canonique :
+\begin{frame}{Comparaisons chez les Souris Témoins Saines (WT)}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Résultats du Test Post-Hoc chez WT}
+        \small
+        \begin{itemize}
+          \item $|\bar{y}_{\text{T}} - \bar{y}_{\text{D50}}| = 5.2 - 4.8 = \mathbf{0.40} < 0.664 \implies \text{NS } (p > 0.05)$.
+          \item $|\bar{y}_{\text{T}} - \bar{y}_{\text{D100}}| = 5.2 - 4.6 = \mathbf{0.60} < 0.664 \implies \text{NS } (p > 0.05)$.
+          \item $|\bar{y}_{\text{D50}} - \bar{y}_{\text{D100}}| = 4.8 - 4.6 = \mathbf{0.20} < 0.664 \implies \text{NS } (p > 0.05)$.
+        \end{itemize}
+        $\implies$ Aucun changement métabolique chez les souris saines.
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{Conclusion Thérapeutique Majeure}
+        \small
+        L'antioxydant possède un profil d'innocuité et d'efficacité exceptionnel :
+        \begin{itemize}
+          \item Cible spécifiquement la peroxydation lipidique pathologique chez les diabétiques.
+          \item N'altère aucunement le statut redox physiologique chez les témoins sains.
+          \item Signature parfaite d'une \textbf{interaction spécifique}.
+        \end{itemize}
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Comment Rédiger ces Résultats dans une Publication Internationale}
+  \begin{conceptbox}{Format Standardisé Exigé par les Revues Internationales}
+    \footnotesize
     \begin{quote}
-      \textit{« A two-way ANOVA revealed a statistically significant interaction between treatment dose and mouse genotype on hepatic MDA levels ($F(2, 24) = 7.80, \; p = 0.0025$). Post-hoc comparisons using Tukey's HSD test indicated that the polyphenol at $100\,\text{mg/kg}$ significantly reduced MDA levels in diabetic mice by 58\% ($p < 0.001$), whereas no significant change was observed in wild-type animals ($p = 0.72$). »}
+      \textit{« A two-way analysis of variance (ANOVA) revealed a highly significant interaction between antioxidant treatment and mouse genotype on hepatic MDA levels ($F(2, 24) = 371.89, \; p < 0.0001, \; \eta_p^2 = 0.969$). Post-hoc pairwise comparisons using Tukey's HSD test demonstrated that the extract significantly and dose-dependently reduced MDA levels in diabetic $db/db$ mice (50 mg/kg: $-34.8\%$; 100 mg/kg: $-58.7\%$; $p < 0.001$), whereas no significant variation was detected in healthy wild-type animals ($p > 0.05$). »}
     \end{quote}
   \end{conceptbox}
   \vspace{1mm}
-  \begin{takeawaybox}{Les 4 Éléments Indispensables à Mentionner Toujours}
-    \begin{enumerate}
-      \item Le nom du test (Two-way ANOVA).
-      \item Les degrés de liberté entre parenthèses : $F(ddl_{\text{effet}}, \; ddl_{\text{res}})$.
-      \item La valeur numérique de $F_{\text{obs}}$ et la $p$-value exacte.
-      \item Le nom du test post-hoc appliqué avec ses seuils de significativité.
-    \end{enumerate}
+  \begin{takeawaybox}{Les 4 Mentions Obligatoires}
+    \small
+    1. Nom exact du test $\cdot$ 2. Degrés de liberté $F(ddl_{\text{effet}}, ddl_{\text{res}})$ $\cdot$ 3. Valeur de $F_{\text{obs}}$ et $p$-value exacte $\cdot$ 4. Taille d'effet ($\eta_p^2$) et test post-hoc.
   \end{takeawaybox}
 \end{frame}
 
@@ -910,38 +1217,34 @@
 \section{Conclusion \& Transition vers le Chapitre II}
 % ========================================================
 
-\begin{frame}{Feuille de Route : De l'ANOVA Croisée à l'ANOVA Hiérarchisée}
+\begin{frame}{Bilan Pédagogique du Chapitre I}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \textbf{\color{BioNavy}Ce que nous avons maîtrisé (Chapitre I) :}
-      \begin{itemize}
-        \item Plans factoriels croisés ($A \times B$).
-        \item Détection et interprétation des interactions (synergie/antagonisme).
-        \item Décomposition des variances ($SS, MS, F$).
-        \item Tests post-hoc de Tukey et Dunnett.
-      \end{itemize}
+      \begin{conceptbox}{Compétences Acquises}
+        \small
+        \begin{enumerate}
+          \item Maîtriser interaction vs additivité.
+          \item Calculer manuellement $SS$, $MS$ et $ddl$.
+          \item Construire et interpréter la table d'ANOVA.
+          \item Maîtriser la démarche en effets simples.
+          \item Appliquer les tests post-hoc de Tukey et Dunnett.
+        \end{enumerate}
+      \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \textbf{\color{BioTeal}Ce qui nous attend au Chapitre II :}
-      \begin{itemize}
-        \item Que faire si un facteur est **emboîté** dans un autre ($B \subset A$) ?
-        \item Exemple : Tubes $\subset$ Animaux $\subset$ Lots de production.
-        \item C'est l'\textbf{ANOVA Hiérarchisée (Nested ANOVA)} et le contrôle qualité de laboratoire !
-      \end{itemize}
+      \begin{takeawaybox}{Vers le Chapitre II : Les Plans Emboîtés}
+        \small
+        Dans ce Chapitre I, les facteurs étaient \textbf{croisés} : chaque dose testée chez chaque génotype.\\
+        \vspace{1mm}
+        \textbf{Que se passe-t-il si B est hiérarchisé sous A ?}
+        \begin{itemize}
+          \item Exemple : 3 Bioréacteurs (A), contenant chacun 4 flacons de culture distincts (B emboîté).
+          \item Le flacon 1 de A n'a rien à voir avec le flacon 1 de B !
+          \item $\implies$ \textbf{ANOVA Hiérarchisée (Nested ANOVA)} du Chapitre II.
+        \end{itemize}
+      \end{takeawaybox}
     \end{column}
   \end{columns}
-\end{frame}
-
-\begin{frame}[plain]
-  \begin{center}
-    \vspace{1.6cm}
-    {\Huge\color{BioNavy}\textbf{Fin du Chapitre I}}\\[0.6cm]
-    {\large\textbf{ANOVA à Deux Facteurs Croisés \& Analyse des Interactions}}\\[0.4cm]
-    {\small Vous maîtrisez désormais l'interprétation complète des plans factoriels multivariés.}\\[1.0cm]
-    \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
-    \small Faculté des Sciences --- Département de Biologie\\
-    \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
-  \end{center}
 \end{frame}
 
 \end{document}

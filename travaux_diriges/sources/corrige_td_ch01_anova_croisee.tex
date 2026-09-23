@@ -154,4 +154,88 @@
 \end{enumerate}
 \end{solutionbox}
 
+\begin{solutionbox}{Exercice 6 : Calcul Manuel Intégral d'une ANOVA Croisée à Partir de Données Brutes}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Facteur de correction $C$ et moyenne générale :}
+  \begin{align*}
+    C &= \frac{T_{\dots}^2}{N} = \frac{(384)^2}{18} = \frac{147456}{18} = \mathbf{8192} \\
+    \bar{Y}_{\dots} &= \frac{384}{18} = \mathbf{21.333\,\text{U/mg prot.}}
+  \end{align*}
+
+  \item \textbf{Somme des Carrés Totale ($SS_{\text{Total}}$) :}
+  \begin{align*}
+    SS_{\text{Total}} &= \sum_{i,j,k} Y_{ijk}^2 - C = 8706 - 8192 = \mathbf{514.00} \\
+    ddl_{\text{Total}} &= N - 1 = 18 - 1 = \mathbf{17}
+  \end{align*}
+
+  \item \textbf{Sommes des Carrés Factorielles $SS_A$ et $SS_B$ :}
+  \begin{itemize}
+    \item \textbf{Facteur A (Oxygénation, $I=2$) :} $J \cdot K = 3 \times 3 = 9$ souris par niveau.
+    \begin{align*}
+      T_{\text{Normoxie}} &= 66 + 75 + 81 = 222, \quad T_{\text{Hypoxie}} = 33 + 57 + 72 = 162 \\
+      SS_A &= \frac{222^2 + 162^2}{9} - C = \frac{75528}{9} - 8192 = 8392 - 8192 = \mathbf{200.00} \\
+      ddl_A &= I - 1 = 2 - 1 = \mathbf{1}
+    \end{align*}
+    \item \textbf{Facteur B (Traitement, $J=3$) :} $I \cdot K = 2 \times 3 = 6$ souris par niveau.
+    \begin{align*}
+      T_{\text{Véhicule}} &= 66 + 33 = 99, \quad T_{\text{NAC}} = 75 + 57 = 132, \quad T_{\text{RESV}} = 81 + 72 = 153 \\
+      SS_B &= \frac{99^2 + 132^2 + 153^2}{6} - C = \frac{50634}{6} - 8192 = 8439 - 8192 = \mathbf{247.00} \\
+      ddl_B &= J - 1 = 3 - 1 = \mathbf{2}
+    \end{align*}
+  \end{itemize}
+
+  \item \textbf{Calcul de $SS_{\text{Cell}}$, de l'Interaction $SS_{AB}$ et de la Résiduelle $SS_{\text{res}}$ :}
+  \begin{align*}
+    \sum T_{ij}^2 &= 66^2 + 75^2 + 81^2 + 33^2 + 57^2 + 72^2 = 26064 \\
+    SS_{\text{Cell}} &= \frac{26064}{3} - 8192 = 8688 - 8192 = \mathbf{496.00} \\
+    SS_{AB} &= SS_{\text{Cell}} - SS_A - SS_B = 496.00 - 200.00 - 247.00 = \mathbf{49.00} \quad (ddl_{AB} = \mathbf{2}) \\
+    SS_{\text{res}} &= SS_{\text{Total}} - SS_{\text{Cell}} = 514.00 - 496.00 = \mathbf{18.00} \quad (ddl_{\text{res}} = \mathbf{12})
+  \end{align*}
+
+  \item \textbf{Tableau d'ANOVA complet :}
+  \begin{center}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lcccccc}
+      \toprule
+      \textbf{Source de Variation} & \textbf{$SS$} & \textbf{$ddl$} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{crit}}(5\%)$} & \textbf{Décision ($p$-value)} \\
+      \midrule
+      \textbf{Oxygénation (A)} & 200.00 & 1  & $200.00 / 1 = 200.00$ & $\frac{200.00}{1.50} = \mathbf{133.33}$ & 4.75 & $p < 0.0001$ (Significatif) \\
+      \textbf{Traitement (B)}  & 247.00 & 2  & $247.00 / 2 = 123.50$ & $\frac{123.50}{1.50} = \mathbf{82.33}$  & 3.89 & $p < 0.0001$ (Significatif) \\
+      \textbf{Interaction $A \times B$} & \textbf{49.00} & \textbf{2} & $49.00 / 2 = \mathbf{24.50}$ & $\frac{24.50}{1.50} = \mathbf{16.33}$ & \textbf{3.89} & \textbf{$p = 0.0004$ (Significatif)} \\
+      \textbf{Résiduelle}      & 18.00  & 12 & $18.00 / 12 = \mathbf{1.50}$ & --- & --- & --- \\
+      \midrule
+      \textbf{Total}           & 514.00 & 17 & --- & --- & --- & --- \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{center}
+
+  \item \textbf{Conclusion et démarche d'analyse :}
+  $F_{AB} = 16.33 > 3.89$ ($p < 0.001$) : \textbf{L'interaction est hautement significative.}
+  Il est donc formellement proscrit de conclure globalement sur l'effet traitement ou hypoxie. On doit impérativement procéder à une **analyse des effets simples** : tester l'efficacité des antioxydants au sein de chaque niveau d'oxygénation séparément.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 7 : Taille d'Effet, Contraste de Dunnett vs Tukey, et Rédaction Scientifique}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calculs de taille d'effet pour l'interaction $A \times B$ :}
+  \begin{align*}
+    \eta_p^2 &= \frac{SS_{AB}}{SS_{AB} + SS_{\text{res}}} = \frac{49.00}{49.00 + 18.00} = \frac{49}{67} = \mathbf{0.731} \quad (73.1\%\text{ de variance expliquée}) \\
+    \omega^2 &= \frac{SS_{AB} - ddl_{AB} \cdot MS_{\text{res}}}{SS_{\text{Total}} + MS_{\text{res}}} = \frac{49.00 - 2 \times 1.50}{514.00 + 1.50} = \frac{46.00}{515.50} = \mathbf{0.089}
+  \end{align*}
+  \textbf{Interprétation :} Selon les seuils de Cohen ($\eta_p^2 \ge 0.14$), cet effet est qualifié de **majeur** (impact biologique de grande ampleur).
+
+  \item \textbf{Test de Dunnett vs Test de Tukey :}
+  \begin{itemize}
+    \item \textbf{Test adapté :} Le **test post-hoc de Dunnett**. Il est spécifiquement formulé pour comparer simultanément plusieurs traitements expérimentaux ($k-1$) à un seul groupe de contrôle de référence (ici le Véhicule).
+    \item \textbf{Gain de puissance statistique :} Alors que le test de Tukey compare toutes les paires possibles ($\frac{k(k-1)}{2} = 3$ comparaisons) et applique une correction conservatrice, le test de Dunnett ne teste que $k-1 = 2$ paires. Le seuil critique $q_{\text{Dunnett}}$ est moins sévère que $q_{\text{Tukey}}$, ce qui confère une **puissance statistique supérieure** pour détecter une différence réelle vis-à-vis du témoin.
+  \end{itemize}
+
+  \item \textbf{Rédaction standardisée pour publication internationale (Elsevier / Nature) :}
+  \begin{quote}
+    \textit{« A two-way ANOVA revealed a highly significant interaction between oxygenation status and antioxidant therapy on renal SOD activity ($F(2, 12) = 16.33, \; p = 0.0004, \; \eta_p^2 = 0.731$). Post-hoc analysis using Dunnett's test demonstrated that while both NAC and Resveratrol preserved normal enzyme activity under normoxia, they significantly and robustly prevented hypoxia-induced SOD collapse compared to the vehicle group (NAC: $+72.7\%$; Resveratrol: $+118.2\%$, both $p < 0.001$). »}
+  \end{quote}
+\end{enumerate}
+\end{solutionbox}
+
 \end{document}

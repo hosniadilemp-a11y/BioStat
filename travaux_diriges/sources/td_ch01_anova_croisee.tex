@@ -94,4 +94,56 @@ L'application de l'ANOVA à deux facteurs repose sur trois postulats fondamentau
 \end{enumerate}
 \end{exercicebox}
 
+\begin{exercicebox}{Exercice 6 : Calcul Manuel Intégral d'une ANOVA Croisée à Partir de Données Brutes}
+Pour étudier la protection rénale contre le stress oxydatif induit par l'hypoxie, un laboratoire mesure l'activité de la Superoxyde Dismutase (\textbf{SOD, en U/mg de protéine}) dans le parenchyme rénal de souris soumises à deux facteurs contrôlés :
+\begin{itemize}
+  \item \textbf{Facteur A (Oxygénation, $I = 2$) :} Normoxie ($21\%\,\text{O}_2$) vs Hypoxie sévère ($8\%\,\text{O}_2$ pendant 48h).
+  \item \textbf{Facteur B (Traitement, $J = 3$) :} Véhicule témoin, N-Acétylcystéine (NAC, $100\,\text{mg/kg}$), Resvératrol (RESV, $50\,\text{mg/kg}$).
+  \item Effectif : $K = 3$ souris indépendantes par condition ($N = 2 \times 3 \times 3 = 18$ souris au total).
+\end{itemize}
+
+Les données individuelles observées au laboratoire sont résumées ci-dessous :
+\begin{center}
+  \resizebox{0.92\linewidth}{!}{%
+  \begin{tabular}{llcccc}
+    \toprule
+    \textbf{Oxygénation (A)} & \textbf{Traitement (B)} & \textbf{Animal 1} & \textbf{Animal 2} & \textbf{Animal 3} & \textbf{Total ($T_{ij}$)} \\
+    \midrule
+    \textbf{Normoxie} & Véhicule & 20 & 22 & 24 & \textbf{66} \\
+                      & NAC      & 24 & 26 & 25 & \textbf{75} \\
+                      & RESV     & 27 & 28 & 26 & \textbf{81} \\
+    \midrule
+    \textbf{Hypoxie}  & Véhicule & 10 & 12 & 11 & \textbf{33} \\
+                      & NAC      & 18 & 19 & 20 & \textbf{57} \\
+                      & RESV     & 24 & 25 & 23 & \textbf{72} \\
+    \bottomrule
+  \end{tabular}%
+  }
+\end{center}
+On donne : $\sum_{i,j,k} Y_{ijk} = 384$ et la somme brute de tous les carrés individuels : $\sum_{i,j,k} Y_{ijk}^2 = 8706$.
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez le facteur de correction $C = \frac{T_{\dots}^2}{N}$ et la moyenne générale de l'étude $\bar{Y}_{\dots}$.
+  \item Calculez la Somme des Carrés Totale ($SS_{\text{Total}}$) et déterminez son nombre de degrés de liberté ($ddl_{\text{Total}}$).
+  \item Calculez les totaux marginaux $T_{i\cdot\cdot}$ pour le Facteur A et $T_{\cdot j\cdot}$ pour le Facteur B. En déduire $SS_A$ et $SS_B$.
+  \item À partir de la somme des carrés des totaux de cellule ($\sum T_{ij}^2$), calculez $SS_{\text{Cell}}$. Déduisez-en par soustraction la Somme des Carrés d'Interaction ($SS_{AB}$) et la Somme des Carrés Résiduelle ($SS_{\text{res}}$).
+  \item Dressez le tableau complet d'ANOVA ($ddl$, $SS$, $MS$, $F_{\text{obs}}$, $F_{\text{critique}}$ au seuil $\alpha = 0.05$). Les valeurs critiques de Fisher sont $F_{0.05}(1, 12) = 4.75$ et $F_{0.05}(2, 12) = 3.89$.
+  \item L'interaction Oxygénation $\times$ Traitement est-elle statistiquement significative ? Quelle démarche d'analyse s'impose impérativement avant d'émettre des conclusions pharmacologiques ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 7 : Taille d'Effet, Contraste de Dunnett vs Tukey, et Rédaction Scientifique}
+En exploitant les résultats numériques obtenus à l'Exercice 6 :
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Taille d'effet :} Calculez l'Eta-carré partiel ($\eta_p^2$) et l'Omega-carré ($\omega^2$) pour l'interaction $A \times B$. Interprétez la magnitude de cet effet selon les repères conventionnels de Cohen.
+  \item \textbf{Choix du test post-hoc :} L'équipe de recherche souhaite démontrer que les molécules antioxydantes (NAC et RESV) augmentent significativement l'activité SOD par rapport au groupe Véhicule sous hypoxie, sans s'intéresser à la comparaison directe NAC vs RESV.
+  \begin{itemize}
+    \item Quel test post-hoc spécifique est parfaitement adapté à cette question unilatérale par rapport au témoin ?
+    \item Pourquoi ce test offre-t-il une puissance statistique supérieure au test de Tukey HSD dans cette situation ?
+  \end{itemize}
+  \item \textbf{Rédaction au format international :} Rédigez le texte de synthèse des résultats au standard d'une revue internationale à comité de lecture (format Elsevier / PubMed), intégrant la mention du test, les degrés de liberté, $F_{\text{obs}}$, la $p$-value et la taille d'effet.
+\end{enumerate}
+\end{exercicebox}
+
 \end{document}

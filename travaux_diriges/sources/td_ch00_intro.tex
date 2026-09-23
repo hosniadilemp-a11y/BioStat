@@ -84,4 +84,68 @@ Lors d'une cinétique d'hémolyse induite par un détergent, les pourcentages d'
 \end{enumerate}
 \end{exercicebox}
 
+\begin{exercicebox}{Exercice 6 : Théorème de Bayes \& Performances Diagnostiques d'un Test Sérologique (ELISA)}
+Dans le cadre d'un programme de dépistage sérologique d'une hépatite virale chronique au sein d'une population générale asymptomatique :
+\begin{itemize}
+  \item La prévalence de l'infection dans cette population est estimée à $P(M) = 1\%$ ($0.01$).
+  \item La sensibilité clinique du test immuno-enzymatique ELISA est de $Se = P(+ \mid M) = 98\%$ ($0.98$).
+  \item La spécificité clinique du test ELISA est de $Sp = P(- \mid \bar{M}) = 95\%$ ($0.95$).
+\end{itemize}
+
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Donnez la probabilité qu'un sujet sain soit testé faussement positif : $P(+ \mid \bar{M})$.
+  \item Calculez la probabilité totale qu'un individu prélevé au hasard dans la population obtienne un résultat positif au test ELISA : $P(+)$ (formule des probabilités totales).
+  \item En appliquant le Théorème de Bayes, calculez la \textbf{Valeur Prédictive Positive ($VPP = P(M \mid +)$)}, c'est-à-dire la probabilité qu'un individu testé positif soit réellement porteur du virus.
+  \item Commentez la valeur obtenue. Pourquoi observe-t-on un tel « paradoxe des faux positifs » ($> 80\%$ de faux positifs parmi les tests positifs) malgré une sensibilité et une spécificité très élevées ?
+  \item Calculez la \textbf{Valeur Prédictive Négative ($VPN = P(\bar{M} \mid -)$)}. Quelle est son utilité pratique pour exclure la maladie ?
+  \item Si ce même test est désormais utilisé en milieu hospitalier spécialisé chez des patients présentant des symptômes hépatiques avérés (prévalence $P(M) = 30\%$), quelle devient la nouvelle valeur de la $VPP$ ? Que concluez-vous sur la dépendance de la $VPP$ vis-à-vis de la prévalence ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 7 : Lois de Probabilités en Microbiologie \& Génétique (Poisson \& Binomiale)}
+\textbf{Partie 1 : Contrôle de Stérilité d'un Bioréacteur (Loi de Poisson)} \\
+Lors du suivi microbiologique d'un fermenteur industriel, on étale $100\,\mu\text{L}$ de prélèvement sur boîte de gélose. Le nombre de colonies bactériennes contaminantes (UFC) par boîte suit une loi de Poisson de paramètre $\lambda = 3.0$ colonies/boîte.
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Rappelez les conditions biologiques justifiant la modélisation du comptage de colonies par une loi de Poisson $\mathcal{P}(\lambda)$.
+  \item Calculez la probabilité que la boîte soit parfaitement stérile (aucune colonie observée, $X = 0$).
+  \item Calculez la probabilité d'observer exactement 2 colonies ($X = 2$).
+  \item Quelle est la probabilité d'observer une contamination notable, c'est-à-dire au moins 4 colonies ($X \ge 4$) ?
+\end{enumerate}
+
+\vspace{2mm}
+\textbf{Partie 2 : Sélection de Mutants Résistants aux Antibiotiques (Loi Binomiale)} \\
+Une culture bactérienne est soumise à un rayonnement UV pour induire des mutations ciblées. La probabilité qu'un clone bactérien acquière une résistance à la kanamycine est $p = 0.05$. On sélectionne au hasard $n = 10$ clones indépendants. Soit $Y$ la variable aléatoire désignant le nombre de clones résistants parmi les 10.
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \setcounter{enumi}{4}
+  \item Justifiez pourquoi $Y$ suit une loi binomiale $\mathcal{B}(n, p)$ et précisez son espérance mathématique $\mathbb{E}(Y)$ et son écart-type $\sigma_Y$.
+  \item Calculez la probabilité d'obtenir exactement un clone résistant ($Y = 1$).
+  \item Calculez la probabilité d'obtenir au moins un clone résistant ($Y \ge 1$). Combien de clones faudrait-il cribler pour être sûr à 95\% d'isoler au moins un mutant résistant ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 8 : Loi Normale, $Z$-Score \& Intervalles de Référence Cliniques}
+Dans une population de référence d'adultes sains, la glycémie à jeun suit une distribution normale de paramètres $\mu = 0.95\,\text{g/L}$ et $\sigma = 0.10\,\text{g/L}$ : $X \sim \mathcal{N}(0.95, \, 0.10^2)$.
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez l'intervalle de référence physiologique contenant 95\% des individus sains selon la règle canonique $[\mu \pm 1.96\sigma]$.
+  \item Un patient se présente au laboratoire avec une glycémie mesurée à $1.22\,\text{g/L}$. Calculez son $Z$-score (valeur centrée-réduite $Z = \frac{X - \mu}{\sigma}$).
+  \item Sachant que pour la loi normale standard, $\Phi(2.70) = P(Z \le 2.70) = 0.9965$, calculez le pourcentage d'individus sains ayant une glycémie supérieure ou égale à celle de ce patient. Cette valeur plaide-t-elle pour un état pathologique ?
+  \item En toxicologie hépatique, l'activité sérique de l'alanine aminotransférase (ALAT) présente une distribution fortement asymétrique étirée vers les valeurs élevées (présence de patients cytolytiques). Pourquoi l'intervalle $\mu \pm 2\sigma$ est-il rigoureusement inapproprié dans ce cas ? Quelle transformation mathématique applique-t-on en routine pour normaliser ces données avant analyse ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{exercicebox}{Exercice 9 : Puissance Statistique ($1-\beta$), Risque de 2\textsuperscript{de} Espèce ($\beta$) \& Éthique 3R}
+Une équipe de biochimie pharmacologique étudie un peptide candidat pour réduire la taille d'une plaque d'athérome sur modèle murin.
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Définissez rigoureusement le risque de première espèce $\alpha$ et le risque de seconde espèce $\beta$. Lequel correspond à un « faux positif » et lequel à un « faux négatif » ?
+  \item Qu'appelle-t-on la \textbf{puissance statistique ($1 - \beta$)} d'une expérience ? Quel est le seuil standard de puissance exigé par les revues internationales et les agences du médicament (ex: FDA, EMA) ?
+  \item Par contrainte budgétaire, le chercheur décide d'utiliser seulement $N = 3$ souris par lot. Un calcul de puissance rétrospectif révèle une puissance de seulement $25\%$ ($1 - \beta = 0.25$).
+  \begin{itemize}
+    \item Quelle est la probabilité que cette étude passe à côté d'un effet thérapeutique pourtant bien réel ?
+    \item En quoi cette démarche viole-t-elle gravement le principe éthique des \textbf{3R (Remplacer, Réduire, Raffiner)} ? Pourquoi « sacrifier trop peu d'animaux » est-il tout aussi contraire à l'éthique que « sacrifier trop d'animaux » ?
+  \end{itemize}
+  \item Citez trois stratégies méthodologiques concrètes permettant d'accroître la puissance statistique d'un protocole sans nécessairement augmenter le nombre total d'animaux.
+\end{enumerate}
+\end{exercicebox}
+
 \end{document}

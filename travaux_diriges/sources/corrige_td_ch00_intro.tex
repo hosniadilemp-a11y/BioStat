@@ -125,4 +125,125 @@
 \end{enumerate}
 \end{solutionbox}
 
+\begin{solutionbox}{Exercice 6 : Théorème de Bayes \& Performances Diagnostiques (ELISA)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Probabilité de faux positif :}
+  $P(+ \mid \bar{M}) = 1 - Sp = 1 - 0.95 = \mathbf{0.05 \quad (5\%)}$.
+
+  \item \textbf{Probabilité totale d'un résultat positif $P(+)$ :}
+  D'après la formule des probabilités totales :
+  \begin{align*}
+    P(+) &= P(+ \mid M) \cdot P(M) + P(+ \mid \bar{M}) \cdot P(\bar{M}) \\
+    &= (0.98 \times 0.01) + (0.05 \times 0.99) = 0.0098 + 0.0495 = \mathbf{0.0593 \quad (5.93\%)}
+  \end{align*}
+
+  \item \textbf{Valeur Prédictive Positive ($VPP$) par le Théorème de Bayes :}
+  \begin{equation*}
+    VPP = P(M \mid +) = \frac{P(+ \mid M) \cdot P(M)}{P(+)} = \frac{0.0098}{0.0593} = \mathbf{0.1653 \quad (16.53\%)}
+  \end{equation*}
+
+  \item \textbf{Explication du paradoxe des faux positifs :}
+  Bien que le test soit excellent ($Se = 98\%$, $Sp = 95\%$), la maladie est rare ($1\%$). Sur un échantillon de $10\,000$ personnes :
+  \begin{itemize}
+    \item $100$ malades $\implies 100 \times 0.98 = \mathbf{98}$ vrais positifs ($2$ faux négatifs).
+    \item $9\,900$ personnes saines $\implies 9\,900 \times 0.05 = \mathbf{495}$ faux positifs !
+  \end{itemize}
+  Le nombre de faux positifs ($495$) est cinq fois supérieur au nombre de vrais positifs ($98$). Ainsi, parmi les $593$ individus testés positifs, seuls $16.5\%$ sont réellement infectés. \textbf{Conséquence clinique :} En dépistage de masse, tout test ELISA positif doit impérativement faire l'objet d'un test de confirmation plus spécifique (Western Blot, RT-PCR).
+
+  \item \textbf{Valeur Prédictive Négative ($VPN$) :}
+  \begin{align*}
+    VPN &= P(\bar{M} \mid -) = \frac{Sp \cdot (1 - P(M))}{Sp \cdot (1 - P(M)) + (1 - Se) \cdot P(M)} \\
+    &= \frac{0.95 \times 0.99}{(0.95 \times 0.99) + (0.02 \times 0.01)} = \frac{0.9405}{0.9407} = \mathbf{99.98\%}
+  \end{align*}
+  Un résultat négatif est d'une fiabilité quasi-absolue pour écarter l'infection.
+
+  \item \textbf{Effet de la prévalence hospitalière ($P(M) = 30\%$) :}
+  \begin{align*}
+    P(+) &= (0.98 \times 0.30) + (0.05 \times 0.70) = 0.2940 + 0.0350 = 0.3290 \\
+    VPP &= \frac{0.2940}{0.3290} = \mathbf{89.36\%}
+  \end{align*}
+  \textit{Conclusion fondamentale :} La sensibilité et la spécificité sont des propriétés intrinsèques du réactif biologique, mais la $VPP$ dépend directement de la prévalence épidémiologique de la population explorée.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 7 : Lois de Probabilités en Microbiologie \& Génétique}
+\textbf{Partie 1 : Contrôle de Stérilité (Loi de Poisson $\lambda = 3.0$)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Justification biologique :} Le dénombrement d'UFC représente des événements rares, discrets ($X \in \mathbb{N}$), indépendants, survenant de manière aléatoire et uniforme dans un volume continu ($100\,\mu\text{L}$).
+  \item \textbf{Boîte parfaitement stérile ($X = 0$) :}
+  $P(X = 0) = \frac{e^{-3.0} \cdot 3.0^0}{0!} = e^{-3.0} = \mathbf{0.0498 \quad (4.98\%)}$.
+  \item \textbf{Exactement 2 colonies ($X = 2$) :}
+  $P(X = 2) = \frac{e^{-3.0} \cdot 3.0^2}{2!} = \frac{9 \cdot 0.04979}{2} = \mathbf{0.2240 \quad (22.40\%)}$.
+  \item \textbf{Contamination notable ($X \ge 4$) :}
+  \begin{align*}
+    P(X \ge 4) &= 1 - [P(0) + P(1) + P(2) + P(3)] \\
+    P(1) &= \frac{e^{-3} \cdot 3^1}{1!} = 0.1494, \quad P(3) = \frac{e^{-3} \cdot 27}{6} = 0.2240 \\
+    P(X \ge 4) &= 1 - [0.0498 + 0.1494 + 0.2240 + 0.2240] = 1 - 0.6472 = \mathbf{0.3528 \quad (35.28\%)}
+  \end{align*}
+\end{enumerate}
+
+\textbf{Partie 2 : Sélection de Mutants (Loi Binomiale $n=10, \, p=0.05$)}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \setcounter{enumi}{4}
+  \item \textbf{Justification \& Paramètres :} Succession de $n = 10$ tirages indépendants de Bernoulli avec probabilité constante de succès $p = 0.05$.
+  $\mathbb{E}(Y) = n \cdot p = 10 \times 0.05 = \mathbf{0.50 \text{ mutant}}$, et $\sigma_Y = \sqrt{n \cdot p \cdot (1-p)} = \sqrt{10 \times 0.05 \times 0.95} = \sqrt{0.475} = \mathbf{0.689}$.
+  \item \textbf{Exactement un clone résistant ($Y = 1$) :}
+  $P(Y = 1) = \binom{10}{1} \cdot (0.05)^1 \cdot (0.95)^9 = 10 \times 0.05 \times 0.6302 = \mathbf{0.3151 \quad (31.51\%)}$.
+  \item \textbf{Au moins un clone résistant ($Y \ge 1$) \& Taille d'échantillon :}
+  $P(Y \ge 1) = 1 - P(Y = 0) = 1 - (0.95)^{10} = 1 - 0.5987 = \mathbf{0.4013 \quad (40.13\%)}$.
+  Pour obtenir au moins un mutant avec une confiance $\ge 95\%$ :
+  \begin{align*}
+    1 - (0.95)^n &\ge 0.95 \implies (0.95)^n \le 0.05 \\
+    &\implies n \ge \frac{\ln(0.05)}{\ln(0.95)} = \frac{-2.9957}{-0.05129} \approx 58.4 \implies \mathbf{n = 59 \text{ clones}}
+  \end{align*}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 8 : Loi Normale, $Z$-Score \& Intervalles de Référence}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Intervalle de référence physiologique à 95\% :}
+  $[\mu \pm 1.96\sigma] = [0.95 - (1.96 \times 0.10) \,;\, 0.95 + (1.96 \times 0.10)] = [0.95 - 0.196 \,;\, 0.95 + 0.196] = \mathbf{[0.754 \,;\, 1.146]\,\text{g/L}}$.
+  95\% de la population saine présente une glycémie comprise entre $0.75$ et $1.15\,\text{g/L}$.
+
+  \item \textbf{Calcul du $Z$-score du patient ($X = 1.22\,\text{g/L}$) :}
+  \begin{equation*}
+    Z = \frac{X - \mu}{\sigma} = \frac{1.22 - 0.95}{0.10} = \frac{0.27}{0.10} = \mathbf{+2.70}
+  \end{equation*}
+  La glycémie de ce patient est située à $2.70$ écarts-types au-dessus de la moyenne de référence.
+
+  \item \textbf{Proportion de sujets sains avec $X \ge 1.22\,\text{g/L}$ :}
+  $P(X \ge 1.22) = P(Z \ge 2.70) = 1 - \Phi(2.70) = 1 - 0.9965 = \mathbf{0.0035 \quad (0.35\%)}$.
+  Seulement $3.5$ personnes saines sur $1\,000$ atteignent un tel niveau. Cette valeur est nettement pathologique et justifie le diagnostic d'hyperglycémie.
+
+  \item \textbf{Asymétrie des biomarqueurs \& Transformation logarithmique :}
+  Pour des enzymes comme l'ALAT, la présence de queues de distribution vers les valeurs très élevées rend la distribution fortement asymétrique (non normale). Appliquer $\mu \pm 2\sigma$ aboutirait à une borne inférieure absurde (parfois négative) et tronquerait les valeurs réelles. On applique en routine une \textbf{transformation logarithmique} $Y = \log_{10}(X)$ pour symétriser les données et rétablir la normalité gaussienne.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{solutionbox}{Exercice 9 : Puissance Statistique, Risque $\beta$ \& Éthique 3R}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Risques $\alpha$ et $\beta$ :}
+  \begin{itemize}
+    \item \textbf{Risque $\alpha$ (Première espèce) :} Probabilité de rejeter $H_0$ à tort (Faux positif, conclure à un effet qui n'existe pas).
+    \item \textbf{Risque $\beta$ (Seconde espèce) :} Probabilité de conserver $H_0$ à tort (Faux négatif, manquer un effet thérapeutique réel).
+  \end{itemize}
+
+  \item \textbf{Puissance statistique ($1 - \beta$) :}
+  C'est la probabilité de détecter un effet réel d'une taille donnée s'il existe. Le consensus scientifique international (ex: FDA, ARRIVE guidelines) impose une puissance minimale de $\mathbf{80\%}$ ($1 - \beta \ge 0.80$), et idéalement $90\%$ pour les essais pivots.
+
+  \item \textbf{Conséquences d'une puissance de 25\% ($N = 3$) :}
+  \begin{itemize}
+    \item Le risque de faux négatif est de $\beta = 1 - 0.25 = \mathbf{75\%}$. Le chercheur a 3 chances sur 4 de ne rien observer et d'abandonner une molécule pourtant active.
+    \item \textbf{Violation éthique des 3R :} Le principe de « Réduction » ne signifie pas réduire le nombre d'animaux au point de rendre l'expérience inutile. Une étude sous-puissancée entraîne le sacrifice pur et simple d'animaux sans possibilité de tirer une conclusion scientifique valide.
+  \end{itemize}
+
+  \item \textbf{Trois leviers pour augmenter la puissance sans gonfler le nombre d'animaux :}
+  \begin{enumerate}
+    \item \textbf{Réduire la variance d'erreur résiduelle ($\sigma^2$) :} Standardisation stricte de l'animalerie (cycle lumière, température, lignées pures), protocoles de pipetage automatisés.
+    \item \textbf{Augmenter l'amplitude de l'effet ($\Delta$) :} Optimiser la dose, le temps d'exposition ou la sensibilité du test biologique mesuré.
+    \item \textbf{Utiliser un plan expérimental apparié ou à mesures répétées :} Chaque animal servant de son propre témoin (mesures avant et après traitement), la variabilité inter-individuelle est mathématiquement éliminée de l'erreur résiduelle.
+  \end{enumerate}
+\end{enumerate}
+\end{solutionbox}
+
 \end{document}
