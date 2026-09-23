@@ -17,6 +17,50 @@
 
 ## 📚 Programme Détaillé Chapitre par Chapitre
 
+### Chapitre 0 : Généralités sur les Statistiques, Probabilités & Démarche Expérimentale
+*Focus : Socle fondamental pour non-informaticiens, variabilité du vivant, probabilités, distributions théoriques et logique décisionnelle.*
+
+1. **La Démarche Biostatistique & la Variabilité du Vivant**
+   - Rôle décisionnel des biostatistiques : extraire le signal biologique du bruit aléatoire.
+   - L'équation fondamentale du laboratoire : $Y = \text{Signal vrai} + \text{Biais biologique} + \text{Erreur technique}$.
+   - Réplicats biologiques ($N$) vs réplicats techniques ($k$) & lutte contre la pseudo-réplication.
+   - Inférence statistique : estimer les paramètres de la population ($\mu, \sigma$) à partir de l'échantillon ($\bar{X}, s$).
+
+2. **Typologie des Variables & Structuration des Données**
+   - Les 4 échelles de mesure : Quantitative continue, quantitative discrète, qualitative nominale, qualitative ordinale.
+   - Bonnes pratiques de structuration tabulaire (*Tidy Data* sous Excel/Python).
+
+3. **Statistique Descriptive : Position & Dispersion**
+   - Tendance centrale : Moyenne arithmétique ($\bar{X}$), Médiane ($Med$), Mode ($Mo$). Duel moyenne vs médiane face aux distributions asymétriques (cytokines, biomarqueurs).
+   - Dispersion : Variance corrigée de Bessel ($s^2$ avec $n-1$), Écart-type ($SD$).
+   - Écart-type ($SD$) vs Erreur Standard de la Moyenne ($SEM = SD/\sqrt{n}$) : rôles biologiques distincts.
+   - Quartiles ($Q_1, Q_2, Q_3$), Écart Interquartile ($IQR$) et Coefficient de Variation ($CV = SD/\bar{X} \times 100\%$).
+   - Visualisation graphique moderne : anatomie du Boxplot de Tukey (moustaches $1.5 \times IQR$ et détection d'outliers) vs Violin plots.
+
+4. **Fondements des Probabilités en Biologie**
+   - Notion d'expérience aléatoire, univers $\Omega$ et axiomes de probabilités ($0 \le P(A) \le 1$).
+   - Probabilités conditionnelles $P(A|B)$ et indépendance statistique appliquée à la génétique mendélienne.
+   - **Théorème de Bayes appliqué au diagnostic biologique** : Sensibilité ($Se$), Spécificité ($Sp$), VPP et VPN. Le paradoxe des tests rares en épidémiologie.
+
+5. **Les Grandes Lois de Probabilité en Biologie**
+   - Variables aléatoires discrètes vs continues (fonction de masse vs densité de probabilité).
+   - **Loi Binomiale $\mathcal{B}(n, p)$** : modélisation oui/non, survie cellulaire, allèles.
+   - **Loi de Poisson $\mathcal{P}(\lambda)$** : événements rares, comptage d'UFC bactériennes, mutations spontanées, sur-dispersion.
+   - **Loi Normale de Gauss $\mathcal{N}(\mu, \sigma^2)$** : standardisation centrée réduite $Z = (X-\mu)/\sigma$ et règle empirique des $68\% - 95\% - 99.7\%$ pour les normes cliniques.
+   - **Théorème Central Limite (TCL)** : convergence des moyennes d'échantillons vers la loi normale quelle que soit la population d'origine.
+   - Lois dérivées d'échantillonnage : Chi-deux ($\chi^2$), Student ($t$), Fisher-Snedecor ($F$).
+
+6. **Inférence, Tests d'Hypothèses & Prise de Décision**
+   - Estimation ponctuelle vs par Intervalle de Confiance à 95\% ($IC_{95\%} = \bar{X} \pm t \cdot SEM$).
+   - Raisonnement par l'absurde : formulation de $H_0$ (hypothèse nulle) vs $H_1$ (alternative).
+   - Matrice décisionnelle : Risque $\alpha$ (Type I), Risque $\beta$ (Type II) et Puissance ($1-\beta$).
+   - Démystification de la $p$-value : définition rigoureuse et démontage des idées fausses.
+   - Significativité statistique vs pertinence biologique : taille d'effet ($d$ de Cohen).
+   - Conditions d'application des tests paramétriques (Indépendance, Shapiro-Wilk, Levene) vs alternatives non paramétriques (Mann-Whitney, Kruskal-Wallis).
+   - **Arbre décisionnel universel du choix du test statistique**.
+
+---
+
 ### Chapitre I : Analyse de Variance (ANOVA) à Deux Facteurs (ou Plus) Croisés
 *Focus : Étude simultanée de plusieurs variables explicatives et analyse des interactions.*
 

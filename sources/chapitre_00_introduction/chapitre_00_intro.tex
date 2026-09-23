@@ -1,8 +1,8 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{../common/beamer_theme_bio}
 
-\title{\textbf{Biostatistiques Appliquées}}
-\subtitle{Chapitre 0 : Fondements, Variabilité Biologique \& Démarche Statistique}
+\title{\textbf{Biostatistiques Appliquées \& Modélisation du Vivant}}
+\subtitle{Chapitre 0 : Généralités sur les Statistiques, Probabilités \& Démarche Expérimentale}
 \author{\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}}
 \institute{
   Faculté des Sciences --- Département de Biologie\\
@@ -24,30 +24,30 @@
 \end{frame}
 
 % ========================================================
-\section{La Démarche Biostatistique en Biochimie}
+\section{La Démarche Biostatistique \& la Variabilité du Vivant}
 % ========================================================
 
-\begin{frame}{Pourquoi le Biochimiste a-t-il Besoin des Statistiques ?}
+\begin{frame}{Pourquoi le Biochimiste a-t-il un Besoin Vital des Statistiques ?}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{La Nature Intrinsèque du Vivant}
-        En physique ou en chimie minérale, les réactions dans des conditions identiques donnent des résultats quasi-parfaits.\\
+        En physique ou chimie minérale, les conditions identiques mènent à des résultats quasi déterministes.\\
         \vspace{1mm}
         En \textbf{Biochimie et Biologie} :
         \begin{itemize}
-          \item Deux souris consanguines réagissent différemment.
-          \item Deux cultures cellulaires clonales présentent des micro-hétérogénéités d'expression enzymatique.
-          \item Les cellules oscillent selon des rythmes métaboliques et circadiens.
+          \item Deux souris de même lignée consanguine réagissent différemment à un xénobiotique.
+          \item Deux cultures cellulaires clonales présentent une hétérogénéité d'expression enzymatique.
+          \item Le métabolisme cellulaire oscille en permanence (rythmes circadiens, homéostasie).
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{biobox}{Le Rôle Central de la Statistique}
-        La biostatistique n'est pas un ensemble de calculs abstraits ; c'est \textbf{l'outil décisionnel} permettant de :
+        La biostatistique n'est pas un calcul abstrait ; c'est \textbf{l'outil décisionnel} indispensable pour :
         \begin{enumerate}
-          \item \textbf{Quantifier l'incertitude} inhérente aux mesures expérimentales.
-          \item \textbf{Séparer le signal biologique réel} du bruit de fond aléatoire.
-          \item \textbf{Prendre une décision objective} : valider ou réfuter l'efficacité d'un traitement avec un risque d'erreur contrôlé.
+          \item \textbf{Quantifier l'incertitude} inhérente aux mesures expérimentales de laboratoire.
+          \item \textbf{Extraire le signal biologique réel} du bruit de fond aléatoire.
+          \item \textbf{Prendre une décision objective} : valider ou réfuter l'effet d'une molécule d'intérêt avec un risque d'erreur strictement contrôlé.
         \end{enumerate}
       \end{biobox}
     \end{column}
@@ -56,9 +56,9 @@
 
 \begin{frame}{Décomposition de la Variabilité Expérimentale}
   \begin{conceptbox}{L'Équation Fondamentale du Laboratoire}
-    Toute mesure brute $Y$ obtenue au spectrophotomètre, en cytométrie ou en ELISA s'écrit :
+    Toute mesure brute $Y$ (absorbance spectrophotométrique, intensité de fluorescence, fluorescence qPCR) s'écrit :
     \begin{equation*}
-      \text{\textbf{Mesure Observée}} = \text{\textbf{Valeur Vraie}} + \text{\textbf{Biais Biologique}} + \text{\textbf{Erreur Technique}}
+      \text{\textbf{Mesure Observée}} = \text{\textbf{Signal Vrai}} + \text{\textbf{Biais Biologique}} + \text{\textbf{Erreur Technique}}
     \end{equation*}
   \end{conceptbox}
 
@@ -66,18 +66,15 @@
     \begin{column}{0.48\linewidth}
       \textbf{\color{BioTeal}\faDna\ Variabilité Biologique (Inhérente)}
       \begin{itemize}
-        \item Diversité génétique et statut épigénétique.
-        \item Âge, poids, cycle hormonal des animaux.
-        \item $\implies$ \textbf{C'est l'objet même de l'étude scientifique !} On ne peut pas l'annuler, on doit l'estimer.
+        \item Diversité génétique, statut épigénétique, âge, poids, sexe, statut nutritionnel.
+        \item $\implies$ \textbf{C'est le cœur même de la recherche !} On ne peut pas l'annuler, on doit en estimer la distribution.
       \end{itemize}
     \end{column}
     \begin{column}{0.48\linewidth}
       \textbf{\color{BioAmber}\faVial\ Variabilité Technique (Artefactuelle)}
       \begin{itemize}
-        \item Imprécision volumétrique des pipettes.
-        \item Fluctuations thermiques de l'étuve.
-        \item Dérive de la lampe UV-visible du lecteur.
-        \item $\implies$ \textbf{Bruit parasite} à minimiser par de bonnes pratiques de laboratoire.
+        \item Imprécision de pipetage, fluctuations thermiques du bain-marie, dérive de la lampe UV.
+        \item $\implies$ \textbf{Bruit parasite} à minimiser par de rigoureuses Bonnes Pratiques de Laboratoire (BPL).
       \end{itemize}
     \end{column}
   \end{columns}
@@ -87,70 +84,236 @@
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{Réplicats Biologiques ($N$)}
-        Échantillons prélevés sur des \textbf{individus ou organismes totalement indépendants} (ex: 5 souris différentes, 3 extractions végétales distinctes).\\
+        Échantillons prélevés sur des \textbf{organismes ou systèmes biologiques totalement indépendants} (ex: 6 souris différentes, 3 extractions tissulaires distinctes).\\
         \vspace{1mm}
-        $\implies$ \textbf{Seuls les réplicats biologiques} confèrent le droit de généraliser les conclusions à l'ensemble d'une espèce ou d'une population !
+        $\implies$ \textbf{Seuls les réplicats biologiques} permettent d'extrapoler les conclusions à une population générale !
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
       \begin{warnbox}{Réplicats Techniques ($k$)}
-        Mesures répétées sur le \textbf{même échantillon biologique} (ex : doser 3 fois le même extrait tissulaire dans 3 puits d'une plaque ELISA).\\
+        Mesures répétées sur le \textbf{même échantillon biologique} (ex : doser 3 fois le même tube de sérum dans 3 puits d'une microplaque ELISA).\\
         \vspace{1mm}
-        $\implies$ Réduit l'imprécision de pipetage, mais \textbf{ne donne aucune information} sur la variabilité inter-individuelle.
+        $\implies$ Réduit l'imprécision instrumentale, mais \textbf{ne donne aucune information} sur la variabilité biologique inter-individuelle.
       \end{warnbox}
     \end{column}
   \end{columns}
   \vspace{1mm}
-  \begin{takeawaybox}{La Pseudo-Réplication : Faute Déontologique Grave}
-    Compter 3 mesures techniques sur 1 seule souris comme $n=3$ est une tromperie méthodologique. Le vrai $n$ biologique est 1 !
+  \begin{takeawaybox}{La Pseudo-Réplication : Faute Méthodologique Majeure}
+    Compter 3 mesures techniques sur 1 seule souris comme $N=3$ est une tromperie statistique. Le vrai $N$ biologique est $1$ ! En analyse statistique, on fait la moyenne des réplicats techniques pour n'avoir qu'un seul point par unité biologique.
+  \end{takeawaybox}
+\end{frame}
+
+\begin{frame}{De la Population Cible à l'Échantillon Expérimental}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{La Population Parente ($\Omega$)}
+        \begin{itemize}
+          \item Ensemble total des unités d'intérêt (ex : tous les patients diabétiques d'Algérie, toutes les cellules HeLa du monde).
+          \item Caractérisée par des \textbf{paramètres vrais mais inconnus} :
+            \begin{itemize}
+              \item Moyenne vraie : $\mu$
+              \item Variance vraie : $\sigma^2$
+              \item Écart-type vrai : $\sigma$
+            \end{itemize}
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{L'Échantillon Réel ($n$)}
+        \begin{itemize}
+          \item Sous-ensemble fini accessible au laboratoire (ex : $n=25$ rats, $n=12$ biopsies).
+          \item Caractérisé par des \textbf{statistiques calculées} :
+            \begin{itemize}
+              \item Moyenne observée : $\bar{X}$
+              \item Variance d'échantillon : $s^2$
+              \item Écart-type d'échantillon : $s$ (ou $SD$)
+            \end{itemize}
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{takeawaybox}{L'Inférence Statistique : Le Pont entre Échantillon et Population}
+    L'inférence statistique consiste à utiliser les statistiques connues calculées sur l'échantillon ($\bar{X}, s$) pour estimer avec une marge d'erreur quantifiée les paramètres inconnus de la population ($\mu, \sigma$).
   \end{takeawaybox}
 \end{frame}
 
 % ========================================================
-\section{Typologie des Variables en Biochimie}
+\section{Typologie des Variables \& Échelles de Mesure}
 % ========================================================
 
-\begin{frame}{Les Différentes Natures de Données de Laboratoire}
+\begin{frame}{Les 4 Natures de Données Rencontrées au Laboratoire}
   \begin{table}[h]
     \centering
     \small
     \resizebox{\linewidth}{!}{%
-    \begin{tabular}{lp{6cm}p{5.5cm}}
+    \begin{tabular}{lp{5.5cm}p{6cm}}
       \toprule
-      \textbf{Type de Variable} & \textbf{Définition \& Échelle} & \textbf{Exemples Précis en Biochimie} \\
+      \textbf{Type de Variable} & \textbf{Définition \& Échelle} & \textbf{Exemples Précis en Biochimie \& Biologie} \\
       \midrule
-      \textbf{Quantitative continue} & Valeurs réelles infinies sur un intervalle mesurable. & Absorbance ($A_{595}$), Concentration protéique ($\mu\text{g/mL}$), Activité enzymatique ($\mu\text{mol/min/mg}$), pH. \\
+      \textbf{Quantitative continue} & Valeurs numériques réelles sur une échelle continue mesurable. & Absorbance ($A_{595}$), Concentration protéique ($\mu\text{g/mL}$), Activité enzymatique ($\mu\text{mol/min/mg}$), pH, Glycémie. \\
       \midrule
-      \textbf{Quantitative discrète} & Nombres entiers résultant d'un comptage. & Nombre de colonies bactériennes (UFC), comptage cellulaire sur cellule de Malassez. \\
+      \textbf{Quantitative discrète} & Nombres entiers résultant d'un comptage strict. & Nombre de colonies bactériennes (UFC), comptage de leucocytes sur cellule de Malassez, nombre de métastases. \\
       \midrule
-      \textbf{Qualitative nominale} & Catégories disjointes sans hiérarchie ni ordre. & Génotype (Sauvage WT vs Muté KO), Sexe, Type de tissu (Foie, Rein, Muscle). \\
+      \textbf{Qualitative nominale} & Catégories disjointes sans hiérarchie ni relation d'ordre. & Génotype (Sauvage WT vs Muté KO), Sexe (M/F), Type d'organe (Foie, Rein, Rate), Statut sérologique (+ / -). \\
       \midrule
-      \textbf{Qualitative ordinale} & Classes possédant un ordre naturel ou gravité. & Stade de fibrose hépatique (F0, F1, F2, F3, F4), intensité de bande Western blot (+, ++, +++). \\
+      \textbf{Qualitative ordinale} & Modalités qualitatives possédant un ordre naturel ou gravité. & Stade de fibrose hépatique (F0, F1, F2, F3, F4), intensité de bande Western blot ($-$, $+$, $++$, $+++$). \\
       \bottomrule
     \end{tabular}%
     }
   \end{table}
   \vspace{1mm}
-  \begin{takeawaybox}{Impact sur le Choix des Tests}
+  \begin{warnbox}{Attention au Choix des Tests !}
     On n'applique jamais un test de Student ou une ANOVA sur des scores qualitatifs ordinaux sans transformation appropriée ou recours aux tests non paramétriques (Kruskal-Wallis, Mann-Whitney) !
-  \end{takeawaybox}
+  \end{warnbox}
+\end{frame}
+
+\begin{frame}{Structuration Rigoureuse d'un Tableau de Données (\textit{Tidy Data})}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Les 3 Règles d'Or du Format Tidy}
+        Pour être analysable sous Python/R sans erreur :
+        \begin{enumerate}
+          \item Chaque \textbf{ligne} représente un individu biologique unique ($N$).
+          \item Chaque \textbf{colonne} représente une seule variable biologique ou expérimentale.
+          \item Chaque \textbf{cellule} contient une valeur unique (pas de texte mélangé aux chiffres, ex: « 12.4 » et non « 12.4 mg »).
+        \end{enumerate}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{warnbox}{Les Pièges Fréquents sous Excel}
+        \begin{itemize}
+          \item Cellules fusionnées empêchant la lecture automatique.
+          \item Données réparties en multiples tableaux côte à côte.
+          \item Virgule décimale française (,) au lieu du point (.) international.
+          \item Valeurs manquantes codées par « ND » ou « 0 » au lieu d'un blanc (NaN).
+        \end{itemize}
+      \end{warnbox}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 % ========================================================
-\section{Paramètres Descriptifs : SD vs. SEM}
+\section{Statistique Descriptive : Position \& Dispersion}
 % ========================================================
 
-\begin{frame}{Écart-Type (SD) vs. Erreur Standard (SEM) : Quelle Différence ?}
+\begin{frame}{Paramètres de Tendance Centrale : Moyenne, Médiane, Mode}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{1. La Moyenne ($\bar{X}$)}
+        \begin{equation*}
+          \bar{X} = \frac{1}{n} \sum_{i=1}^n X_i
+        \end{equation*}
+        \textbf{Avantage :} Utilise 100\% de l'information numérique.\\
+        \textbf{Faiblesse :} Très sensible aux valeurs extrêmes (outliers).
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.34\linewidth}
+      \begin{biobox}{2. La Médiane ($Med$)}
+        Valeur qui sépare l'échantillon ordonné en deux moitiés égales (50\% au-dessus, 50\% au-dessous).\\
+        \textbf{Avantage :} Statistique \textbf{robuste}, insensible aux valeurs aberrantes de pipetage.
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{3. Le Mode ($Mo$)}
+        Valeur la plus fréquemment observée dans l'échantillon.\\
+        \textbf{Usage :} Particulièrement utile pour les variables discrètes ou catégorielles (ex: pic de prévalence).
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{takeawaybox}{Moyenne vs Médiane}
+    Lorsque la distribution est parfaitement symétrique (loi normale), $\text{Moyenne} = \text{Médiane} = \text{Mode}$. Dès que la distribution est asymétrique, la moyenne est « tirée » vers la queue de distribution, alors que la médiane reste stable.
+  \end{takeawaybox}
+\end{frame}
+
+\begin{frame}{Moyenne vs. Médiane face aux Asymétries Biologiques}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Cas Réel : Dosage d'Interleukine-6 (IL-6)}
+        Chez 10 patients atteints d'un choc septique, les taux sériques d'IL-6 (pg/mL) mesurés sont :
+        \begin{center}
+          $12, \; 14, \; 15, \; 18, \; 20, \; 22, \; 25, \; 28, \; 35, \; \mathbf{1250}$
+        \end{center}
+        \begin{itemize}
+          \item \textbf{Moyenne :} $\bar{X} = 142.9\,\text{pg/mL}$
+          \item \textbf{Médiane :} $Med = 21.0\,\text{pg/mL}$
+        \end{itemize}
+        $\implies$ La moyenne (142.9) ne reflète la réalité d'aucun patient ! 90\% des patients ont un taux $< 35$. La médiane (21.0) traduit fidèlement le niveau central du groupe.
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Règle de Décision Pédagogique}
+        \textbf{Quand utiliser la Moyenne ?}
+        \begin{itemize}
+          \item Distribution symétrique (Gaussienne).
+          \item Tests paramétriques (ANOVA, Student).
+        \end{itemize}
+        \vspace{1mm}
+        \textbf{Quand utiliser la Médiane ?}
+        \begin{itemize}
+          \item Distribution asymétrique (cytokines, qPCR $2^{-\Delta\Delta Ct}$, expression génique).
+          \item Présence d'outliers non rejetables.
+          \item Tests non paramétriques (Mann-Whitney).
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Illustration Graphique : Tendance Centrale \& Asymétrie}
+  \begin{center}
+    \includegraphics[width=0.92\linewidth]{../figures/fig00_central_tendency_skewness.png}
+  \end{center}
+  \vspace{-2mm}
+  \begin{takeawaybox}{Impact Visuel}
+    Sur la distribution asymétrique positive (à droite), observez comment le mode ($2.0$), la médiane ($2.0$) et la moyenne ($2.65$) se dissocient nettement.
+  \end{takeawaybox}
+\end{frame}
+
+\begin{frame}{Paramètres de Dispersion : Variance \& Écart-Type}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Variance d'Échantillon ($s^2$)}
+        \begin{equation*}
+          s^2 = \frac{\sum_{i=1}^n (X_i - \bar{X})^2}{n - 1}
+        \end{equation*}
+        \textbf{Pourquoi diviser par $n-1$ ? (Bessel)}
+        \begin{itemize}
+          \item La moyenne vraie $\mu$ est inconnue ; on utilise $\bar{X}$ estimée sur l'échantillon.
+          \item $\sum (X_i - \bar{X})^2$ est mathématiquement plus petite que $\sum (X_i - \mu)^2$.
+          \item Diviser par $n-1$ compense exactement cette sous-estimation : $s^2$ devient un \textbf{estimateur sans biais} de $\sigma^2$.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Écart-Type d'Échantillon ($SD$)}
+        \begin{equation*}
+          SD = s = \sqrt{s^2} = \sqrt{\frac{\sum_{i=1}^n (X_i - \bar{X})^2}{n - 1}}
+        \end{equation*}
+        \textbf{Signification biologique :}
+        \begin{itemize}
+          \item S'exprime dans la \textbf{même unité} que la variable biologique mesurée (mg/mL, $\mu\text{M}$, absorbance).
+          \item Quantifie l'étendue réelle de dispersion des individus biologiques autour de la moyenne.
+          \item \textbf{Ne diminue pas} lorsque $n$ augmente !
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Écart-Type ($SD$) vs. Erreur Standard ($SEM$) : Quelle Différence ?}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
       \begin{conceptbox}{1. L'Écart-Type ($SD$)}
         \begin{equation*}
-          SD = \sqrt{\frac{\sum_{i=1}^n (X_i - \bar{X})^2}{n - 1}}
+          SD = \sqrt{\frac{\sum (X_i - \bar{X})^2}{n - 1}}
         \end{equation*}
-        \textbf{Signification biologique :} Mesure à quel point les individus biologiques sont dispersés autour de la moyenne.
+        \textbf{Rôle :} Décrit la \textbf{dispersion biologique} des individus.
         \begin{itemize}
-          \item Ne diminue \textbf{pas} quand la taille d'échantillon $n$ augmente.
-          \item Reflète la vraie diversité de la nature.
+          \item Répond à : \textit{« À quel point les animaux ou échantillons sont-ils différents entre eux ? »}
+          \item Reste stable quand la taille $n$ augmente.
+          \item Indispensable pour caractériser une population.
         \end{itemize}
       \end{conceptbox}
     \end{column}
@@ -159,10 +322,11 @@
         \begin{equation*}
           SEM = \frac{SD}{\sqrt{n}}
         \end{equation*}
-        \textbf{Signification biologique :} Mesure l'incertitude sur la position de la moyenne vraie de la population ($\mu$).
+        \textbf{Rôle :} Mesure la \textbf{précision de l'estimation} de la moyenne.
         \begin{itemize}
-          \item Diminue quand $n$ augmente ($\sim 1/\sqrt{n}$).
-          \item Reflète la précision expérimentale.
+          \item Répond à : \textit{« Quelle est l'incertitude sur la position de la moyenne vraie $\mu$ ? »}
+          \item \textbf{Diminue} proportionnellement à $1/\sqrt{n}$.
+          \item Sert à construire les intervalles de confiance et à comparer deux groupes.
         \end{itemize}
       \end{conceptbox}
     \end{column}
@@ -174,41 +338,528 @@
     \includegraphics[width=0.90\linewidth]{../figures/fig00_distributions_sd_sem.png}
   \end{center}
   \vspace{-2mm}
-  \begin{takeawaybox}{Recommandation Internationale}
-    Si vous décrivez les caractéristiques d'un groupe d'animaux : indiquez $\text{Moyenne} \pm SD$. Si vous comparez l'effet de deux traitements : indiquez $\text{Moyenne} \pm SEM$ ou mieux, affichez l'intervalle de confiance à 95\% !
+  \begin{takeawaybox}{Règle Internationale de Publication}
+    \begin{itemize}
+      \item \textbf{Rapporter un groupe biologique :} Indiquer $\bar{X} \pm SD$ (ex : rats témoins : $41.2 \pm 3.1\,\text{g/L}$).
+      \item \textbf{Comparer l'effet de deux traitements :} Indiquer $\bar{X} \pm SEM$ ou mieux, l'Intervalle de Confiance à 95\% !
+    \end{itemize}
   \end{takeawaybox}
 \end{frame}
 
-% ========================================================
-\section{La Logique des Tests d'Hypothèses}
-% ========================================================
-
-\begin{frame}{Le Raisonnement par l'Absurde du Test Statistique}
+\begin{frame}{Indicateurs Complémentaires : Quartiles, IQR \& Coefficient de Variation}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{1. Formulation des Hypothèses}
-        On ne peut jamais prouver directement qu'un traitement fonctionne. On cherche à \textbf{rejeter l'hypothèse qu'il ne fonctionne pas} :
+      \begin{conceptbox}{Quartiles \& Écart Interquartile ($IQR$)}
         \begin{itemize}
-          \item \textbf{$H_0$ (Hypothèse Nulle) :} « Pas de différence » ($\mu_A = \mu_B$).
-          \item \textbf{$H_1$ (Alternative) :} « Il existe un effet » ($\mu_A \neq \mu_B$).
+          \item $Q_1$ (25\%) : 25\% des données sont inférieures.
+          \item $Q_2$ (50\%) : La médiane.
+          \item $Q_3$ (75\%) : 75\% des données sont inférieures.
+          \item \textbf{Écart Interquartile :}
+            \begin{equation*}
+              IQR = Q_3 - Q_1
+            \end{equation*}
+          \item Englobe les \textbf{50\% centraux} de l'échantillon. Insensible aux valeurs aberrantes !
         \end{itemize}
       \end{conceptbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{biobox}{Exemple en Enzymologie}
-        On teste si un inhibiteur à $10\,\mu\text{M}$ réduit l'activité d'une protéase :
+      \begin{biobox}{Coefficient de Variation ($CV\%$)}
         \begin{equation*}
-          H_0 : \text{Activité}_{\text{Inhibiteur}} = \text{Activité}_{\text{Témoin}}
+          CV = \frac{SD}{\bar{X}} \times 100\%
         \end{equation*}
-        Si la différence observée est tellement grande qu'elle a moins de 5\% de chances d'être due au hasard, on rejette $H_0$ !
+        \textbf{Contrôle Qualité \& Répétabilité Analytique :}
+        \begin{itemize}
+          \item Mesure la dispersion relative sans dimension.
+          \item Permet de comparer la précision de deux techniques n'ayant pas la même unité.
+          \item \textbf{Norme laboratoire :}
+            \begin{itemize}
+              \item $CV < 5\%$ : Excellente répétabilité (ELISA intra-essai, spectrophotométrie).
+              \item $CV > 15\%$ : Alerte qualité analytique !
+            \end{itemize}
+        \end{itemize}
       \end{biobox}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Les Deux Risques d'Erreur : $\alpha$, $\beta$ et Puissance}
+\begin{frame}{Visualisation Graphique : Anatomie du Boxplot de Tukey}
   \begin{center}
-    \includegraphics[width=0.78\linewidth]{../figures/fig00_hypothesis_testing_alpha_beta.png}
+    \includegraphics[width=0.92\linewidth]{../figures/fig00_boxplots_outliers_tukey.png}
+  \end{center}
+  \vspace{-2mm}
+  \begin{conceptbox}{La Règle de Tukey pour les Valeurs Aberrantes (\textit{Outliers})}
+    Une valeur $X$ est considérée comme suspecte si elle dépasse les limites des moustaches :
+    \begin{equation*}
+      \text{Limite Inférieure} = Q_1 - 1.5 \times IQR \qquad \text{et} \qquad \text{Limite Supérieure} = Q_3 + 1.5 \times IQR
+    \end{equation*}
+  \end{conceptbox}
+\end{frame}
+
+% ========================================================
+\section{Fondements des Probabilités en Biologie}
+% ========================================================
+
+\begin{frame}{Qu'est-ce qu'une Probabilité en Sciences du Vivant ?}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Définition \& Axiomes Fondamentaux}
+        Pour une expérience biologique aléatoire (prélèvement, réaction enzymatique, génotypage) dans l'univers $\Omega$ :
+        \begin{enumerate}
+          \item Une probabilité est comprise entre 0 et 1 :
+            \begin{equation*}
+              0 \le P(A) \le 1
+            \end{equation*}
+          \item La probabilité de l'événement certain vaut 1 : $P(\Omega) = 1$.
+          \item Si deux événements $A$ et $B$ sont disjoints (incompatibles) :
+            \begin{equation*}
+              P(A \cup B) = P(A) + P(B)
+            \end{equation*}
+        \end{enumerate}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Interprétation Fréquentiste}
+        En biologie expérimentale, $P(A)$ représente la \textbf{fréquence relative limite} d'apparition de l'événement $A$ si l'on répétait l'expérience un très grand nombre de fois dans des conditions identiques :
+        \begin{equation*}
+          P(A) = \lim_{n \to \infty} \frac{n_A}{n}
+        \end{equation*}
+        \textit{Exemple :} La probabilité qu'un souriceau issu d'un croisement hétérozygote $Aa \times Aa$ soit albinos ($aa$) est $P = 0.25$ (loi mendélienne).
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Probabilités Conditionnelles \& Événements Indépendants}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Probabilité Conditionnelle $P(A|B)$}
+        Probabilité que l'événement $A$ se produise \textbf{sachant que l'événement $B$ est déjà réalisé} :
+        \begin{equation*}
+          P(A | B) = \frac{P(A \cap B)}{P(B)} \quad (\text{avec } P(B) > 0)
+        \end{equation*}
+        $\implies$ Modifie l'univers des possibles en se restreignant à $B$.
+        \begin{equation*}
+          \implies P(A \cap B) = P(B) \times P(A|B)
+        \end{equation*}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Indépendance Biologique}
+        Deux événements $A$ et $B$ sont dits \textbf{statistiquement indépendants} si la réalisation de $B$ n'apporte aucune information sur $A$ :
+        \begin{equation*}
+          P(A | B) = P(A) \iff P(A \cap B) = P(A) \times P(B)
+        \end{equation*}
+        \textbf{Cas biologique :} La ségrégation de deux gènes portés par deux chromosomes différents (absence de liaison génétique / \textit{linkage}).
+      \end{biobox}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{warnbox}{Attention au Piège du Conditionnement}
+    $P(A|B)$ est très différente de $P(B|A)$ ! La probabilité d'avoir de la fièvre sachant qu'on a une septicémie ($P(\text{Fièvre}|\text{Septicémie}) \approx 95\%$) n'a rien à voir avec la probabilité d'avoir une septicémie sachant qu'on a de la fièvre ($P(\text{Septicémie}|\text{Fièvre}) < 1\%$).
+  \end{warnbox}
+\end{frame}
+
+\begin{frame}{Le Théorème de Bayes au Cœur du Diagnostic Biologique}
+  \begin{conceptbox}{Théorème de Bayes}
+    Permet de réviser la probabilité d'une maladie ($M$) après avoir obtenu le résultat d'un test biologique ($T$) :
+    \begin{equation*}
+      P(M^+ | T^+) = \frac{P(T^+ | M^+) \cdot P(M^+)}{P(T^+)} = \frac{P(T^+ | M^+) \cdot P(M^+)}{P(T^+ | M^+) P(M^+) + P(T^+ | M^-) P(M^-)}
+    \end{equation*}
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Paramètres Intrinsèques du Test}
+        \begin{itemize}
+          \item \textbf{Sensibilité ($Se$) :} Probabilité que le test soit positif si le sujet est malade.
+            \begin{equation*}
+              Se = P(T^+ | M^+) \quad (\text{Vrais Positifs})
+            \end{equation*}
+          \item \textbf{Spécificité ($Sp$) :} Probabilité que le test soit négatif si le sujet est sain.
+            \begin{equation*}
+              Sp = P(T^- | M^-) \quad (\text{Vrais Négatifs})
+            \end{equation*}
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Valeurs Prédictives Cliniques}
+        \begin{itemize}
+          \item \textbf{Valeur Prédictive Positive ($VPP$) :} Probabilité d'être réellement malade si le test est positif.
+            \begin{equation*}
+              VPP = P(M^+ | T^+)
+            \end{equation*}
+          \item \textbf{Valeur Prédictive Négative ($VPN$) :} Probabilité d'être réellement sain si le test est négatif.
+            \begin{equation*}
+              VPN = P(M^- | T^-)
+            \end{equation*}
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Le Paradoxe des Tests Rares en Épidémiologie \& Dépistage}
+  \begin{biobox}{Exemple Chiffré Frappant}
+    On teste un biomarqueur précoce du cancer du pancréas :
+    \begin{itemize}
+      \item Sensibilité du test : $Se = 99\%$
+      \item Spécificité du test : $Sp = 99\%$
+      \item Prévalence de la maladie dans la population : $P(M^+) = 0.1\%$ ($1$ individu sur $1000$).
+    \end{itemize}
+    Un patient reçoit un test \textbf{POSITIF}. Quelle est la probabilité réelle qu'il ait ce cancer ?
+  \end{biobox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.55\linewidth}
+      \textbf{Application de Bayes sur $100\,000$ personnes :}
+      \begin{itemize}
+        \item $100$ malades $\implies 99$ tests positifs ($Se = 99\%$).
+        \item $99\,900$ personnes saines $\implies 1\% \times 99\,900 = \mathbf{999}$ \textbf{faux positifs} !
+        \item Total des tests positifs : $99 + 999 = 1098$.
+      \end{itemize}
+      \begin{equation*}
+        VPP = \frac{99}{1098} \approx \mathbf{9.0\%}
+      \end{equation*}
+    \end{column}
+    \begin{column}{0.43\linewidth}
+      \begin{takeawaybox}{Leçon Biologique}
+        Même avec un test excellent ($99\%$ de précision), \textbf{plus de 90\% des tests positifs sont des faux positifs} car la maladie est rare !\\
+        $\implies$ Ne jamais interpréter un résultat de laboratoire sans connaître la \textbf{prévalence} de la cible.
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Les Grandes Lois de Probabilité en Biologie}
+% ========================================================
+
+\begin{frame}{Variables Aléatoires Discrètes vs. Continues}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{1. Variable Aléatoire Discrète}
+        Ne prend que des valeurs entières isolées ($k \in \mathbb{N}$).
+        \begin{itemize}
+          \item Caractérisée par sa \textbf{fonction de probabilité} :
+            \begin{equation*}
+              P(X = k) \quad \text{avec} \quad \sum_k P(X = k) = 1
+            \end{equation*}
+          \item \textbf{Espérance :} $\mathbb{E}(X) = \sum k \cdot P(X=k)$
+          \item \textbf{Lois clés :} Binomiale, Poisson.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{2. Variable Aléatoire Continue}
+        Prend une infinité non dénombrable de valeurs réelles ($x \in \mathbb{R}$).
+        \begin{itemize}
+          \item Caractérisée par sa \textbf{densité de probabilité} $f(x)$ :
+            \begin{equation*}
+              P(a \le X \le b) = \int_a^b f(x) \, dx
+            \end{equation*}
+          \item \textbf{Attention :} La probabilité d'une valeur exacte est nulle : $P(X = a) = 0$.
+          \item \textbf{Lois clés :} Normale, Student, Fisher.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La Loi Binomiale $\mathcal{B}(n, p)$ : Les Processus Oui / Non}
+  \begin{conceptbox}{Définition \& Formule}
+    Modélise le nombre de succès $k$ parmi $n$ essais biologiques indépendants, où chaque essai a une probabilité constante de succès $p$ :
+    \begin{equation*}
+      P(X = k) = \binom{n}{k} p^k (1-p)^{n-k} = \frac{n!}{k!(n-k)!} p^k (1-p)^{n-k}
+    \end{equation*}
+    \textbf{Espérance :} $\mathbb{E}(X) = n \cdot p \qquad \textbf{Variance :} \mathrm{Var}(X) = n \cdot p \cdot (1-p)$
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Applications Fréquentes en Biologie}
+        \begin{itemize}
+          \item Nombre de souris survivantes après injection létale ($n=10$, $p=0.3$).
+          \item Nombre d'embryons porteurs d'un allèle récessif ($p=0.25$).
+          \item Taux de transduction virale dans une lignée cellulaire.
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{Propriété Remarquable}
+        Lorsque le nombre d'essais $n$ est grand et $p$ n'est ni trop proche de 0 ni de 1 ($np \ge 5$ et $n(1-p) \ge 5$), la loi binomiale s'approche parfaitement d'une \textbf{loi normale} :
+        \begin{equation*}
+          \mathcal{B}(n, p) \approx \mathcal{N}\Big(np, \; np(1-p)\Big)
+        \end{equation*}
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La Loi de Poisson $\mathcal{P}(\lambda)$ : La Loi des Événements Rares}
+  \begin{conceptbox}{Définition \& Formule}
+    Modélise le nombre d'événements $k$ survenant dans un intervalle de temps, d'espace ou de volume continu, lorsque les événements sont indépendants et ont un taux moyen constant $\lambda$ :
+    \begin{equation*}
+      P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!} \qquad (k = 0, 1, 2, \dots)
+    \end{equation*}
+    \textbf{Propriété Signature Unique :} L'espérance est strictement égale à la variance !
+    \begin{equation*}
+      \mathbb{E}(X) = \mathrm{Var}(X) = \lambda
+    \end{equation*}
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Applications Clés de Laboratoire}
+        \begin{itemize}
+          \item Comptage d'UFC bactériennes par boîte de Petri à forte dilution.
+          \item Nombre de mutations spontanées par million de paires de bases.
+          \item Nombre de particules virales entrant dans une cellule en infection à faible multiplicité (MOI).
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{warnbox}{Le Test de Poisson}
+        Si dans un comptage expérimental, la variance observée $s^2$ est nettement supérieure à la moyenne $\bar{X}$ ($s^2 \gg \bar{X}$), il y a \textbf{sur-dispersion} (\textit{overdispersion}). Les bactéries ne sont pas distribuées au hasard mais forment des agrégats (clumping) !
+      \end{warnbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La Loi Normale de Gauss $\mathcal{N}(\mu, \sigma^2)$ : La Reine des Distributions}
+  \begin{conceptbox}{Densité de Probabilité Gaussienne}
+    La célèbre courbe en cloche, parfaitement symétrique autour de sa moyenne $\mu$ :
+    \begin{equation*}
+      f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - \mu)^2}{2\sigma^2} \right) \qquad (x \in \mathbb{R})
+    \end{equation*}
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Standardisation (Centrage-Réduction)}
+        Toute variable normale $X \sim \mathcal{N}(\mu, \sigma^2)$ se transforme en \textbf{Loi Normale Centrée Réduite} $Z \sim \mathcal{N}(0, 1)$ par :
+        \begin{equation*}
+          Z = \frac{X - \mu}{\sigma}
+        \end{equation*}
+        Permet d'utiliser une seule table universelle de probabilités pour toutes les variables biologiques du monde !
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Pourquoi est-elle Partout en Biologie ?}
+        De nombreux paramètres biologiques (taille, poids, glycémie, pression artérielle) résultent de l'addition d'une multitude de facteurs génétiques et environnementaux indépendants de faible intensité.
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La Règle Empirique des 68\% -- 95\% -- 99.7\%}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Les 3 Intervalles Fondamentaux}
+        Pour toute distribution normale $\mathcal{N}(\mu, \sigma^2)$ :
+        \begin{itemize}
+          \item \textbf{68.3\%} des individus se trouvent dans l'intervalle :
+            \begin{equation*}
+              [\mu - 1\sigma, \; \mu + 1\sigma]
+            \end{equation*}
+          \item \textbf{95.4\%} ($\approx 95\%$) des individus dans :
+            \begin{equation*}
+              [\mu - 1.96\sigma, \; \mu + 1.96\sigma] \approx [\mu - 2\sigma, \; \mu + 2\sigma]
+            \end{equation*}
+          \item \textbf{99.7\%} des individus dans :
+            \begin{equation*}
+              [\mu - 3\sigma, \; \mu + 3\sigma]
+            \end{equation*}
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Application aux Valeurs Usuelles de Référence}
+        En biologie médicale, les « normes de laboratoire » remises aux patients sont définies par l'intervalle :
+        \begin{equation*}
+          \text{Normes} = [\bar{X} - 2\,SD, \; \bar{X} + 2\,SD]
+        \end{equation*}
+        $\implies$ Par définition mathématique, \textbf{5\% des personnes parfaitement saines} ont un résultat « hors normes » (2.5\% trop bas, 2.5\% trop haut) !
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Le Théorème Central Limite (TCL) : Le Miracle Statistique}
+  \begin{conceptbox}{Énoncé Fondamental du TCL}
+    Soit une population quelconque, possédant une moyenne $\mu$ et une variance $\sigma^2$, \textbf{quelle que soit sa distribution de départ} (asymétrique, exponentielle, bimodale, uniforme) :\\
+    \vspace{1mm}
+    La distribution de la moyenne $\bar{X}_n$ d'un échantillon aléatoire de taille $n$ tend vers une \textbf{loi normale} lorsque $n$ grandit :
+    \begin{equation*}
+      \bar{X}_n \xrightarrow[n \to \infty]{} \mathcal{N}\left( \mu, \; \frac{\sigma^2}{n} \right) \qquad \text{soit} \qquad Z = \frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{} \mathcal{N}(0, 1)
+    \end{equation*}
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Conséquence Pratique Immense}
+        En pratique, dès que $n \ge 30$, la moyenne d'échantillon se comporte comme une variable normale, même si les mesures biologiques individuelles ne sont pas normales !
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{Justification des Tests Classiques}
+        Le TCL est la raison exacte pour laquelle les tests statistiques basés sur la moyenne (Student, ANOVA) sont robustes et largement applicables en biologie.
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Illustration Graphique : Le Théorème Central Limite en Action}
+  \begin{center}
+    \includegraphics[width=0.95\linewidth]{../figures/fig00_central_limit_theorem.png}
+  \end{center}
+  \vspace{-2mm}
+  \begin{takeawaybox}{Visualisation de la Convergence}
+    À gauche : population d'origine fortement asymétrique (durée de survie cellulaire exponentielle). Au milieu ($n=5$) : l'asymétrie s'atténue. À droite ($n=30$) : la distribution des moyennes d'échantillon épouse parfaitement la courbe de Gauss normale !
+  \end{takeawaybox}
+\end{frame}
+
+\begin{frame}{Les Lois Dérivées d'Échantillonnage : $\chi^2$, Student $t$, Fisher $F$}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{1. Loi du $\chi^2$ (Chi-deux)}
+        Somme des carrés de $k$ variables normales centrées réduites :
+        \begin{equation*}
+          \chi^2 = \sum_{i=1}^k Z_i^2
+        \end{equation*}
+        \textbf{Usage :} Tests d'indépendance de tableaux de contingence, conformité mendélienne.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.34\linewidth}
+      \begin{conceptbox}{2. Loi de Student ($t$)}
+        Quotient d'une variable normale par la racine d'un chi-deux :
+        \begin{equation*}
+          t = \frac{Z}{\sqrt{\chi^2 / ddl}}
+        \end{equation*}
+        \textbf{Usage :} Comparaison de deux moyennes lorsque la variance vraie $\sigma^2$ est inconnue et estimée par $s^2$.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{3. Loi de Fisher ($F$)}
+        Rapport de deux variances indépendantes :
+        \begin{equation*}
+          F = \frac{s_1^2}{s_2^2} = \frac{\chi_1^2 / ddl_1}{\chi_2^2 / ddl_2}
+        \end{equation*}
+        \textbf{Usage :} L'épine dorsale de l'\textbf{ANOVA} (comparaison de variances) et des régressions !
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Inférence Statistique \& Intervalles de Confiance}
+% ========================================================
+
+\begin{frame}{Le Principe Fondamental de l'Estimation Statistique}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{Estimation Ponctuelle}
+        Consiste à attribuer à un paramètre inconnu de la population ($\mu, \sigma^2$) une valeur unique calculée sur l'échantillon :
+        \begin{itemize}
+          \item $\mu$ est estimé par la moyenne d'échantillon $\bar{X}$.
+          \item $\sigma^2$ est estimé par la variance corrigée $s^2$.
+        \end{itemize}
+        \vspace{1mm}
+        \textbf{Inconvénient majeur :} Ne fournit aucune indication sur l'incertitude et la marge d'erreur liée à l'échantillonnage !
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Estimation par Intervalle de Confiance}
+        Fournit une plage de valeurs crédibles $[L_{inf}, \; L_{sup}]$ susceptible de contenir le paramètre vrai inconnu avec un niveau de confiance choisi à l'avance (habituellement 95\%) :
+        \begin{equation*}
+          P(\mu \in [L_{inf}, \; L_{sup}]) = 1 - \alpha = 0.95
+        \end{equation*}
+        $\implies$ Combine la meilleure estimation et l'imprécision expérimentale en un seul chiffre.
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Construction & Interprétation de l'Intervalle de Confiance à 95\%}
+  \begin{conceptbox}{Formule Générale de l'IC à 95\% de la Moyenne}
+    Lorsque la variance de la population est inconnue (cas de 100\% des études biologiques) :
+    \begin{equation*}
+      IC_{95\%}(\mu) = \left[ \bar{X} - t_{\alpha/2, \, n-1} \cdot \frac{s}{\sqrt{n}}, \quad \bar{X} + t_{\alpha/2, \, n-1} \cdot \frac{s}{\sqrt{n}} \right] = \bar{X} \pm t_{\alpha/2, \, n-1} \cdot SEM
+    \end{equation*}
+    Où $t_{\alpha/2, \, n-1}$ est la valeur critique de la loi de Student à $n-1$ degrés de liberté (pour $n \ge 30$, $t \approx 1.96 \approx 2$).
+  \end{conceptbox}
+
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{warnbox}{Ce que signifie « 95\% de confiance »}
+        Si vous répétiez cette expérience 100 fois en prélevant 100 échantillons indépendants et en calculant 100 intervalles : \textbf{95 d'entre eux contiendraient la vraie moyenne $\mu$}, et 5 la manqueraient.
+      \end{warnbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{Ce que cela NE signifie PAS !}
+        « Il y a 95\% de chances que $\mu$ soit dans cet intervalle ».\\
+        $\implies$ \textbf{FAUX !} La moyenne vraie $\mu$ est une constante fixe (non aléatoire). C'est l'intervalle qui est aléatoire et qui fluctue d'une expérience à l'autre !
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Règle d'Or : Intervalles de Confiance \& Prise de Décision}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{L'IC de la Différence entre 2 Groupes}
+        Soit $\Delta = \mu_A - \mu_B$ la différence d'efficacité entre un groupe Traité et un Témoin :
+        \begin{equation*}
+          IC_{95\%}(\mu_A - \mu_B) = (\bar{X}_A - \bar{X}_B) \pm t \cdot SEM_{\text{diff}}
+        \end{equation*}
+        \textbf{Règle Décisionnelle Équivalente au Test $t$ :}
+        \begin{itemize}
+          \item Si l'IC à 95\% \textbf{inclut la valeur 0} (ex : $[-1.2, \; +3.4]$) : La différence \textbf{n'est pas significative} ($p > 0.05$).
+          \item Si l'IC à 95\% \textbf{exclut 0} (ex : $[+2.1, \; +6.8]$) : L'effet est \textbf{statistiquement significatif} ($p \le 0.05$).
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{takeawaybox}{Le Piège du Chevauchement des Barres}
+        \begin{itemize}
+          \item Si deux barres d'erreur en $SEM$ se chevauchent : on ne peut rien conclure sans calcul formel.
+          \item Si deux Intervalles de Confiance à 95\% ne se chevauchent absolument pas : la différence est \textbf{garantie significative à $p < 0.01$} !
+        \end{itemize}
+      \end{takeawaybox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Logique des Tests d'Hypothèses \& Prise de Décision}
+% ========================================================
+
+\begin{frame}{Le Raisonnement par l'Absurde du Test Statistique}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{1. Formulation des Deux Hypothèses}
+        En démarche scientifique, on ne peut jamais prouver directement qu'un traitement est actif. On démontre que \textbf{l'hypothèse d'inactivité est hautement improbable} :
+        \begin{itemize}
+          \item \textbf{$H_0$ (Hypothèse Nulle) :} « Aucun effet du traitement » ($\mu_{\text{Traité}} = \mu_{\text{Témoin}}$). Toute différence observée n'est due qu'au hasard d'échantillonnage.
+          \item \textbf{$H_1$ (Alternative) :} « Il existe un effet réel » ($\mu_{\text{Traité}} \neq \mu_{\text{Témoin}}$).
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{Cas Concret en Enzymologie}
+        On étudie l'inhibition d'une protéase tumorale par une molécule X à $10\,\mu\text{M}$ :
+        \begin{equation*}
+          H_0 : \text{Activité}_{\text{Inhibiteur}} = \text{Activité}_{\text{Contrôle}}
+        \end{equation*}
+        Si la baisse d'activité mesurée au spectrophotomètre est tellement spectaculaire qu'elle a moins de 5\% de chances d'être le fruit du hasard pur, \textbf{on rejette $H_0$} et on affirme que la molécule est inhibitrice !
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Les Deux Risques d'Erreur : $\alpha$, $\beta$ et Puissance Statistique}
+  \begin{center}
+    \includegraphics[width=0.76\linewidth]{../figures/fig00_hypothesis_testing_alpha_beta.png}
   \end{center}
   \vspace{-2mm}
   \begin{table}[h]
@@ -228,64 +879,181 @@
 \end{frame}
 
 \begin{frame}{Démystification Rigoureuse de la $p$-value}
-  \begin{conceptbox}{Définition Exacte}
-    La \textbf{$p$-value} est la probabilité d'observer une différence au moins aussi grande que celle mesurée au laboratoire, \textbf{sous l'hypothèse où le traitement n'a absolument aucun effet réel ($H_0$ vraie)}.
+  \begin{conceptbox}{Définition Formelle Exacte}
+    La \textbf{$p$-value} est la probabilité d'observer un résultat au moins aussi extrême que celui obtenu expérimentalement, \textbf{sous l'hypothèse où le traitement n'a absolument aucun effet ($H_0$ vraie)}.
     \begin{equation*}
-      p \le 0.05 \implies \text{Événement très rare sous } H_0 \implies \text{Rejet de } H_0 \text{ (Différence significative)}.
+      p \le \alpha \; (0.05) \implies \text{Événement rarissime sous } H_0 \implies \text{Rejet de } H_0 \text{ (Différence significative)}.
     \end{equation*}
   \end{conceptbox}
 
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \begin{warnbox}{Les 3 Idées Fausses Répandues}
+      \begin{warnbox}{Les 3 Idées Fausses des Biologistes}
         \begin{enumerate}
-          \item « $p = 0.03$ signifie qu'il y a 97\% de chances que $H_1$ soit vraie » $\implies$ \textbf{FAUX !}
-          \item « Une $p$-value très faible ($p < 0.0001$) prouve un effet biologique géant » $\implies$ \textbf{FAUX !} (Avec $n=10000$, un effet infinitésimal donne $p < 0.0001$).
+          \item « $p = 0.02$ signifie qu'il y a 98\% de chances que mon traitement fonctionne » $\implies$ \textbf{FAUX !} (Confusion avec le théorème bayésien).
+          \item « $p > 0.05$ prouve que les deux groupes sont identiques » $\implies$ \textbf{FAUX !} (Absence de preuve n'est pas preuve d'absence ; l'échantillon était peut-être trop petit).
         \end{enumerate}
       \end{warnbox}
     \end{column}
     \begin{column}{0.48\linewidth}
-      \begin{takeawaybox}{Significativité vs Pertinence Clinique}
-        Toujours dissocier :
-        \begin{itemize}
-          \item \textbf{Significativité statistique} (la $p$-value).
-          \item \textbf{Pertinence biologique} : la taille de l'effet mesuré (ex : baisse de 45\% de la glycémie vs baisse de 0.5\%).
-        \end{itemize}
+      \begin{takeawaybox}{Seuil $\alpha = 0.05$ : Une Convention Historique}
+        Fixé par Ronald Fisher en 1925 : « 1 chance sur 20 de se tromper ». Ce n'est pas une loi physique de la nature ! Une $p$-value de $0.049$ et de $0.051$ décrivent quasiment la même réalité biologique.
       \end{takeawaybox}
     \end{column}
   \end{columns}
 \end{frame}
 
-% ========================================================
-\section{Organisation \& Objectifs du Programme}
-% ========================================================
-
-\begin{frame}{Feuille de Route du Module de Biostatistiques}
+\begin{frame}{Significativité Statistique vs. Pertinence Biologique}
   \begin{columns}[onlytextwidth, T]
     \begin{column}{0.48\linewidth}
-      \textbf{\color{BioNavy}Partie I : Modèles Linéaires Avancés}
+      \begin{conceptbox}{Le Rôle de la Taille d'Échantillon ($n$)}
+        La statistique de test dépend de la taille de l'effet et de $\sqrt{n}$ :
+        \begin{equation*}
+          t = \frac{\bar{X}_1 - \bar{X}_2}{s / \sqrt{n}}
+        \end{equation*}
+        \begin{itemize}
+          \item Avec $n = 10\,000$ souris, une baisse de glycémie infinitésimale de $0.02\,\text{g/L}$ sera statistiquement ultra-significative ($p < 0.0001$). Mais cliniquement inutile !
+          \item Avec $n = 3$, une baisse majeure de 50\% peut ne pas être significative ($p = 0.08$) par manque de puissance.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{La Taille de l'Effet (\textit{Effect Size})}
+        Toujours rapporter le \textbf{$d$ de Cohen} :
+        \begin{equation*}
+          d = \frac{\bar{X}_1 - \bar{X}_2}{s_{\text{pool}}}
+        \end{equation*}
+        \begin{itemize}
+          \item $d = 0.2$ : Effet faible.
+          \item $d = 0.5$ : Effet modéré.
+          \item $d \ge 0.8$ : Effet biologique majeur !
+        \end{itemize}
+        $\implies$ La $p$-value dit si l'effet existe ; la taille de l'effet dit s'il a de l'importance biologique.
+      \end{biobox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ========================================================
+\section{Conditions d'Application \& Arbre Décisionnel}
+% ========================================================
+
+\begin{frame}{Les 3 Postulats Obligatoires des Tests Paramétriques}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{1. Indépendance}
+        Les observations proviennent d'unités biologiques indépendantes.
+        \begin{itemize}
+          \item Pas de pseudo-réplication.
+          \item Respect du protocole expérimental et randomisation des cages et puits.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.34\linewidth}
+      \begin{conceptbox}{2. Normalité}
+        Les données (ou les résidus du modèle) suivent une loi normale.
+        \begin{itemize}
+          \item \textbf{Test de Shapiro-Wilk} ($p > 0.05 \implies$ Normalité acceptée).
+          \item \textbf{Graphe Q-Q plot} : points alignés sur la diagonale.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\linewidth}
+      \begin{conceptbox}{3. Homoscédasticité}
+        Les variances des différents groupes sont égales ($\sigma_1^2 = \sigma_2^2 = \dots$).
+        \begin{itemize}
+          \item \textbf{Test de Levene} ou de \textbf{Bartlett} ($p > 0.05 \implies$ Variances homogènes).
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  \begin{warnbox}{Que faire si les postulats ne sont pas respectés ?}
+    Deux solutions : 1) Transformer les données ($\log$, racine carrée) pour normaliser, ou 2) Utiliser les tests non paramétriques !
+  \end{warnbox}
+\end{frame}
+
+\begin{frame}{Stratégies de Transformation \& Tests Non Paramétriques}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \begin{biobox}{1. Transformations de Variables}
+        \begin{itemize}
+          \item \textbf{Transformation Logarithmique $\log_{10}(X)$ :}
+            Idéale pour les données asymétriques positives, concentrations d'anticorps, qPCR ($2^{-\Delta\Delta Ct}$). Rétablit la normalité et stabilise la variance !
+          \item \textbf{Transformation Racine Carrée $\sqrt{X}$ :}
+            Indiquée pour les données de comptage (Poisson, colonies UFC, cellules).
+        \end{itemize}
+      \end{biobox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{conceptbox}{2. Tests Non Paramétriques (Sur Rangs)}
+        Ne supposent aucune loi de distribution sous-jacente :
+        \begin{itemize}
+          \item \textbf{Mann-Whitney / Wilcoxon :} Remplace le test $t$ de Student pour 2 groupes indépendants.
+          \item \textbf{Kruskal-Wallis :} Remplace l'ANOVA à un facteur pour $\ge 3$ groupes.
+          \item \textbf{Corrélation de Spearman :} Remplace Pearson pour des relations non linéaires.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Arbre Décisionnel Universel : Choisir le Bon Test Statistique}
+  \begin{table}[h]
+    \centering
+    \small
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{p{4cm}p{4cm}p{4cm}}
+      \toprule
+      \textbf{Question Biologique} & \textbf{Conditions Paramétriques Réunies} & \textbf{Postulats Non Respectés / Petit $n$} \\
+      \midrule
+      Comparer \textbf{2 groupes indépendants} (ex: Témoin vs Traité) & \textbf{Test $t$ de Student} pour échantillons indépendants & \textbf{Test $U$ de Mann-Whitney} (Wilcoxon rank-sum) \\
+      \midrule
+      Comparer \textbf{2 mesures sur même individu} (Avant / Après) & \textbf{Test $t$ de Student apparié} & \textbf{Test des rangs signés de Wilcoxon} \\
+      \midrule
+      Comparer \textbf{$\ge 3$ groupes} avec 1 seul facteur (ex: 3 doses) & \textbf{ANOVA à 1 facteur (One-way ANOVA)} & \textbf{Test de Kruskal-Wallis} (+ post-hoc Dunn) \\
+      \midrule
+      Comparer avec \textbf{2 facteurs croisés} (ex: Traitement $\times$ Sexe) & \textbf{ANOVA croisée à 2 facteurs (Two-way)} & Modèles mixtes ou transformations \\
+      \midrule
+      Liaison entre \textbf{2 variables quantitatives} (ex: Absorbance vs Dose) & \textbf{Corrélation de Pearson} \& Régression linéaire & \textbf{Corrélation de Spearman} ($r_s$) \\
+      \midrule
+      Association entre \textbf{2 variables qualitatives} (ex: Génotype $\times$ Maladie) & \textbf{Test du $\chi^2$ d'indépendance} (si effectifs attendus $\ge 5$) & \textbf{Test Exact de Fisher} (si petit effectif $< 5$) \\
+      \bottomrule
+    \end{tabular}%
+    }
+  \end{table}
+\end{frame}
+
+% ========================================================
+\section{Organisation \& Feuille de Route du Module}
+% ========================================================
+
+\begin{frame}{Feuille de Route du Module de Biostatistiques (Master 2)}
+  \begin{columns}[onlytextwidth, T]
+    \begin{column}{0.48\linewidth}
+      \textbf{\color{BioNavy}Partie I : Modélisation Linéaire Avancée}
       \begin{itemize}
-        \item \textbf{Chapitre I :} ANOVA croisée (détection d'interactions, synergie et antagonisme).
-        \item \textbf{Chapitre II :} ANOVA hiérarchisée (variabilité technique vs biologique, contrôle qualité).
-        \item \textbf{Chapitre III :} Régression linéaire \& étalonnages (LOD, LOQ, BSA/Bradford).
+        \item \textbf{Chapitre I :} ANOVA croisée à 2 facteurs (effets principaux, interactions, synergie / antagonisme).
+        \item \textbf{Chapitre II :} ANOVA hiérarchisée / \textit{Nested} (séparation de la variabilité biologique et technique, contrôle qualité).
+        \item \textbf{Chapitre III :} Régression linéaire \& étalonnages analytiques (gammes BSA, limites LOD et LOQ).
       \end{itemize}
       \vspace{2mm}
       \textbf{\color{BioNavy}Partie II : Modélisation Non Linéaire}
       \begin{itemize}
-        \item \textbf{Chapitre IV :} Cinétiques enzymatiques (Michaelis-Menten direct, Hill, 4PL ELISA).
+        \item \textbf{Chapitre IV :} Cinétiques enzymatiques directes (Michaelis-Menten non linéaire vs Lineweaver-Burk, Hill, 4PL).
       \end{itemize}
     \end{column}
     \begin{column}{0.48\linewidth}
       \textbf{\color{BioTeal}Partie III : Analyse de Données Multivariées}
       \begin{itemize}
-        \item \textbf{Chapitre V :} ACP (Analyse en Composantes Principales de données omiques).
-        \item \textbf{Chapitre VI :} CAH (Classification Hiérarchique \& Heatmaps).
+        \item \textbf{Chapitre V :} Analyse en Composantes Principales (ACP) sur profils métabolomiques et protéomiques.
+        \item \textbf{Chapitre VI :} Classification Ascendante Hiérarchique (CAH) \& Dendrogrammes / Heatmaps omiques.
       \end{itemize}
       \vspace{2mm}
-      \textbf{\color{BioGreen}Partie IV : Intégrité \& Travaux Pratiques}
+      \textbf{\color{BioGreen}Partie IV : Pratique \& Travaux Dirigés}
       \begin{itemize}
-        \item \textbf{Chapitre VII :} Design expérimental \& publication.
-        \item \textbf{TP Python / Jupyter :} Pratique sur jeux de données réels de biochimie.
+        \item \textbf{Chapitre VII :} Plan d'expérience, intégrité scientifique et communication des résultats.
+        \item \textbf{Travaux Dirigés & TP Python :} Exercices corrigés et notebooks interactifs Jupyter.
       \end{itemize}
     \end{column}
   \end{columns}
@@ -293,9 +1061,10 @@
 
 \begin{frame}[plain]
   \begin{center}
-    \vspace{1.8cm}
-    {\Huge\color{BioNavy}\textbf{Fin du Chapitre 0}}\\[0.8cm]
-    {\large Vous possédez les bases conceptuelles indispensables pour aborder l'ANOVA croisée.}\\[1.2cm]
+    \vspace{1.6cm}
+    {\Huge\color{BioNavy}\textbf{Fin du Chapitre 0}}\\[0.6cm]
+    {\large\textbf{Généralités, Statistique Descriptive \& Probabilités}}\\[0.4cm]
+    {\small Vous disposez désormais de tous les socles théoriques et décisionnels indispensables.}\\[1.0cm]
     \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
     \small Faculté des Sciences --- Département de Biologie\\
     \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}

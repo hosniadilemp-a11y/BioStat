@@ -97,6 +97,133 @@ plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_hypothesis_testing_alpha_beta.png'))
 plt.close()
 
 
+# Fig 0.3 : Tendance Centrale et Asymétrie (Moyenne vs Médiane vs Mode)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.2), dpi=300)
+
+# Distribution Symétrique (Normale)
+x_sym = np.linspace(-4, 4, 1000)
+y_sym = stats.norm.pdf(x_sym, 0, 1)
+ax1.plot(x_sym, y_sym, color=BioNavy, lw=2.5)
+ax1.fill_between(x_sym, y_sym, color=BioTeal, alpha=0.15)
+ax1.axvline(0, color=BioRed, linestyle='-', lw=2, label='Moyenne = Médiane = Mode (0.0)')
+ax1.set_title("Distribution Symétrique (Normale)", fontweight='bold', fontsize=11, color=BioNavy)
+ax1.set_xlabel("Valeur mesurée (ex: Protéinémie g/L centrée)", fontsize=10)
+ax1.set_ylabel("Densité de probabilité", fontsize=10)
+ax1.legend(frameon=True, facecolor='white', loc='upper right', fontsize=8.5)
+ax1.grid(True, alpha=0.4)
+
+# Distribution Asymétrique à Droite (Log-Normale, ex: Cytokines IL-6 pg/mL)
+x_asym = np.linspace(0.01, 8, 1000)
+s_param = 0.75
+y_asym = stats.lognorm.pdf(x_asym, s_param, scale=2.0)
+mode_val = 2.0 * np.exp(-s_param**2)
+median_val = 2.0
+mean_val = 2.0 * np.exp(s_param**2 / 2)
+
+ax2.plot(x_asym, y_asym, color=BioNavy, lw=2.5)
+ax2.fill_between(x_asym, y_asym, color=BioAmber, alpha=0.15)
+ax2.axvline(mode_val, color=BioTeal, linestyle=':', lw=2, label=f'Mode ({mode_val:.2f})')
+ax2.axvline(median_val, color=BioGreen, linestyle='--', lw=2.2, label=f'Médiane ({median_val:.2f})')
+ax2.axvline(mean_val, color=BioRed, linestyle='-', lw=2, label=f'Moyenne ({mean_val:.2f})')
+ax2.set_title("Distribution Asymétrique Positive (Biomarqueurs)", fontweight='bold', fontsize=11, color=BioNavy)
+ax2.set_xlabel("Concentration sérique (ex: IL-6 pg/mL)", fontsize=10)
+ax2.set_ylabel("Densité de probabilité", fontsize=10)
+ax2.legend(frameon=True, facecolor='white', loc='upper right', fontsize=8.5)
+ax2.grid(True, alpha=0.4)
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_central_tendency_skewness.png'))
+plt.close()
+
+# Fig 0.4 : Anatomie Complète du Boxplot (Tukey) et Détection des Outliers
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.2), dpi=300)
+
+np.random.seed(42)
+data_normal = np.random.normal(50, 8, 80)
+# Ajouter deux outliers
+data_with_outliers = np.concatenate([data_normal, [18.0, 82.0]])
+
+# Boxplot détaillé
+bp = ax1.boxplot(data_with_outliers, patch_artist=True, widths=0.4,
+                 boxprops=dict(facecolor=BioTeal, alpha=0.4, color=BioNavy, lw=1.5),
+                 medianprops=dict(color=BioRed, lw=2.5),
+                 whiskerprops=dict(color=BioNavy, lw=1.5, linestyle='--'),
+                 capprops=dict(color=BioNavy, lw=1.5),
+                 flierprops=dict(marker='o', markerfacecolor=BioRed, markeredgecolor=BioNavy, markersize=8))
+
+# Annotations pédagogiques sur le Boxplot
+q1, med, q3 = np.percentile(data_with_outliers, [25, 50, 75])
+iqr = q3 - q1
+lower_whisker = np.min(data_with_outliers[data_with_outliers >= q1 - 1.5 * iqr])
+upper_whisker = np.max(data_with_outliers[data_with_outliers <= q3 + 1.5 * iqr])
+
+ax1.text(1.28, med, f"Médiane = {med:.1f}", va='center', fontsize=9, fontweight='bold', color=BioRed)
+ax1.text(1.28, q3, f"Q3 (75%) = {q3:.1f}", va='center', fontsize=8.5, color=BioNavy)
+ax1.text(1.28, q1, f"Q1 (25%) = {q1:.1f}", va='center', fontsize=8.5, color=BioNavy)
+ax1.text(0.72, (q1 + q3)/2, f"IQR = {iqr:.1f}", ha='right', va='center', fontsize=8.5, fontweight='bold', color=BioNavy)
+ax1.annotate('Outlier biologique (> 1.5×IQR)', xy=(1, 82), xytext=(1.25, 80),
+             arrowprops=dict(facecolor=BioRed, arrowstyle='->', lw=1.5), fontsize=8.5, fontweight='bold', color=BioRed)
+
+ax1.set_xlim(0.4, 1.9)
+ax1.set_title("Anatomie du Boxplot de Tukey (IQR & Outliers)", fontweight='bold', fontsize=11, color=BioNavy)
+ax1.set_ylabel("Mesure biologique (ex: Activité enzymatique)", fontsize=10)
+ax1.set_xticks([1])
+ax1.set_xticklabels(["Échantillon Expérimental"], fontsize=9.5)
+ax1.grid(True, axis='y', alpha=0.4)
+
+# Comparaison Boxplot vs Violin Plot vs Points individuels
+sns.violinplot(data=[data_with_outliers], ax=ax2, color=BioTeal, inner=None, cut=0)
+sns.boxplot(data=[data_with_outliers], ax=ax2, width=0.15, color='white', boxprops=dict(alpha=0.7),
+            medianprops=dict(color=BioRed, lw=2))
+sns.stripplot(data=[data_with_outliers], ax=ax2, color=BioNavy, size=5, jitter=0.15, alpha=0.6)
+ax2.set_title("Violin Plot + Boxplot + Données Individuelles", fontweight='bold', fontsize=11, color=BioNavy)
+ax2.set_ylabel("Mesure biologique", fontsize=10)
+ax2.set_xticks([0])
+ax2.set_xticklabels(["Distribution Réelle Complète"], fontsize=9.5)
+ax2.grid(True, axis='y', alpha=0.4)
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_boxplots_outliers_tukey.png'))
+plt.close()
+
+# Fig 0.5 : Théorème Central Limite (TCL) en Biologie
+fig, axes = plt.subplots(1, 3, figsize=(11, 3.8), dpi=300)
+
+np.random.seed(123)
+# Population parente non normale : Exponentielle (ex: durée de survie cellulaire en culture)
+pop_exp = np.random.exponential(scale=2.0, size=50000)
+
+axes[0].hist(pop_exp, bins=40, density=True, color=BioAmber, alpha=0.6, edgecolor=BioNavy)
+axes[0].set_title("Population Parente (Non Normale)\nex: Temps de survie (Exp)", fontweight='bold', fontsize=10, color=BioNavy)
+axes[0].set_xlabel("Valeur biologique brute", fontsize=9)
+axes[0].set_ylabel("Densité", fontsize=9)
+axes[0].set_xlim(0, 10)
+axes[0].grid(True, alpha=0.3)
+
+# Échantillons de n = 5
+means_n5 = [np.mean(np.random.choice(pop_exp, size=5)) for _ in range(5000)]
+axes[1].hist(means_n5, bins=35, density=True, color=BioTeal, alpha=0.6, edgecolor=BioNavy)
+axes[1].set_title("Distribution des Moyennes ($n = 5$)\nAsymétrie réduite", fontweight='bold', fontsize=10, color=BioNavy)
+axes[1].set_xlabel("Moyenne $\\bar{X}$ de 5 mesures", fontsize=9)
+axes[1].set_xlim(0, 6)
+axes[1].grid(True, alpha=0.3)
+
+# Échantillons de n = 30
+means_n30 = [np.mean(np.random.choice(pop_exp, size=30)) for _ in range(5000)]
+axes[2].hist(means_n30, bins=35, density=True, color=BioGreen, alpha=0.6, edgecolor=BioNavy)
+# Courbe normale théorique par dessus
+x_norm = np.linspace(1, 3, 200)
+axes[2].plot(x_norm, stats.norm.pdf(x_norm, 2.0, 2.0/np.sqrt(30)), color=BioRed, lw=2.2, label='Courbe Gaussienne')
+axes[2].set_title("Distribution des Moyennes ($n = 30$)\nConvergence Gaussienne (TCL)", fontweight='bold', fontsize=10, color=BioNavy)
+axes[2].set_xlabel("Moyenne $\\bar{X}$ de 30 mesures", fontsize=9)
+axes[2].set_xlim(0.8, 3.2)
+axes[2].legend(frameon=True, facecolor='white', loc='upper right', fontsize=8.5)
+axes[2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(os.path.join(OUTPUT_DIR, 'fig00_central_limit_theorem.png'))
+plt.close()
+
 # ==============================================================================
 # CHAPITRE 1 : Figures
 # ==============================================================================
