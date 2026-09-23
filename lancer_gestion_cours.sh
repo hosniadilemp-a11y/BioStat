@@ -11,4 +11,4 @@ echo "======================================================================"
 echo "🚀 Lancement du Tableau de Bord Enseignant (Gestion du Cours)..."
 echo "======================================================================"
 
-python3 "$DIR/gestion_cours.py"
+python3 "$DIR/admin/gestion_cours.py"

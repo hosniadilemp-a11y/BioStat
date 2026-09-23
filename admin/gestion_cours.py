@@ -15,7 +15,8 @@ from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 PORT = 8000
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ADMIN_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(ADMIN_DIR)
 
 COURSES_MAP = {
     "00": ("sources/chapitre_00_introduction", "chapitre_00_intro.tex", "Chapitre_00_Introduction_Biostatistiques.pdf"),
@@ -77,8 +78,13 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=BASE_DIR, **kwargs)
 
     def do_GET(self):
-        if self.path in ["/", "/index.html"]:
-            self.path = "/gestion_cours.html"
+        if self.path in ["/", "/index.html", "/gestion_cours.html"]:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            with open(os.path.join(ADMIN_DIR, "gestion_cours.html"), "rb") as f:
+                self.wfile.write(f.read())
+            return
         return super().do_GET()
 
     def do_POST(self):
