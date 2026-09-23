@@ -783,8 +783,8 @@ a {
 
 .chapter-actions {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
   padding-top: 0.85rem;
   border-top: 1px solid var(--border-color);
 }
@@ -1919,8 +1919,8 @@ a {
   }
   
   .chapter-actions {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
   }
   
   .downloads-grid {
