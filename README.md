@@ -59,15 +59,12 @@ Cours_bio_state/
 │   ├── figures/                                      # Graphiques scientifiques intégrés aux diapos
 │   └── chapitre_00_ à chapitre_07_
 │
-├── courses_pdf/                                      # Présentations Beamer compilées (PDF 16:9)
-│   ├── Chapitre_00_Introduction_Biostatistiques.pdf
-│   ├── Chapitre_01_ANOVA_Croisee.pdf
-│   ├── Chapitre_02_ANOVA_Hierarchisee.pdf
-│   ├── Chapitre_03_Regression_Lineaire.pdf
-│   ├── Chapitre_04_Regression_Non_Lineaire.pdf
-│   ├── Chapitre_05_ACP.pdf
-│   ├── Chapitre_06_CAH.pdf
-│   └── Chapitre_07_Interpretation_Analyse.pdf
+├── website/                                          # Portail web officiel & Hub central de téléchargement
+│   ├── index.html                                    # Page web responsive (thème clair bio, KaTeX)
+│   └── downloads/                                    # EMPLACEMENT UNIQUE DES PDFS GÉNÉRÉS
+│       ├── cours/                                    # 8 Diapositives Beamer (PDF 16:9)
+│       ├── td_enonces/                               # 8 Énoncés de TD (PDF A4)
+│       └── guide/                                    # Guide d'installation Python/Anaconda (PDF)
 │
 ├── travaux_diriges/                                  # Séries d'exercices & Corrigés détaillés
 │   ├── common/td_style.sty                           # Style LaTeX polycopié universitaire A4

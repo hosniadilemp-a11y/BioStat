@@ -62,20 +62,18 @@ def compile_latex(src_dir, tex_file, dest_pdf_name, is_course=True, is_enonce=Tr
         return False, f"Erreur de compilation pour {tex_file}:\n{stdout_tail}"
         
     if is_course:
-        target1 = os.path.join(BASE_DIR, "courses_pdf", dest_pdf_name)
-        target2 = os.path.join(BASE_DIR, "website", "downloads", "cours", dest_pdf_name)
-        os.makedirs(os.path.dirname(target1), exist_ok=True)
-        os.makedirs(os.path.dirname(target2), exist_ok=True)
-        shutil.copy2(src_pdf_path, target1)
-        shutil.copy2(src_pdf_path, target2)
+        target = os.path.join(BASE_DIR, "website", "downloads", "cours", dest_pdf_name)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(src_pdf_path, target)
     else:
-        target1 = os.path.join(BASE_DIR, "travaux_diriges", "td_pdf", dest_pdf_name)
-        os.makedirs(os.path.dirname(target1), exist_ok=True)
-        shutil.copy2(src_pdf_path, target1)
         if is_enonce:
-            target2 = os.path.join(BASE_DIR, "website", "downloads", "td_enonces", dest_pdf_name)
-            os.makedirs(os.path.dirname(target2), exist_ok=True)
-            shutil.copy2(src_pdf_path, target2)
+            target = os.path.join(BASE_DIR, "website", "downloads", "td_enonces", dest_pdf_name)
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            shutil.copy2(src_pdf_path, target)
+        else:
+            target = os.path.join(BASE_DIR, "travaux_diriges", "td_pdf", dest_pdf_name)
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            shutil.copy2(src_pdf_path, target)
             
     return True, f"Succès : {dest_pdf_name} généré."
 

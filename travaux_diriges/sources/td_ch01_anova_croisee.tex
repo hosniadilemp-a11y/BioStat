@@ -71,15 +71,15 @@ Après avoir constaté un effet traitement significatif ($p < 0.001$) dans l'ANO
 \begin{center}
   $\bar{y}_{\text{Témoin}} = 8.40\,\mu\text{mol/g}, \quad \bar{y}_{\text{Dose 50}} = 6.10\,\mu\text{mol/g}, \quad \bar{y}_{\text{Dose 200}} = 3.90\,\mu\text{mol/g}$
 \end{center}
-Le carré moyen résiduel issu de l'ANOVA est $\text{CMR} = 0.72$ avec $n = 5$ animaux par lot et $df_{\text{résiduel}} = 24$.
+Le carré moyen résiduel issu de l'ANOVA est $MS_{\text{res}} = \text{CMR} = 0.72$ avec $n = 5$ animaux par lot et $ddl_{\text{résiduel}} = 24$.
 La valeur tabulée de l'étendue studentisée au seuil $\alpha = 0.05$ pour $k = 3$ groupes est $q_{0.05, \, 3, \, 24} = 3.53$.
 
 \textbf{Questions :}
 \begin{enumerate}[label=\textbf{\alph*.}]
-  \item Calculez la Différence Honnêtement Significative de Tukey ($\text{HSD} = q_{\alpha} \times \sqrt{\frac{\text{CMR}}{n}}$).
+  \item Calculez la Différence Honnêtement Significative de Tukey ($\text{HSD} = q_{\alpha} \times \sqrt{\frac{MS_{\text{res}}}{n}}$).
   \item Calculez les différences observées $|\bar{y}_i - \bar{y}_j|$ pour les trois paires possibles.
   \item Quelles paires de traitements présentent une différence statistiquement significative ?
-  \item Pourquoi ne doit-on pas réaliser 3 tests $t$ de Student classiques successifs à la place de la procédure de Tukey ? Quel risque statistique cela engendrerait-il ?
+  \item Pourquoi ne doit-on pas réaliser 3 tests $t$ de Student classiques successifs à la place de la procédure de Tukey ? Quel risque statistique cela engendrerait-il (formule de l'inflation du risque $\alpha$) ?
 \end{enumerate}
 \end{exercicebox}
 
