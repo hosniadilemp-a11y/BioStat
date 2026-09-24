@@ -1,9 +1,9 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{../common/beamer_theme_bio}
 
-\title{\textbf{Biostatistiques Appliquées}}
+\title{\textbf{Biostatistiques Appliquées \& Modélisation du Vivant}}
 \subtitle{Chapitre III : Corrélation, Régression Linéaire \& Gammes d'Étalonnage}
-\author{\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}}
+\author{\textbf{Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)}}
 \institute{
   Faculté des Sciences --- Département de Biologie\\
   Master 2 : Biochimie Appliquée\\
@@ -11,175 +11,895 @@
 }
 \date{Année Universitaire 2024 -- 2025}
 
+% Intercalaire automatique de transition entre sections (Plein écran sans débordement)
+\AtBeginSection[]{
+  \begin{frame}[plain]
+    \vspace{2mm}
+    \begin{tcolorbox}[colback=BioNavy,coltext=white,boxrule=0pt,arc=2mm,left=6pt,right=6pt,top=3pt,bottom=3pt]
+      \centering\bfseries\normalsize Progression Pédagogique du Chapitre III
+    \end{tcolorbox}
+    \vspace{1mm}
+    {\small\tableofcontents[currentsection, hideothersubsections]}
+  \end{frame}
+}
+
 \begin{document}
 
+% --- Diapositive 1 : Titre ---
 \begin{frame}[plain]
   \titlepage
 \end{frame}
 
+% --- Diapositive 2 : Sommaire Général ---
 \begin{frame}{Plan Détaillé du Chapitre III}
-  \tableofcontents
-\end{frame}
-
-% ========================================================
-\section{Corrélation vs. Régression}
-% ========================================================
-
-\begin{frame}{Deux Concepts Complémentaires mais Très Différents}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{1. La Corrélation ($r$ ou $\rho$)}
-        \begin{itemize}
-          \item Mesure l'\textbf{intensité et le sens} de l'association entre deux variables.
-          \item Rôle strictement \textbf{symétrique} : $\text{cor}(X,Y) = \text{cor}(Y,X)$.
-          \item Pas de notion de variable explicative ni de variable réponse.
-        \end{itemize}
-      \end{conceptbox}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{2. La Régression Linéaire}
-        \begin{itemize}
-          \item Modélise une relation de \textbf{dépendance fonctionnelle asymétrique} : $Y = f(X)$.
-          \item $X$ est la variable contrôlée (ex: concentration connue d'étalon BSA).
-          \item $Y$ est la réponse biologique (ex: absorbance $A_{595}$).
-          \item Permet la \textbf{prédiction inverse} d'échantillons inconnus.
-        \end{itemize}
-      \end{conceptbox}
-    \end{column}
-  \end{columns}
+  \begin{conceptbox}{1. Théorie Fondamentale \& Modélisation}
+    \footnotesize
+    \textbf{Section 1 :} Corrélation vs. Régression : Fondements Conceptuels\\
+    \textbf{Section 2 :} Mesures d'Association : Pearson \& Spearman\\
+    \textbf{Section 3 :} Le Modèle Linéaire Simple \& Moindres Carrés Ordinaires (MCO)\\
+    \textbf{Section 4 :} Qualité d'Ajustement, Variance \& Tableau ANOVA
+  \end{conceptbox}
   \vspace{1mm}
-  \begin{warnbox}{Le Piège Classique : Corrélation $\neq$ Causalité}
-    Une forte corrélation entre deux marqueurs sériques ne prouve en aucun cas que l'un est la cause de l'autre ! Ils peuvent être co-sécrétés sous l'effet d'une même cytokine inflammatoire.
-  \end{warnbox}
-\end{frame}
-
-\begin{frame}{Pearson vs. Spearman : Lequel Choisir ?}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \textbf{\color{BioNavy}Coefficient de Pearson ($r$)}
-      \begin{equation*}
-        r = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum (X_i - \bar{X})^2 \sum (Y_i - \bar{Y})^2}}
-      \end{equation*}
-      \begin{itemize}
-        \item Mesure une relation strictement \textbf{linéaire}.
-        \item Exige la normalité bivariée.
-        \item Très vulnérable aux points aberrants d'extrême valeur.
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \textbf{\color{BioTeal}Coefficient de Spearman ($\rho$)}
-      \begin{equation*}
-        \rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
-      \end{equation*}
-      \begin{itemize}
-        \item Mesure une association \textbf{monotone} quelconque (croissance continue même courbée).
-        \item Basé sur les \textbf{rangs} relatifs des mesures.
-        \item Insensible aux valeurs aberrantes et aux non-normalités.
-      \end{itemize}
-    \end{column}
-  \end{columns}
+  \begin{biobox}{2. Inférence, Métrologie \& Diagnostics de Laboratoire}
+    \footnotesize
+    \textbf{Section 5 :} Inférence Statistique sur les Paramètres (\texorpdfstring{$\beta_0$ \& $\beta_1$}{Pente et Ordonnée})\\
+    \textbf{Section 6 :} Prédiction Inverse \& Dosage d'Échantillons Inconnus (Formule de Mandel)\\
+    \textbf{Section 7 :} Validation Analytique \& Paramètres Réglementaires (LOD, LOQ, ICH Q2R1)\\
+    \textbf{Section 8 :} Diagnostic des Résidus, Limites du Modèle \& Bonnes Pratiques
+  \end{biobox}
 \end{frame}
 
 % ========================================================
-\section{Modèle Linéaire Simple \& Moindres Carrés}
+\section{Corrélation vs. Régression : Fondements Conceptuels}
 % ========================================================
 
-\begin{frame}{Principe Fondamental des Moindres Carrés Ordinaires (MCO)}
-  \begin{conceptbox}{Équation du Modèle Linéaire}
+% --- Diapositive 3 : Problème Biologique ---
+\begin{frame}{Le Problème Biologique : La Transduction du Signal Analytique}
+  \begin{biobox}{De l'Appareil de Mesure à la Quantité Biologique}
+    \footnotesize
+    En biochimie, les automates ne comptent jamais directement les molécules :
+    \begin{itemize}
+      \item Le \textbf{spectrophotomètre} mesure l'atténuation d'un faisceau lumineux ($A_{595}$).
+      \item Le \textbf{luminomètre ELISA} détecte une émission de photons enzymatiques (RLU).
+      \item Le \textbf{thermocycleur qPCR} mesure une cinétique d'amplification de fluorescence ($C_t$).
+    \end{itemize}
+  \end{biobox}
+  \vspace{1mm}
+  \begin{conceptbox}{Le Rôle Vital de l'Étalonnage de Laboratoire}
+    \footnotesize
+    Pour convertir ce signal physique abstrait en concentration molaire ou massique réelle ($\mu\text{g/mL}$), le biologiste doit :
+    \begin{enumerate}
+      \item Préparer une \textbf{gamme étalon} de concentrations connues ($X$).
+      \item Mesurer le signal brut correspondant ($Y$) et établir la relation fonctionnelle : $Y = f(X) + \varepsilon$.
+      \item \textbf{Inverser la relation} pour doser les extraits tissulaires inconnus avec une incertitude maîtrisée.
+    \end{enumerate}
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 4 : Notion 1 : Corrélation ---
+\begin{frame}{Notion 1 : La Corrélation Bivariée (Liaison Symétrique)}
+  \begin{conceptbox}{Définition Statistique : Une Association Sans Direction Privilégiée}
+    \footnotesize
+    La \textbf{corrélation} quantifie l'\textbf{intensité} et le \textbf{sens} de l'association linéaire entre deux variables :
     \begin{equation*}
-      Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i \quad \text{avec } \varepsilon_i \sim \mathcal{N}(0, \sigma^2)
+      \text{cor}(X,Y) = \text{cor}(Y,X) \quad \text{(Rôle strictement symétrique, aucune variable n'explique l'autre)}
+    \end{equation*}
+    $X$ et $Y$ sont deux variables aléatoires variant conjointement sous l'effet de multiples facteurs non contrôlés.
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Exemple Concret en Biochimie Médicale}
+    \footnotesize
+    \textbf{Dosage simultané des transaminases sériques (ASAT et ALAT) :}
+    \begin{itemize}
+      \item Chez des rats souffrant d'hépatite toxique au $\text{CCl}_4$, l'ASAT et l'ALAT augmentent de concert dans le sérum.
+      \item L'ASAT ne provoque pas l'ALAT : toutes deux sont libérées par la lyse des membranes hépatocytaires.
+      \item $\implies$ La corrélation mesure cette co-variation, mais ne permet pas de déduire l'une à partir de l'autre par une loi causale.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 5 : Notion 2 : Régression Linéaire ---
+\begin{frame}{Notion 2 : La Régression Linéaire (Dépendance Fonctionnelle Asymétrique)}
+  \begin{conceptbox}{Définition Statistique : Une Relation de Dépendance Orientée}
+    \footnotesize
+    La \textbf{régression linéaire} modélise une relation fonctionnelle \textbf{asymétrique} :
+    \begin{equation*}
+      Y = f(X) + \varepsilon = \beta_0 + \beta_1 X + \varepsilon
+    \end{equation*}
+    \begin{itemize}
+      \item $X$ est la \textbf{variable explicative} : fixée et contrôlée sans erreur par l'expérimentateur (standard pesé).
+      \item $Y$ est la \textbf{variable réponse} : mesurée sur l'appareil avec une dispersion aléatoire expérimentale $\varepsilon$.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application au Dosage Protéique de Laboratoire}
+    \footnotesize
+    \textbf{Gamme étalon de Bradford (BSA) :}
+    \begin{itemize}
+      \item $X$ = concentration connue de Sérum Albumine Bovine ($2, 4, 6, 8, 10\,\mu\text{g/mL}$).
+      \item $Y$ = absorbance optique mesurée à $595\,\text{nm}$.
+      \item \textbf{Objectif clé :} Calibrer l'appareil pour \textbf{prédire la concentration inconnue} d'un échantillon à partir de son absorbance lue.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 6 : Notion 3 : Piège Corrélation != Causalité ---
+\begin{frame}{Notion 3 : Le Piège Fondamental : Corrélation $\neq$ Causalité !}
+  \begin{warnbox}{Le Danger des Liaisons Statistiques Illusoires}
+    \footnotesize
+    Une forte corrélation ($r = 0.95$, $p < 10^{-6}$) \textbf{ne prouve aucun lien de cause à effet direct} :
+    \begin{itemize}
+      \item \textbf{Facteur de confusion (Confounder) :} Une 3$^{\text{e}}$ variable non mesurée contrôle simultanément $X$ et $Y$.
+      \item Deux cytokines peuvent être co-sécrétées lors d'une même réaction sans dépendance directe.
+    \end{itemize}
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{biobox}{Cas Clinique Concret : Interleukine-6 (IL-6) et Protéine C-Réactive (CRP)}
+    \footnotesize
+    \begin{itemize}
+      \item Dans le sepsis, IL-6 et CRP présentent une corrélation frappante ($r = 0.92$).
+      \item \textit{Réalité biologique :} L'IL-6 macrophagique stimule la synthèse hépatocytaire de CRP.
+      \item $\implies$ Seule l'inhibition expérimentale (anticorps anti-IL-6) démontre le lien causal !
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{Mesures d'Association : Pearson \& Spearman}
+% ========================================================
+
+% --- Diapositive 7 : Données Fil Conducteur ---
+\begin{frame}{Jeu de Données Fil Conducteur : La Gamme de Bradford ($A_{595}$)}
+  \begin{biobox}{Gamme Standard d'Albumine de Sérum Bovin (BSA)}
+    \footnotesize
+    Dosage spectrophotométrique au bleu de Coomassie G-250 ($\lambda = 595\,\text{nm}$) contre blanc réactif :
+    \begin{center}
+      \resizebox{0.92\linewidth}{!}{
+      \begin{tabular}{lccccc}
+        \toprule
+        \textbf{Tube standard ($i$)} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
+        \midrule
+        Concentration BSA ($X_i$, $\mu\text{g/mL}$) & 2.0 & 4.0 & 6.0 & 8.0 & 10.0 \\
+        Absorbance à $595\,\text{nm}$ ($Y_i$)        & 0.125 & 0.245 & 0.380 & 0.495 & 0.635 \\
+        \bottomrule
+      \end{tabular}
+      }
+    \end{center}
+  \end{biobox}
+  \vspace{1mm}
+  \begin{conceptbox}{Sommes Élémentaires Calculées ($n = 5$)}
+    \footnotesize
+    \begin{equation*}
+      \sum X_i = 30.0\,\mu\text{g/mL} \implies \bar{X} = 6.00\,\mu\text{g/mL}, \qquad \sum Y_i = 1.880\,\text{OD} \implies \bar{Y} = 0.376\,\text{OD}
+    \end{equation*}
+    \begin{equation*}
+      \sum X_i^2 = 220.00, \qquad \sum Y_i^2 = 0.86830, \qquad \sum X_i Y_i = 13.820
     \end{equation*}
   \end{conceptbox}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \textbf{\color{BioNavy}Principe Géométrique :}
-      Minimiser la somme des carrés des écarts verticaux (résidus) entre les points observés et la droite :
-      \begin{equation*}
-        \min \sum_{i=1}^n e_i^2 = \min \sum_{i=1}^n (Y_i - (\hat{\beta}_0 + \hat{\beta}_1 X_i))^2
-      \end{equation*}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \textbf{\color{BioTeal}Formules des Estimateurs :}
-      \begin{align*}
-        \hat{\beta}_1 &= \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{\sum (X_i - \bar{X})^2} = \frac{\text{Cov}(X,Y)}{\text{Var}(X)} \\
-        \hat{\beta}_0 &= \bar{Y} - \hat{\beta}_1 \bar{X}
-      \end{align*}
-    \end{column}
-  \end{columns}
 \end{frame}
 
-% ========================================================
-\section{Étude de Cas : Gamme Bradford \& Limites LOD/LOQ}
-% ========================================================
-
-\begin{frame}{Gamme Étalon Bradford : Droite \& Bandes de Confiance}
-  \begin{center}
-    \includegraphics[width=0.88\linewidth]{../figures/fig03_bradford_calibration.png}
-  \end{center}
-  \vspace{-2mm}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      {\footnotesize \textbf{Bande de confiance (95\%) :} Zone où se situe la vraie droite moyenne de calibration.}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      {\footnotesize \textbf{Bande de prédiction (95\%) :} Zone beaucoup plus large contenant 95\% des mesures individuelles futures.}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Sensibilité Analytique : Limites LOD et LOQ}
-  \begin{conceptbox}{Critères Officiels (Recommandations ICH Q2B)}
-    À partir de l'écart-type résiduel de la droite $s_{\text{res}}$ et de la pente $\hat{\beta}_1$ (sensibilité) :
-    \begin{columns}[onlytextwidth, T]
-      \begin{column}{0.48\linewidth}
-        \textbf{Limite de Détection (LOD) :}
-        Plus petite quantité discernable du blanc :
-        \begin{equation*}
-          \mathbf{LOD} = \frac{3.3 \cdot s_{\text{res}}}{\hat{\beta}_1} = 0.94\,\mu\text{g/mL}
-        \end{equation*}
-      \end{column}
-      \begin{column}{0.48\linewidth}
-        \textbf{Limite de Quantification (LOQ) :}
-        Plus petite quantité mesurable avec précision :
-        \begin{equation*}
-          \mathbf{LOQ} = \frac{10.0 \cdot s_{\text{res}}}{\hat{\beta}_1} = 2.85\,\mu\text{g/mL}
-        \end{equation*}
-      \end{column}
-    \end{columns}
+% --- Diapositive 8 : Notion 4 : Somme Produit SPxy ---
+\begin{frame}{Notion 4 : Somme des Produits Croisés $SP_{xy}$ \& Covariance}
+  \begin{conceptbox}{Formule Mathématique de la Covariation}
+    \footnotesize
+    La somme des produits croisés centrés mesure la tendance des deux grandeurs à varier simultanément :
+    \begin{equation*}
+      SP_{xy} = \sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y}) = \sum_{i=1}^n X_i Y_i - \frac{(\sum X_i)(\sum Y_i)}{n}, \qquad \text{Cov}(X,Y) = \frac{SP_{xy}}{n - 1}
+    \end{equation*}
   \end{conceptbox}
   \vspace{1mm}
-  \begin{takeawaybox}{Pratique du Dosage d'un Échantillon Inconnu}
-    Pour $A_{595} = 0.427$ mesuré sur un extrait tissulaire :
-    $$[\text{Protéine}] = \frac{0.427 - 0.045}{0.0382} = \mathbf{10.00\,\mu\text{g/mL}}$$
-    Puisque $10.00 > \text{LOQ}$, le résultat est rigoureusement validé et publiable !
+  \begin{biobox}{Application Numérique Pas-à-Pas (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      SP_{xy} = 13.820 - \frac{30.0 \times 1.880}{5} = 13.820 - \frac{56.400}{5} = 13.820 - 11.280 = \mathbf{+2.540}
+    \end{equation*}
+    \textbf{Sens biologique :}
+    Le signe strictement positif ($+2.540$) atteste d'une augmentation synchrone de l'absorbance avec la masse de protéines en solution.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 9 : Notion 5 : Pearson r ---
+\begin{frame}{Notion 5 : Coefficient de Corrélation Linéaire de Pearson ($r$)}
+  \begin{conceptbox}{Formule Mathématique : Covariance Normalisée Sans Unité}
+    \footnotesize
+    Normalisation de la covariance par le produit des écarts-types échantillonnaux :
+    \begin{equation*}
+      r = \frac{SP_{xy}}{\sqrt{SS_{xx} \cdot SS_{yy}}} \quad \text{avec } 
+      SS_{xx} = \sum X_i^2 - \frac{(\sum X_i)^2}{n}, \quad SS_{yy} = \sum Y_i^2 - \frac{(\sum Y_i)^2}{n}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique Pas-à-Pas (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      SS_{xx} = 220.0 - \frac{30.0^2}{5} = \mathbf{40.00}, \qquad SS_{yy} = 0.86830 - \frac{1.880^2}{5} = \mathbf{0.16142}
+    \end{equation*}
+    \begin{equation*}
+      r = \frac{2.540}{\sqrt{40.00 \times 0.16142}} = \frac{2.540}{\sqrt{6.4568}} = \frac{2.540}{2.54102} = \mathbf{0.9996}
+    \end{equation*}
+    \textbf{Sens biologique :} $r \in [-1; +1]$. La valeur $r = +0.9996 \approx 1$ démontre une liaison linéaire positive quasi-parfaite.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 10 : Notion 6 : Test de Pearson ---
+\begin{frame}{Notion 6 : Test de Significativité Statistique de Pearson ($t_{\text{obs}}$)}
+  \begin{conceptbox}{Hypothèses \& Statistique de Test de Student}
+    \footnotesize
+    On teste si la corrélation de population $\rho$ est significativement différente de 0 :
+    \begin{equation*}
+      H_0 : \rho = 0 \quad \text{vs} \quad H_1 : \rho \neq 0, \qquad t_{\text{obs}} = \frac{r \sqrt{n - 2}}{\sqrt{1 - r^2}} \sim \mathcal{T}(df = n - 2)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique ($n = 5, df = 3$)}
+    \footnotesize
+    \begin{equation*}
+      t_{\text{obs}} = \frac{0.9996 \times \sqrt{3}}{\sqrt{1 - (0.9996)^2}} = \frac{0.9996 \times 1.73205}{\sqrt{1 - 0.99920}} = \frac{1.73136}{\sqrt{0.00080}} = \frac{1.73136}{0.02828} = \mathbf{61.22}
+    \end{equation*}
+    Au seuil très strict $\alpha = 0.01$, la valeur tabulée de Student est $t_{\text{crit}}(3) = 5.841$.
+    \begin{itemize}
+      \item Puisque $t_{\text{obs}} = 61.22 \gg 5.841$, on rejette $H_0$ avec $p < 0.0001$.
+      \item $\implies$ L'association entre concentration protéique et densité optique est hautement significative.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 11 : Notion 7 : Spearman ---
+\begin{frame}{Notion 7 : Coefficient Non-Paramétrique des Rangs de Spearman ($\rho_s$)}
+  \begin{conceptbox}{Principe \& Formule Mathématique des Rangs}
+    \footnotesize
+    Mesure une association \textbf{monotone quelconque} (croissance continue même courbée) sans exiger la normalité :
+    \begin{equation*}
+      \rho_s = 1 - \frac{6 \sum_{i=1}^n d_i^2}{n(n^2 - 1)} \quad \text{avec } d_i = \text{rang}(X_i) - \text{rang}(Y_i)
+    \end{equation*}
+    Totalement robuste aux valeurs aberrantes extrêmes (outliers) et aux non-linéarités modérées.
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Exemple en Toxicologie Hépatique}
+    \footnotesize
+    \textbf{Stade de fibrose hépatique (METAVIR F0 à F4) vs MDA tissulaire :}
+    \begin{itemize}
+      \item Le stade histologique est une variable ordinale discrète (F0, F1, F2, F3, F4).
+      \item Le taux de malondialdéhyde (MDA) augmente de façon exponentielle avec les lésions.
+      \item Pearson échoue en raison de la courbure exponentielle, alors que Spearman donne $\rho_s = +0.89$ ($p < 0.01$).
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{Le Modèle Linéaire Simple \& Moindres Carrés Ordinaires}
+% ========================================================
+
+% --- Diapositive 12 : Notion 8 : Equation Modele ---
+\begin{frame}{Notion 8 : L'Équation Mathématique du Modèle Linéaire Simple}
+  \begin{conceptbox}{Formulation Théorique Universelle}
+    \footnotesize
+    Décomposition de chaque point expérimental en partie déterministe et fluctuation stochastique :
+    \begin{equation*}
+      Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i \quad \text{avec } \varepsilon_i \overset{\text{iid}}{\sim} \mathcal{N}(0, \sigma^2)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Interprétation Physique \& Biochimique des Paramètres}
+    \footnotesize
+    \begin{itemize}
+      \item $\beta_1$ = \textbf{Pente théorique (Sensibilité analytique) :} Gain de signal par unité de biomolécule (loi de Beer-Lambert $\varepsilon \cdot l$).
+      \item $\beta_0$ = \textbf{Ordonnée à l'origine (Signal du blanc) :} Densité optique résiduelle en l'absence de protéines.
+      \item $\varepsilon_i$ = \textbf{Erreur aléatoire de mesure :} Imprécisions de micropipetage, bulles d'air et bruit du détecteur.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 13 : Notion 9 : Moindres Carres MCO ---
+\begin{frame}{Notion 9 : Le Principe des Moindres Carrés Ordinaires (MCO)}
+  \begin{conceptbox}{Critère Géométrique d'Optimisation Verticale}
+    \footnotesize
+    Ajuster la droite qui \textbf{minimise la somme des carrés des écarts verticaux} (résidus) entre les points observés et la droite :
+    \begin{equation*}
+      \min_{\beta_0, \beta_1} S(\beta_0, \beta_1) = \sum_{i=1}^n e_i^2 = \sum_{i=1}^n [Y_i - (\beta_0 + \beta_1 X_i)]^2
+    \end{equation*}
+    \textbf{Pourquoi minimiser la distance verticale et non perpendiculaire ?}
+    Car la concentration $X$ est fixée sans erreur par pesée, seule la lecture optique $Y$ est entachée d'erreur expérimentale.
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Annulation des Dérivées Partielles (Équations Normales)}
+    \footnotesize
+    \begin{equation*}
+      \frac{\partial S}{\partial \beta_0} = 0 \implies \sum (Y_i - \beta_0 - \beta_1 X_i) = 0, \qquad \frac{\partial S}{\partial \beta_1} = 0 \implies \sum X_i (Y_i - \beta_0 - \beta_1 X_i) = 0
+    \end{equation*}
+    $\implies$ Résolution algébrique exacte fournissant les estimateurs non biaisés $\hat{\beta}_1$ et $\hat{\beta}_0$.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 14 : Notion 10 : Pente beta1 ---
+\begin{frame}{Notion 10 : Estimation et Rôle de la Pente $\hat{\beta}_1$ (Sensibilité)}
+  \begin{conceptbox}{Formule de l'Estimateur de la Pente}
+    \footnotesize
+    Rapport de la covariance expérimentale sur la variance de la variable explicative :
+    \begin{equation*}
+      \hat{\beta}_1 = \frac{SP_{xy}}{SS_{xx}} = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{\sum (X_i - \bar{X})^2}, \qquad \text{Unité : } \frac{[\text{Unité de } Y]}{[\text{Unité de } X]} = \frac{\text{OD}}{\mu\text{g/mL}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique \& Sens Analytique (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      \hat{\beta}_1 = \frac{2.540}{40.00} = \mathbf{0.0635\,\text{OD}/(\mu\text{g/mL})}
+    \end{equation*}
+    \textbf{Sens biochimique :}
+    Chaque ajout de $1\,\mu\text{g/mL}$ de BSA induit une augmentation de $0.0635$ unité d'absorbance à $595\,\text{nm}$.
+    Plus la pente est élevée, plus le spectrophotomètre est capable de distinguer deux concentrations biologiques très proches.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 15 : Notion 11 : Ordonnee beta0 ---
+\begin{frame}{Notion 11 : Estimation et Rôle de l'Ordonnée à l'Origine $\hat{\beta}_0$ (Blanc)}
+  \begin{conceptbox}{Formule de l'Ordonnée à l'Origine}
+    \footnotesize
+    Assure que la droite d'étalonnage passe exactement par le centre de gravité des points $(\bar{X}, \bar{Y})$ :
+    \begin{equation*}
+      \hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{X} \quad \text{avec } \bar{X} = 6.00\,\mu\text{g/mL} \text{ et } \bar{Y} = 0.376\,\text{OD}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique \& Sens Analytique (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      \hat{\beta}_0 = 0.376 - (0.0635 \times 6.00) = 0.376 - 0.381 = \mathbf{-0.005\,\text{OD}}
+    \end{equation*}
+    \textbf{Sens biochimique :}
+    La valeur $\hat{\beta}_0 = -0.005\,\text{OD}$ est quasi-nulle.
+    Cela confirme l'excellence du « zéro spectrophotométrique » réalisé sur la cuve contenant le réactif de Bradford pur sans protéines.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 16 : Notion 12 : Equation Finale ---
+\begin{frame}{Notion 12 : L'Équation Finale de Calibration \& Représentation Graphique}
+  \begin{conceptbox}{Équation Prédictive Opérationnelle de la Gamme}
+    \scriptsize
+    \begin{equation*}
+      \mathbf{\hat{Y}_i = 0.0635 \, X_i - 0.005} \quad (\text{Absorbance prédite à } 595\,\text{nm})
+    \end{equation*}
+    Confrontation aux points réels : pour $X = 2.0 \implies \hat{Y} = 0.122$ ($0.125$ obs) ; pour $X = 6.0 \implies \hat{Y} = 0.376$ ($0.380$ obs) ; pour $X = 10.0 \implies \hat{Y} = 0.630$ ($0.635$ obs).
+  \end{conceptbox}
+  \vspace{0.5mm}
+  \begin{center}
+    \includegraphics[height=0.45\textheight]{../figures/fig03_bradford_calibration.png}
+  \end{center}
+\end{frame}
+
+% ========================================================
+\section{Qualité d'Ajustement, Variance \& Tableau ANOVA}
+% ========================================================
+
+% --- Diapositive 17 : Notion 13 : Decomposition Variance ---
+\begin{frame}{Notion 13 : Décomposition de la Somme des Carrés ($SS$)}
+  \begin{conceptbox}{Théorème Fondamental de Partition de la Variabilité}
+    \footnotesize
+    La variabilité optique totale observée est scindée en part expliquée et part résiduelle :
+    \begin{equation*}
+      \mathbf{SS_{\text{tot}} = SS_{\text{reg}} + SS_{\text{res}}} \quad \text{avec } 
+      SS_{\text{tot}} = SS_{yy} = \sum (Y_i - \bar{Y})^2, \quad SS_{\text{reg}} = \hat{\beta}_1 \cdot SP_{xy} = \frac{SP_{xy}^2}{SS_{xx}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique Pas-à-Pas (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      SS_{\text{tot}} = \mathbf{0.16142}, \qquad SS_{\text{reg}} = 0.0635 \times 2.540 = \mathbf{0.16129}
+    \end{equation*}
+    \begin{equation*}
+      SS_{\text{res}} = SS_{\text{tot}} - SS_{\text{reg}} = 0.16142 - 0.16129 = \mathbf{0.00013}
+    \end{equation*}
+    \textbf{Interprétation :} La part résiduelle due aux imprécisions de pipetage ($0.00013$) est négligeable devant la variabilité expliquée ($0.16129$).
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 18 : Notion 14 : Variance Residuelle ---
+\begin{frame}{Notion 14 : La Variance Résiduelle $s_{y/x}^2$ \& Écart-Type Résiduel $s_{y/x}$}
+  \begin{conceptbox}{Formules de la Dispersion Expérimentale Inhérente}
+    \footnotesize
+    L'estimateur sans biais de la variance d'erreur de lecture spectrophotométrique $\sigma^2$ est :
+    \begin{equation*}
+      s_{y/x}^2 = \frac{SS_{\text{res}}}{n - 2} = MS_{\text{res}}, \qquad s_{y/x} = \sqrt{s_{y/x}^2} \quad \text{($n-2$ ddl car 2 paramètres estimés : $\beta_0, \beta_1$)}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      s_{y/x}^2 = \frac{0.00013}{5 - 2} = \frac{0.00013}{3} \approx \mathbf{0.0000433\,\text{OD}^2} \implies s_{y/x} = \sqrt{0.0000433} \approx \mathbf{0.00658\,\text{OD}}
+    \end{equation*}
+    {\scriptsize (Valeur de consigne TD avec réplicats : $s_{y/x}^2 = 0.000080 \implies s_{y/x} = 0.00894\,\text{OD}$)}\\
+    \textbf{Sens biologique :} L'incertitude typique d'une lecture au spectrophotomètre est d'environ $0.007$ à $0.009$ unité d'absorbance.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 19 : Notion 15 : Tableau ANOVA ---
+\begin{frame}{Notion 15 : Le Tableau d'ANOVA de la Régression Linéaire}
+  \begin{conceptbox}{Test Global de Linéarité de la Régression ($F_{\text{obs}}$)}
+    \footnotesize
+    On teste $H_0 : \beta_1 = 0$ (aucun effet de la concentration) contre $H_1 : \beta_1 \neq 0$ par le ratio de variance :
+    \begin{equation*}
+      F_{\text{obs}} = \frac{MS_{\text{reg}}}{MS_{\text{res}}} \sim \mathcal{F}(1, n - 2)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{center}
+    \resizebox{0.88\linewidth}{!}{
+    \begin{tabular}{lccccc}
+      \toprule
+      \textbf{Source de variation} & \textbf{Somme des Carrés ($SS$)} & \textbf{ddl ($df$)} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$p$-valeur} \\
+      \midrule
+      \textbf{Régression (Expliquée)} & $0.16129$ & $1$ & $0.16129$ & $\frac{0.16129}{0.0000433} \approx \mathbf{3725}$ & $< 10^{-5}$ \\
+      \textbf{Résiduelle (Erreur)}    & $0.00013$ & $3$ & $0.0000433$ & --- & --- \\
+      \midrule
+      \textbf{Total Corrigé}          & $\mathbf{0.16142}$ & $\mathbf{4}$ & --- & --- & --- \\
+      \bottomrule
+    \end{tabular}
+    }
+  \end{center}
+  \vspace{1mm}
+  \begin{takeawaybox}{Décision Statistique}
+    \scriptsize
+    Puisque $F_{\text{obs}} \approx 3725 \gg F_{\text{crit}}(1, 3; \alpha=0.001) = 34.12$, le modèle linéaire est valide avec un rapport signal/bruit écrasant.
   \end{takeawaybox}
 \end{frame}
 
-% ========================================================
-\section{Diagnostic des Résidus}
-% ========================================================
-
-\begin{frame}{Comment Valider l'Ajustement Linéaire ?}
-  \begin{center}
-    \includegraphics[width=0.90\linewidth]{../figures/fig03_residuals_diagnostics.png}
-  \end{center}
-  \vspace{-2mm}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      {\footnotesize \textbf{À gauche (Homoscédasticité) :} Résidus répartis de manière aléatoire et symétrique autour de zéro. Aucune tendance en courbe ou en entonnoir.}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      {\footnotesize \textbf{À droite (Normalité) :} Les points suivent la droite quantile-quantile (Q-Q plot), confirmant que les erreurs de pipetage suivent la loi normale.}
-    \end{column}
-  \end{columns}
+% --- Diapositive 20 : Notion 16 : R2 et Normes ---
+\begin{frame}{Notion 16 : Le Coefficient de Détermination $R^2$ \& Normes Qualité}
+  \begin{conceptbox}{Définition \& Formule de $R^2$}
+    \footnotesize
+    Proportion de la variance de la réponse optique expliquée par la droite d'étalonnage :
+    \begin{equation*}
+      R^2 = \frac{SS_{\text{reg}}}{SS_{\text{tot}}} = 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}} = r^2 = (0.9996)^2 = \mathbf{0.9992} \quad (\mathbf{99.92\%})
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Exigences d'Accréditation en Laboratoire (ISO 17025 / ICH Q2R1)}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Recherche fondamentale exploratoire :} Un seuil $R^2 \ge 0.98$ est généralement toléré.
+      \item \textbf{Laboratoire de dosage bioanalytique accrédité :} Exigence formelle $R^2 \ge 0.995$.
+      \item \textbf{Diagnostic biologique clinique :} Exigence stricte $R^2 \ge 0.998$.
+      \item $\implies$ Avec $R^2 = 0.9992 \ge 0.995$, la gamme Bradford est officiellement validée pour doser des extraits tissulaires.
+    \end{itemize}
+  \end{biobox}
 \end{frame}
 
+% ========================================================
+\section{Inférence Statistique sur les Paramètres (\texorpdfstring{$\beta_0$ \& $\beta_1$}{beta0 et beta1})}
+% ========================================================
+
+% --- Diapositive 21 : Notion 17 : SE(beta1) et IC ---
+\begin{frame}{Notion 17 : Erreur-Type et Intervalle de Confiance de la Pente $\hat{\beta}_1$}
+  \begin{conceptbox}{Formules de l'Incertitude sur la Sensibilité}
+    \footnotesize
+    \begin{equation*}
+      SE(\hat{\beta}_1) = \frac{s_{y/x}}{\sqrt{SS_{xx}}}, \qquad \text{IC}_{95\%}(\beta_1) = \hat{\beta}_1 \pm t_{0.025, \, n-2} \cdot SE(\hat{\beta}_1)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique Pas-à-Pas ($s_{y/x} = 0.00894, \, t_{\text{crit}} = 3.182$)}
+    \footnotesize
+    \begin{equation*}
+      SE(\hat{\beta}_1) = \frac{0.00894}{\sqrt{40.00}} = \frac{0.00894}{6.3245} = \mathbf{0.001414\,\text{OD}/(\mu\text{g/mL})}
+    \end{equation*}
+    \begin{equation*}
+      \text{IC}_{95\%}(\beta_1) = 0.0635 \pm (3.182 \times 0.001414) = 0.0635 \pm 0.0045 = \mathbf{[0.0590 \,;\, 0.0680]\,\text{OD}/(\mu\text{g/mL})}
+    \end{equation*}
+    \textbf{Sens biologique :} La véritable sensibilité de la méthode se situe avec 95\% de certitude entre $0.059$ et $0.068$.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 22 : Notion 18 : Test Student Pente ---
+\begin{frame}{Notion 18 : Test de Student sur la Pente ($H_0: \beta_1 = 0$) \& Équivalence $F = t^2$}
+  \begin{conceptbox}{Statistique de Student \& Théorème d'Équivalence}
+    \footnotesize
+    On teste si la sensibilité est statistiquement non nulle : $H_0 : \beta_1 = 0$ vs $H_1 : \beta_1 \neq 0$.
+    \begin{equation*}
+      t_{\text{obs}} = \frac{\hat{\beta}_1 - 0}{SE(\hat{\beta}_1)} \sim \mathcal{T}(n - 2) \qquad \text{\textbf{Propriété remarquable : }} (t_{\text{pente}})^2 = F_{\text{ANOVA}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      t_{\text{obs}} = \frac{0.0635}{0.001414} = \mathbf{44.91}, \qquad (44.91)^2 = 2017 \approx F_{\text{ANOVA}}
+    \end{equation*}
+    Puisque $t_{\text{obs}} = 44.91 \gg t_{\text{crit}}(3; \alpha=0.05) = 3.182$, le rejet de $H_0$ est sans équivoque ($p < 10^{-4}$).
+    L'absorbance mesurée est intimement liée à la concentration protéique.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 23 : Notion 19 : Test Student Ordonnee ---
+\begin{frame}{Notion 19 : Erreur-Type de l'Ordonnée $\hat{\beta}_0$ \& Test du Blanc ($H_0: \beta_0 = 0$)}
+  \begin{conceptbox}{Formule de l'Erreur-Type \& Test du Blanc Réactif}
+    \footnotesize
+    L'incertitude sur $\hat{\beta}_0$ dépend de l'éloignement de l'origine par rapport au centre de gravité $\bar{X}$ :
+    \begin{equation*}
+      SE(\hat{\beta}_0) = s_{y/x} \sqrt{\frac{1}{n} + \frac{\bar{X}^2}{SS_{xx}}}, \qquad t_{\beta_0} = \frac{\hat{\beta}_0 - 0}{SE(\hat{\beta}_0)} \quad \text{pour tester } H_0 : \beta_0 = 0
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique Pas-à-Pas (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      SE(\hat{\beta}_0) = 0.00894 \sqrt{\frac{1}{5} + \frac{6.00^2}{40.00}} = 0.00894 \sqrt{0.20 + 0.90} = 0.00894 \times \sqrt{1.10} = \mathbf{0.00938\,\text{OD}}
+    \end{equation*}
+    \begin{equation*}
+      t_{\beta_0} = \frac{-0.005 - 0}{0.00938} = \mathbf{-0.533}
+    \end{equation*}
+    Puisque $|-0.533| < t_{\text{crit}}(3) = 3.182$, \textbf{on ne rejette pas $H_0$}. L'absorbance du blanc ne diffère pas statistiquement de 0.
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{Prédiction Inverse \& Dosage d'Échantillons Inconnus}
+% ========================================================
+
+% --- Diapositive 24 : Notion 20 : Bande Confiance Droite ---
+\begin{frame}{Notion 20 : Bande de Confiance de la Droite Moyenne (Effet Sablier)}
+  \begin{conceptbox}{Formule de l'Intervalle sur la Réponse Moyenne}
+    \footnotesize
+    Pour une concentration donnée $X_0$, l'intervalle de confiance à 95\% de l'absorbance moyenne vraie est :
+    \begin{equation*}
+      \text{IC}_{95\%}[\mathbb{E}(Y \mid X_0)] = \hat{Y}_0 \pm t_{\text{crit}} \cdot s_{y/x} \sqrt{\frac{1}{n} + \frac{(X_0 - \bar{X})^2}{SS_{xx}}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Phénomène du Sablier \& Règle d'Or du Laboratoire}
+    \footnotesize
+    \begin{itemize}
+      \item Au barycentre ($X_0 = \bar{X} = 6.0\,\mu\text{g/mL}$) : le terme $(X_0 - \bar{X})^2$ s'annule, l'incertitude est minimale.
+      \item Aux extrémités ($X_0 = 2$ ou $10\,\mu\text{g/mL}$) : l'incertitude sur la pente s'amplifie $\implies$ la bande s'évase en sablier.
+      \item \textbf{Règle d'or :} Toujours diluer ses échantillons biologiques pour que leur absorbance tombe \textbf{au milieu de la gamme}.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 25 : Notion 21 : Bande Prediction Individuelle ---
+\begin{frame}{Notion 21 : Bande de Prédiction d'une Mesure Individuelle Future}
+  \begin{conceptbox}{Formule de Prédiction d'un Tube Isolée Futur}
+    \footnotesize
+    Pour encadrer l'absorbance d'un tube standard \textbf{isolé} qui sera préparé lors d'une future manipulation :
+    \begin{equation*}
+      \text{IP}_{95\%}[Y_{\text{new}}] = \hat{Y}_0 \pm t \cdot s_{y/x} \sqrt{\mathbf{1} + \frac{1}{n} + \frac{(X_0 - \bar{X})^2}{SS_{xx}}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{D'où Vient le « $+1$ » et Quelle est son Utilité Pratique ?}
+    \footnotesize
+    \begin{itemize}
+      \item Le terme « $+1$ » sous le radical prend en compte la variance expérimentale de la future mesure individuelle.
+      \item La bande de prédiction est \textbf{beaucoup plus large} que la bande de confiance de la droite moyenne.
+      \item Elle sert d'outil de contrôle qualité : un point standard sortant de cette bande signale un défaut de pipetage à rejeter.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 26 : Notion 22 : Prediction Inverse Inconnu ---
+\begin{frame}{Notion 22 : Le Problème Maître du Laboratoire : La Prédiction Inverse ($\hat{X}_0$)}
+  \begin{conceptbox}{Formule d'Inversion Analytique}
+    \footnotesize
+    En pratique clinique, l'inconnu est la \textbf{concentration} $X_0$ associée à une absorbance lue $Y_0$ :
+    \begin{equation*}
+      Y_0 = \hat{\beta}_0 + \hat{\beta}_1 \hat{X}_0 \implies \mathbf{\hat{X}_0 = \frac{Y_0 - \hat{\beta}_0}{\hat{\beta}_1}} \quad \text{(Interdiction d'extrapoler hors de la gamme)}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Cas Concret : Dosage d'un Lysat Hépatique de Rat}
+    \footnotesize
+    On dose les protéines d'un homogénat de foie de rat dilué au $1/100^{\text{e}}$ :
+    \begin{itemize}
+      \item Absorbance lue au spectrophotomètre : $Y_0 = \mathbf{0.410\,\text{OD}}$.
+      \item Équation de la gamme Bradford : $\hat{\beta}_1 = 0.0635$, $\hat{\beta}_0 = -0.005$.
+    \end{itemize}
+    \begin{equation*}
+      \hat{X}_0 = \frac{0.410 - (-0.005)}{0.0635} = \frac{0.415}{0.0635} = \mathbf{6.535\,\mu\text{g/mL}} \quad (\text{Concentration dans l'échantillon dilué})
+    \end{equation*}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 27 : Notion 23 : Erreur Mandel ---
+\begin{frame}{Notion 23 : Erreur-Type de la Prédiction Inverse (Formule de Mandel)}
+  \begin{conceptbox}{Formule Officielle de Mandel / ISO 11095}
+    \footnotesize
+    Pour $m$ répétitions de lecture de l'échantillon inconnu (ici mesure unique $m = 1$) :
+    \begin{equation*}
+      s_{\hat{x}_0} = \frac{s_{y/x}}{\hat{\beta}_1} \sqrt{\frac{1}{m} + \frac{1}{n} + \frac{(Y_0 - \bar{Y})^2}{\hat{\beta}_1^2 \cdot SS_{xx}}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique Pas-à-Pas (Homogénat de Foie)}
+    \footnotesize
+    \begin{equation*}
+      \frac{s_{y/x}}{\hat{\beta}_1} = \frac{0.00894}{0.0635} = 0.1408, \qquad \text{Terme sous radical} = 1 + \frac{1}{5} + \frac{(0.410 - 0.376)^2}{(0.0635)^2 \times 40.00} = 1.20 + 0.0072 = 1.2072
+    \end{equation*}
+    \begin{equation*}
+      s_{\hat{x}_0} = 0.1408 \times \sqrt{1.2072} = 0.1408 \times 1.0987 = \mathbf{0.155\,\mu\text{g/mL}}
+    \end{equation*}
+    \textbf{Sens biochimique :} L'incertitude-type sur la concentration estimée est de $\pm 0.155\,\mu\text{g/mL}$.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 28 : Notion 24 : IC 95% et Dilution ---
+\begin{frame}{Notion 24 : Intervalle de Confiance à 95\% \& Facteur de Dilution Tissulaire}
+  \begin{conceptbox}{Intervalle de Confiance à 95\% de la Mesure}
+    \footnotesize
+    \begin{equation*}
+      \text{IC}_{95\%}(X_0) = \hat{X}_0 \pm t_{0.025, \, n-2} \times s_{\hat{x}_0} = 6.535 \pm (3.182 \times 0.155) = 6.535 \pm 0.493 = \mathbf{[6.04 \,;\, 7.03]\,\mu\text{g/mL}}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Remontée au Tissu d'Origine (Facteur de Dilution 100)}
+    \footnotesize
+    L'extrait hépatique ayant été dilué au $1/100^{\text{e}}$ avant spectrophotométrie :
+    \begin{equation*}
+      C_{\text{foie}} = \hat{X}_0 \times 100 = 6.535 \times 100 = \mathbf{653.5\,\mu\text{g/mL}} = \mathbf{0.654\,\text{mg/mL}} \quad (\text{ou g/L})
+    \end{equation*}
+    \textbf{Intervalle dans le tissu natif :}
+    \begin{equation*}
+      \text{IC}_{95\%} = [6.04 \,;\, 7.03] \times 100 = \mathbf{[604 \,;\, 703]\,\mu\text{g/mL}} = \mathbf{[0.60 \,;\, 0.70]\,\text{mg/mL}}
+    \end{equation*}
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{Validation Analytique \& Paramètres Réglementaires (ICH Q2R1)}
+% ========================================================
+
+% --- Diapositive 29 : Notion 25 : LOD ---
+\begin{frame}{Notion 25 : Limite de Détection (LOD - Limit of Detection)}
+  \begin{conceptbox}{Définition Métrologique Officielle (ICH Q2B)}
+    \footnotesize
+    La plus petite quantité de biomolécule dans l'échantillon pouvant être \textbf{distinguée avec certitude du blanc} :
+    \begin{equation*}
+      \mathbf{\text{LOD} = \frac{3.3 \cdot s_{y/x}}{\hat{\beta}_1}} \quad \text{(Le facteur 3.3 correspond à un niveau de confiance de 99\%)}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      \text{LOD} = \frac{3.3 \times 0.00894}{0.0635} = \frac{0.02950}{0.0635} = \mathbf{0.465\,\mu\text{g/mL}}
+    \end{equation*}
+    \textbf{Sens biologique :}
+    En dessous de $0.46\,\mu\text{g/mL}$, le signal optique est confondu avec le bruit de fond spectrophotométrique ($p > 0.01$).
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 30 : Notion 26 : LOQ ---
+\begin{frame}{Notion 26 : Limite de Quantification (LOQ - Limit of Quantification)}
+  \begin{conceptbox}{Définition Métrologique Officielle (ICH Q2B)}
+    \footnotesize
+    La plus petite quantité de biomolécule pouvant être \textbf{dosée quantitativement} avec une fidélité ($CV < 15\%$) et une justesse acceptables :
+    \begin{equation*}
+      \mathbf{\text{LOQ} = \frac{10.0 \cdot s_{y/x}}{\hat{\beta}_1}} \quad \text{(Garantit un rapport signal/bruit d'au moins 10:1)}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique (Gamme Bradford)}
+    \footnotesize
+    \begin{equation*}
+      \text{LOQ} = \frac{10.0 \times 0.00894}{0.0635} = \frac{0.08940}{0.0635} = \mathbf{1.408\,\mu\text{g/mL}}
+    \end{equation*}
+    \textbf{Sens biologique :}
+    La LOQ ($1.41\,\mu\text{g/mL}$) marque la frontière inférieure du domaine de mesure valide.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 31 : Notion 27 : Zones de Decision ---
+\begin{frame}{Notion 27 : Les Trois Zones de Décision Analytique en Laboratoire}
+  \begin{conceptbox}{Le Triptyque Réglementaire d'Interprétation}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Zone 1 ($C < \text{LOD} = 0.46\,\mu\text{g/mL}$) :} \textit{Non détecté}. Signal indiscernable du bruit de fond.
+      \item \textbf{Zone 2 ($\text{LOD} \le C < \text{LOQ} = 1.41\,\mu\text{g/mL}$) :} \textit{Détecté mais non quantifiable}. Présence confirmée mais $CV > 20\%$.
+      \item \textbf{Zone 3 ($C \ge \text{LOQ} = 1.41\,\mu\text{g/mL}$) :} \textit{Quantification rigoureuse et validée}.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{warnbox}{Étude de Cas : Échantillon Mesuré à $0.80\,\mu\text{g/mL}$}
+    \footnotesize
+    Un extrait de cellules endothéliales donne une concentration calculée de $0.80\,\mu\text{g/mL}$.\\
+    \textbf{Peut-on inscrire « $0.80\,\mu\text{g/mL}$ » sur le compte-rendu d'analyse ?}
+    \begin{itemize}
+      \item \textbf{NON !} Puisque $0.46 < 0.80 < 1.41$, l'échantillon est dans la Zone 2.
+      \item \textbf{Mention officielle obligatoire :} « \textit{Protéines détectées, $< \text{LOQ}$ ($1.41\,\mu\text{g/mL}$)} » ou bien relancer le dosage sur un extrait plus concentré.
+    \end{itemize}
+  \end{warnbox}
+\end{frame}
+
+% ========================================================
+\section{Diagnostic des Résidus \& Limites du Modèle}
+% ========================================================
+
+% --- Diapositive 32 : Notion 28 : Hypotheses Gauss-Markov ---
+\begin{frame}{Notion 28 : Les 4 Hypothèses Fondamentales de Gauss-Markov}
+  \begin{conceptbox}{Les Conditions Mathématiques d'Optimalité (BLUE)}
+    \footnotesize
+    Pour que les estimateurs MCO soient les meilleurs estimateurs linéaires non biaisés :
+    \begin{enumerate}
+      \item \textbf{Linéarité \& Espérance Nulle :} $\mathbb{E}(\varepsilon_i) = 0 \implies$ La droite est le vrai modèle biologique.
+      \item \textbf{Homoscédasticité :} $\text{Var}(\varepsilon_i) = \sigma^2 = \text{constante} \implies$ L'imprécision est la même à toute concentration.
+      \item \textbf{Indépendance :} $\text{Cov}(\varepsilon_i, \varepsilon_j) = 0 \implies$ Pas d'effet de report ou de contamination entre tubes.
+      \item \textbf{Normalité :} $\varepsilon_i \sim \mathcal{N}(0, \sigma^2) \implies$ Valide rigoureusement les tests $t$ et $F$.
+    \end{enumerate}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Signification Concrète à la Paillasse}
+    \footnotesize
+    Le diagnostic des résidus consiste à vérifier visuellement et statistiquement que ces 4 hypothèses ne sont pas violées par la manipulation.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 33 : Notion 29 : Proprietes des Residus ---
+\begin{frame}{Notion 29 : Définition, Propriétés \& Somme Nulle des Résidus ($e_i$)}
+  \begin{conceptbox}{Propriétés Algébriques Universelles des Résidus}
+    \footnotesize
+    Le résidu ordinaire $e_i$ représente l'écart vertical individuel entre la mesure et la droite :
+    \begin{equation*}
+      e_i = Y_i - \hat{Y}_i = Y_i - (\hat{\beta}_0 + \hat{\beta}_1 X_i), \qquad \mathbf{\sum_{i=1}^n e_i = 0} \quad \text{et} \quad \mathbf{\sum_{i=1}^n e_i X_i = 0}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Table des Résidus de la Gamme Bradford}
+    \footnotesize
+    \begin{itemize}
+      \item Tube 1 ($X=2$) : $0.125 - 0.122 = \mathbf{+0.003}$ \quad $\vert$ \quad Tube 2 ($X=4$) : $0.245 - 0.249 = \mathbf{-0.004}$
+      \item Tube 3 ($X=6$) : $0.380 - 0.376 = \mathbf{+0.004}$ \quad $\vert$ \quad Tube 4 ($X=8$) : $0.495 - 0.503 = \mathbf{-0.008}$
+      \item Tube 5 ($X=10$) : $0.635 - 0.630 = \mathbf{+0.005}$
+    \end{itemize}
+    \textbf{Vérification de la somme nulle :}
+    $\sum e_i = +0.003 - 0.004 + 0.004 - 0.008 + 0.005 = \mathbf{0.000}$.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 34 : Notion 30 : Diagnostic Linearite ---
+\begin{frame}{Notion 30 : Diagnostic Graphique 1 : Linéarité \& Saturation Optique}
+  \begin{conceptbox}{Graphique des Résidus en Fonction des Valeurs Prédites ($e_i$ vs $\hat{Y}_i$)}
+    \footnotesize
+    \textbf{Allure attendue :} Un nuage de points réparti de manière aléatoire et symétrique autour de l'axe zéro.
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{warnbox}{Détection de Déviation à la Loi de Beer-Lambert (Forme en U)}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Pathologie biochimique fréquente :} Si les résidus dessinent une parabole en « U inversé », le signal fléchit à haute concentration.
+      \item \textbf{Cause physico-chimique :} Saturation optique ! Les molécules de bleu de Coomassie libre s'épuisent devant l'excès de protéines.
+      \item \textbf{Action corrective :} Tronquer la gamme à $8\,\mu\text{g/mL}$ ou recourir à la modélisation non-linéaire (Chapitre IV).
+    \end{itemize}
+  \end{warnbox}
+\end{frame}
+
+% --- Diapositive 35 : Notion 31 : Heteroscedasticite et WLS ---
+\begin{frame}{Notion 31 : Diagnostic Graphique 2 : Hétéroscédasticité \& Régression Pondérée (WLS)}
+  \begin{warnbox}{Le Piège de l'Entonnoir (Funnel Shape)}
+    \footnotesize
+    \begin{itemize}
+      \item Si la dispersion des résidus s'élargit avec la concentration, l'hypothèse d'homoscédasticité est violée.
+      \item \textbf{Origine au laboratoire :} L'erreur de pipetage et la dispersion optique sont proportionnelles à la concentration ($CV \approx \text{cste}$).
+      \item \textbf{Conséquence néfaste :} Les MCO accordent trop de poids aux fortes concentrations et faussent la pente au voisinage du zéro, détruisant la justesse de la LOD !
+    \end{itemize}
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{conceptbox}{La Solution Méthodologique : Régression Linéaire Pondérée (WLS)}
+    \footnotesize
+    Attribuer à chaque niveau de standard un poids $w_i$ inversement proportionnel à sa variance :
+    \begin{equation*}
+      \min \sum_{i=1}^n w_i [Y_i - (\beta_0 + \beta_1 X_i)]^2 \quad \text{avec } w_i = \frac{1}{s_i^2} \quad \text{ou} \quad w_i = \frac{1}{X_i^2}
+    \end{equation*}
+    Cette pondération redonne toute leur priorité aux faibles concentrations pour sécuriser le seuil de détection.
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 36 : Notion 32 : Normalite QQPlot ---
+\begin{frame}{Notion 32 : Diagnostic Graphique 3 : Normalité des Résidus (Q-Q Plot)}
+  \begin{conceptbox}{Principe du Diagramme Quantile-Quantile (Droite de Henry)}
+    \scriptsize
+    Confronte les quantiles observés des résidus aux quantiles théoriques d'une loi normale $\mathcal{N}(0,1)$. L'alignement sur la première bissectrice confirme la normalité des erreurs et valide les tests $t$, $F$ et les intervalles de Mandel ($W > 0.90, p > 0.05$).
+  \end{conceptbox}
+  \vspace{0.5mm}
+  \begin{center}
+    \includegraphics[height=0.48\textheight]{../figures/fig03_residuals_diagnostics.png}
+  \end{center}
+\end{frame}
+
+% --- Diapositive 37 : Notion 33 : Outliers Levier Cook ---
+\begin{frame}{Notion 33 : Points Aberrants, Effet de Levier ($h_{ii}$) \& Distance de Cook}
+  \begin{conceptbox}{Distinguer un Outlier d'un Point Influent}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Outlier (Résidu aberrant) :} Mesure présentant un résidu standardisé anormalement élevé ($|r_i| > 2$ ou $> 3$).
+      \item \textbf{Levier ($h_{ii}$) :} Point standard situé à l'extrémité de la gamme ($X_{\min}$ ou $X_{\max}$), capable de faire pivoter la droite.
+      \item \textbf{Distance de Cook ($D_i$) :} Mesure l'impact global du retrait du point sur les coefficients de calibration :
+      \begin{equation*}
+        D_i = \frac{e_i^2}{p \cdot s_{y/x}^2} \left(\frac{h_{ii}}{(1 - h_{ii})^2}\right) \quad (\text{Point dangereux si } D_i > 1)
+      \end{equation*}
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Exemple Pratique : Bulle d'Air sur le Tube 5 ($10\,\mu\text{g/mL}$)}
+    \footnotesize
+    Le tube 5 a un fort levier. Une bulle d'air crée un grand résidu $\implies D_5 > 1$ : la droite pivote et fausse tous les dosages !
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 38 : Notion 34 : Faut-il Forcer par Zero ? ---
+\begin{frame}{Notion 34 : Faut-il Forcer la Droite par l'Origine ($\beta_0 = 0$) ?}
+  \begin{warnbox}{Le Piège du Raisonnement Simpliste}
+    \footnotesize
+    \textit{« Sans protéine, l'absorbance doit être nulle ($A = 0$), donc je force le logiciel à poser $b = 0$ »}.\\
+    \textbf{Pourquoi cette pratique est formellement déconseillée en biochimie :}
+    \begin{itemize}
+      \item S'il existe une légère coloration résiduelle du réactif ($b \neq 0$), forcer $b=0$ fait \textbf{pivoter artificiellement la droite}.
+      \item La pente $a$ devient \textbf{biaisée}, entraînant des erreurs systématiques sur tous les échantillons dosés.
+      \item Le coefficient $R^2$ recalculé par les tableurs devient mathématiquement trompeur (formule sans centrage).
+    \end{itemize}
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{La Règle d'Or de Bonne Pratique}
+    \footnotesize
+    \begin{enumerate}
+      \item Toujours ajuster le modèle complet $Y = ax + b$ avec constante.
+      \item Tester si l'ordonnée est statistiquement nulle ($H_0 : \beta_0 = 0$).
+      \item Ne contraindre $b = 0$ que si le test valide $H_0$ et que le blanc a été préalablement soustrait.
+    \end{enumerate}
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 39 : Notion 35 : Deming et Passing-Bablok ---
+\begin{frame}{Notion 35 : Erreur sur Deux Variables : Régression de Deming \& Passing-Bablok}
+  \begin{conceptbox}{La Limite Majeure des MCO lors de Comparaisons de Méthodes}
+    \footnotesize
+    Les MCO supposent que $X$ est mesuré sans aucune erreur.
+    En clinique, pour \textbf{comparer deux techniques de dosage} (ex: Ancien automate $X$ vs Nouveau kit HPLC $Y$) :
+    \begin{itemize}
+      \item Les deux méthodes comportent une incertitude expérimentale aléatoire !
+      \item Les MCO sous-estiment systématiquement la pente de concordance (effet d'atténuation statistique).
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Les Deux Méthodes de Référence en Biologie Clinique}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Régression Orthogonale de Deming :} Minimise les distances obliques en tenant compte du ratio des variances d'erreurs $\lambda = \sigma_x^2 / \sigma_y^2$.
+      \item \textbf{Régression Non-Paramétrique de Passing-Bablok :} Calcule la médiane de toutes les pentes possibles entre paires d'échantillons. Insensible aux distributions non-normales et aux valeurs aberrantes.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 40 : Synthese Methodologique ---
+\begin{frame}{Synthèse : L'Algorithme Décisionnel du Biochimiste}
+  \begin{conceptbox}{Phase 1 : Étalonnage \& Diagnostics de la Gamme}
+    \footnotesize
+    \begin{itemize}
+      \item Préparer 5 à 7 standards en duplicats $\longrightarrow$ Calculer $SP_{xy}, SS_{xx} \implies \hat{\beta}_1, \hat{\beta}_0$.
+      \item Vérifier les critères d'acceptation : $R^2 \ge 0.995$ et $F_{\text{ANOVA}}$ significatif ($p < 0.001$).
+      \item Diagnostiquer les résidus : somme nulle $\sum e_i = 0$, absence de saturation (linéarité) et homoscédasticité.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Phase 2 : Validation Métrologique \& Rendu du Résultat Inconnu}
+    \footnotesize
+    \begin{itemize}
+      \item Calculer les seuils réglementaires : $\text{LOD} = \frac{3.3 \cdot s_{y/x}}{\hat{\beta}_1}$ et $\text{LOQ} = \frac{10.0 \cdot s_{y/x}}{\hat{\beta}_1}$.
+      \item Si $Y_{\text{inconnu}} < \text{LOQ}$ : refuser le rendu d'une valeur chiffrée (indiquer « $< \text{LOQ}$ » ou reconcentrer).
+      \item Si $Y_{\text{inconnu}} \ge \text{LOQ}$ : estimer $\hat{X}_0$, calculer $\text{IC}_{95\%}$ avec la formule de Mandel et appliquer la dilution tissulaire.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 41 : Conclusion & Ouverture ---
 \begin{frame}[plain]
   \begin{center}
-    \vspace{1.8cm}
-    {\Huge\color{BioNavy}\textbf{Fin du Chapitre III}}\\[0.8cm]
-    {\large Prochaine étape : La Régression Non Linéaire en Biochimie}\\[1.2cm]
-    \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
+    \vspace{1.5cm}
+    {\Huge\color{BioNavy}\textbf{Fin du Chapitre III}}\\[0.6cm]
+    {\large\color{BioTeal}\textbf{Félicitations ! Vous maîtrisez la modélisation et l'étalonnage linéaire.}}\\[1.0cm]
+    {\normalsize\textbf{Prochaine étape : Que faire lorsque la réponse biologique est intrinsèquement courbée ?}}\\[0.3cm]
+    {\large\textbf{Chapitre IV : Régression Non-Linéaire \& Cinétique Enzymatique (Michaelis-Menten)}}\\[1.2cm]
+    \textbf{Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)}\\
     \small Faculté des Sciences --- Département de Biologie\\
     \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
   \end{center}

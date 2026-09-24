@@ -1,9 +1,9 @@
 \documentclass[aspectratio=169,10pt]{beamer}
 \usepackage{../common/beamer_theme_bio}
 
-\title{\textbf{Biostatistiques Appliquées}}
-\subtitle{Chapitre VI : Classification Hiérarchique Ascendante (CAH) \& Dendrogrammes}
-\author{\textbf{Dr. Sarra BENMOUMOU (Ph.D.)}}
+\title{\textbf{Biostatistiques Appliquées \& Modélisation du Vivant}}
+\subtitle{Chapitre VI : Classification Ascendante Hiérarchique (CAH) \& Dendrogrammes}
+\author{\textbf{Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)}}
 \institute{
   Faculté des Sciences --- Département de Biologie\\
   Master 2 : Biochimie Appliquée\\
@@ -11,143 +11,946 @@
 }
 \date{Année Universitaire 2024 -- 2025}
 
+% Intercalaire automatique de transition entre sections (Plein écran sans débordement)
+\AtBeginSection[]{
+  \begin{frame}[plain]
+    \vspace{1mm}
+    \begin{tcolorbox}[colback=BioNavy,coltext=white,boxrule=0pt,arc=1.5mm,left=5pt,right=5pt,top=2pt,bottom=2pt]
+      \centering\bfseries\small Progression Pédagogique du Chapitre VI
+    \end{tcolorbox}
+    \vspace{0.5mm}
+    {\scriptsize\tableofcontents[currentsection, hideothersubsections]}
+  \end{frame}
+}
+
 \begin{document}
 
+% --- Diapositive 1 : Titre ---
 \begin{frame}[plain]
   \titlepage
 \end{frame}
 
+% --- Diapositive 2 : Plan Détaillé ---
 \begin{frame}{Plan Détaillé du Chapitre VI}
-  \tableofcontents
+  {\footnotesize\tableofcontents}
 \end{frame}
 
 % ========================================================
-\section{Objectifs de la CAH en Biologie}
+\section{La Classification Non-Supervisée en Sciences du Vivant}
 % ========================================================
 
-\begin{frame}{La Classification Non Supervisée}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Définition \& Philosophie}
-        Contrairement aux modèles prédictifs guidés :
-        \begin{itemize}
-          \item Les groupes d'individus ou de biomolécules ne sont \textbf{pas connus à l'avance}.
-          \item L'algorithme cherche à regrouper les entités les plus ressemblantes de manière ascendante (du bas vers le haut).
-          \item Fournit une représentation sous forme d'arbre : le \textbf{Dendrogramme}.
-        \end{itemize}
-      \end{conceptbox}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Applications Clés en Biochimie}
-        \begin{itemize}
-          \item \textbf{Microbiologie :} Sous-typage de souches bactériennes d'après leurs profils enzymatiques et antibiogrammes.
-          \item \textbf{Oncologie Moléculaire :} Identification de nouveaux sous-types de cancers à partir de biomarqueurs protéiques.
-          \item \textbf{Génomique :} Regroupement de gènes co-exprimés ou co-régulés.
-        \end{itemize}
-      \end{biobox}
-    \end{column}
-  \end{columns}
+% --- Diapositive 3 : Notion 1 : Supervisé vs Non-Supervisé ---
+\begin{frame}{Notion 1 : Apprentissage Supervisé vs Non-Supervisé en Biologie}
+  \begin{conceptbox}{Fondement Conceptuel de la Découverte Non-Supervisée}
+    \footnotesize
+    Contrairement aux approches supervisées (Régression linéaire, ANOVA, classification guidée) où une variable cible $Y$ étiquetée est connue :
+    \begin{itemize}
+      \item En classification non-supervisée (\textit{Clustering}), \textbf{aucune étiquette diagnostique n'est fournie à l'algorithme}.
+      \item L'algorithme opère exclusivement sur les matrices d'abondances ou d'expressions pour découvrir la structure latente naturelle.
+      \item Objectif : révéler des sous-groupes homogènes (\textit{clusters}) d'individus ou de biomolécules partageant des caractéristiques physico-chimiques communes.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Médicale : Découverte de Sous-Types Tumoraux}
+    \footnotesize
+    En oncologie moléculaire, des patientes atteintes d'un cancer du sein cliniquement semblable présentent en réalité des profils transcriptomiques très distincts (Luminal A, Luminal B, HER2+, Basal-like). Le clustering non-supervisé permet de redéfinir la nosologie des maladies sans a priori humain.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 4 : Notion 2 : Principe de la CAH ---
+\begin{frame}{Notion 2 : Principe Fondamental de la CAH (Approche Ascendante)}
+  \begin{conceptbox}{Algorithme Agglomératif « Du Bas vers le Haut » (Bottom-Up)}
+    \footnotesize
+    La Classification Ascendante Hiérarchique (CAH) procède par regroupements itératifs successifs :
+    \begin{enumerate}
+      \item \textbf{État Initial ($N$ classes) :} Chaque échantillon biologique forme un groupe singleton isolé : $\{X_1\}, \{X_2\}, \dots, \{X_N\}$.
+      \item \textbf{Fusion Itérative :} À chaque étape, on recherche la paire d'entités les plus proches (distance minimale) et on les fusionne en une nouvelle classe.
+      \item \textbf{État Final (1 classe) :} L'algorithme s'arrête lorsque l'ensemble des échantillons est réuni en un unique macro-groupe racine.
+    \end{enumerate}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{La Propriété d'Emboîtement Hiérarchique}
+    \footnotesize
+    Les partitions obtenues sont strictement emboîtées. L'intégralité de l'historique des fusions est conservée et représentée sous la forme d'un arbre binaire : le \textbf{Dendrogramme}.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 5 : Notion 3 : Domaines d'Application en Biochimie ---
+\begin{frame}{Notion 3 : Domaines d'Application Clés en Biochimie \& Santé}
+  \begin{conceptbox}{Typologie des Objets à Classifier}
+    \footnotesize
+    En biologie moderne, la CAH est appliquée selon deux axes d'analyse orthogonaux :
+    \begin{itemize}
+      \item \textbf{Clustering des Individus / Échantillons ($N$) :} Identifier des sous-populations de patients, des souches bactériennes ou des réponses toxiques.
+      \item \textbf{Clustering des Variables / Biomolécules ($p$) :} Regrouper des gènes, des métabolites ou des protéines partageant des patrons d'activation identiques.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Exemples Pratiques au Laboratoire}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Microbiologie Médicale :} Regroupement d'isolats bactériens nosocomiaux selon leur résistance aux carbapénèmes et céphalosporines.
+      \item \textbf{Génomique Fonctionnelle :} Identification de modules de gènes corégulés au cours du cycle cellulaire ou d'une infection virale.
+      \item \textbf{Écotoxicologie :} Classification de biomarqueurs de stress oxydatif chez des bivalves exposés à des xénobiotiques.
+    \end{itemize}
+  \end{biobox}
 \end{frame}
 
 % ========================================================
-\section{Distances \& Critères d'Agrégation}
+\section{Exemple Fil Conducteur : Isolats Bactériens \& Gènes de Résistance}
 % ========================================================
 
-\begin{frame}{1. Mesures de Dissimilarité Biologique}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Distance Euclidienne}
-        \begin{equation*}
-          d(x,y) = \sqrt{\sum_{k=1}^p (x_k - y_k)^2}
-        \end{equation*}
-        \begin{itemize}
-          \item Mesure géométrique classique.
-          \item Très sensible aux unités absolues (exige des données \textbf{préalablement centrées-réduites}).
-        \end{itemize}
-      \end{conceptbox}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Distance de Corrélation}
-        \begin{equation*}
-          d_{\text{cor}}(x,y) = 1 - r(x,y)
-        \end{equation*}
-        \begin{itemize}
-          \item Regroupe les protéines ou gènes ayant la \textbf{même cinétique temporelle}, même si l'amplitude basale est très différente.
-          \item Essentielle pour l'analyse d'expression génique.
-        \end{itemize}
-      \end{conceptbox}
-    \end{column}
-  \end{columns}
+% --- Diapositive 6 : Notion 4 : Contexte Expérimental ---
+\begin{frame}{Notion 4 : Contexte Biologique : Résistance aux Antibiotiques en Réanimation}
+  \begin{conceptbox}{Modèle d'Étude : Surveillance d'Infections Nosocomiales}
+    \footnotesize
+    Dans une unité de réanimation du CHU, des souches de \textit{Klebsiella pneumoniae} sont isolées chez des patients sous antibiothérapie prolongée. On suspecte l'émergence d'un clone bactérien multirésistant.
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Mécanismes Moléculaires Mesurés par RT-qPCR}
+    \footnotesize
+    Deux mécanismes enzymatiques et structurels majeurs sont quantifiés simultanément en RT-qPCR relative ($\Delta\Delta Ct$) :
+    \begin{itemize}
+      \item \textbf{Gène $G_1$ (Pompe d'Efflux AcrAB-TolC) :} Surexpression expulsant activement les antibiotiques hors de la bactérie.
+      \item \textbf{Gène $G_2$ ($\beta$-Lactamase à Spectre Élargi CTX-M) :} Enzyme hydrolysant le noyau $\beta$-lactame des pénicillines et céphalosporines.
+    \end{itemize}
+  \end{biobox}
 \end{frame}
 
-\begin{frame}{2. Critères d'Agrégation (Méthodes de Liaison)}
-  \begin{table}[h]
-    \centering
-    \small
-    \resizebox{\linewidth}{!}{%
-    \begin{tabular}{lp{6cm}p{5.5cm}}
-      \toprule
-      \textbf{Méthode} & \textbf{Principe Mathématique de Fusion} & \textbf{Comportement Biologique} \\
-      \midrule
-      \textbf{Lien Simple} & Distance minimale entre deux éléments des groupes & Tendance fâcheuse au « chaînage » (regroupe les points isolés en filaments). \\
-      \midrule
-      \textbf{Lien Complet} & Distance maximale entre deux éléments & Forme des groupes très compacts et sphériques. \\
-      \midrule
-      \textbf{Lien Moyen (UPGMA)} & Moyenne arithmétique de toutes les distances croisées & Standard historique de la phylogénie moléculaire. \\
-      \midrule
-      \textbf{Méthode de Ward} & Fusionne les deux groupes qui minimisent la perte d'inertie intra-groupe ($\Delta I_{\text{intra}}$) & \cellcolor{BioGreen!20}\textbf{Recommandée en biochimie pour obtenir des groupes homogènes et équilibrés.} \\
-      \bottomrule
-    \end{tabular}%
-    }
-  \end{table}
+% --- Diapositive 7 : Notion 5 : Données Brutes des 4 Isolats ---
+\begin{frame}{Notion 5 : Données Expérimentales Brutes de RT-qPCR ($N = 4$ Isolats)}
+  \begin{conceptbox}{Tableau d'Expression Relative ($\Delta\Delta Ct$)}
+    \footnotesize
+    On analyse 4 isolats bactériens notés $S_1, S_2, S_3, S_4$. Les expressions relatives des deux gènes sont consignées ci-dessous :
+    \begin{center}
+      \resizebox{0.82\linewidth}{!}{%
+      \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Isolat Bactérien} & \textbf{Isolat $S_1$} & \textbf{Isolat $S_2$} & \textbf{Isolat $S_3$} & \textbf{Isolat $S_4$} \\
+        \midrule
+        \textbf{Gène $G_1$ (Pompe d'Efflux)} & $1.0$ & $2.0$ & $5.0$ & $6.0$ \\
+        \textbf{Gène $G_2$ ($\beta$-Lactamase)} & $2.0$ & $1.0$ & $5.0$ & $4.0$ \\
+        \midrule
+        \textbf{Coordonnées Vectorielles} & $\mathbf{x}_1 = (1.0 \,;\, 2.0)$ & $\mathbf{x}_2 = (2.0 \,;\, 1.0)$ & $\mathbf{x}_3 = (5.0 \,;\, 5.0)$ & $\mathbf{x}_4 = (6.0 \,;\, 4.0)$ \\
+        \bottomrule
+      \end{tabular}%
+      }
+    \end{center}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Première Constatation Biologique}
+    \footnotesize
+    À vue d'œil, $S_1$ et $S_2$ présentent des niveaux d'expression faibles à modérés ($\le 2.0$), tandis que $S_3$ et $S_4$ affichent des niveaux d'expression massifs ($\ge 4.0\text{--}6.0$). Comment l'algorithme va-t-il formaliser mathématiquement ces regroupements ?
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 8 : Notion 6 : Représentation Géométrique 2D ---
+\begin{frame}{Notion 6 : Représentation Géométrique dans l'Espace des Gènes ($G_1, G_2$)}
+  \begin{conceptbox}{Visualisation Spatiale des Isolats}
+    \footnotesize
+    Chaque isolat bactérien correspond à un point dans l'espace $\mathbb{R}^2$ défini par les axes des deux gènes :
+    \begin{itemize}
+      \item Axe des abscisses : niveau d'expression de $G_1$ (Efflux).
+      \item Axe des ordonnées : niveau d'expression de $G_2$ ($\beta$-lactamase).
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Intérêt de la Géométrie pour la Classification}
+    \footnotesize
+    Classifier ces bactéries revient à identifier des îlots denses de points géographiquement proches dans cet espace vectoriel, séparés par de grands espaces vides de phénotypes inexistants.
+  \end{takeawaybox}
 \end{frame}
 
 % ========================================================
-\section{Le Dendrogramme \& Les Heatmaps}
+\section{Mesures de Dissimilarité Biologique (Distances)}
 % ========================================================
 
-\begin{frame}{Lecture du Dendrogramme \& Seuil de Coupure}
+% --- Diapositive 9 : Notion 7 : Définition d'une Distance ---
+\begin{frame}{Notion 7 : Propriétés Fondamentales d'une Distance Mathématique}
+  \begin{conceptbox}{Les 4 Axiomes Fondamentaux d'une Métrique}
+    \footnotesize
+    Une fonction $d(A, B)$ mesurant la dissimilarité entre deux profils biologiques $A$ et $B$ est une distance mathématique au sens strict si et seulement si elle vérifie pour tous $A, B, C$ :
+    \begin{enumerate}
+      \item \textbf{Positivité :} $d(A, B) \ge 0$.
+      \item \textbf{Séparation :} $d(A, B) = 0 \iff A = B$ (deux bactéries identiques ont une dissimilarité nulle).
+      \item \textbf{Symétrie :} $d(A, B) = d(B, A)$ (la distance de $A$ à $B$ est égale à celle de $B$ à $A$).
+      \item \textbf{Inégalité Triangulaire :} $d(A, C) \le d(A, B) + d(B, C)$ (le trajet direct est le plus court).
+    \end{enumerate}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Impact sur l'Analyse}
+    \footnotesize
+    Ces axiomes garantissent que la géométrie de l'arbre (dendrogramme) possède une cohérence métrique rigoureuse sans boucle temporelle ni inversion de hauteur.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 10 : Notion 8 : Distance Euclidienne ---
+\begin{frame}{Notion 8 : La Distance Euclidienne ($d_E$) : Définition \& Formule}
+  \begin{conceptbox}{Définition Géométrique en Ligne Droite}
+    \footnotesize
+    Pour deux échantillons $A = (x_{A1}, \dots, x_{Ap})$ et $B = (x_{B1}, \dots, x_{Bp})$ caractérisés par $p$ paramètres :
+    \begin{equation*}
+      d_E(A, B) = \sqrt{\sum_{k=1}^p (x_{Ak} - x_{Bk})^2} = \sqrt{(x_{A1} - x_{B1})^2 + (x_{A2} - x_{B2})^2 + \dots + (x_{Ap} - x_{Bp})^2}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Calcul Numérique entre les Isolats $S_1(1,2)$ et $S_2(2,1)$}
+    \footnotesize
+    \begin{equation*}
+      d_E(S_1, S_2) = \sqrt{(1.0 - 2.0)^2 + (2.0 - 1.0)^2} = \sqrt{(-1)^2 + (+1)^2} = \sqrt{1 + 1} = \sqrt{2} \approx \mathbf{1.414}
+    \end{equation*}
+    Cette distance mesure l'écart géométrique direct entre les profils de ces deux premières souches bactériennes.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 11 : Notion 9 : Distance de Manhattan ---
+\begin{frame}{Notion 9 : La Distance de Manhattan ($d_M$ ou City-Block)}
+  \begin{conceptbox}{Définition en Somme des Écarts Absolus}
+    \footnotesize
+    La distance de Manhattan correspond au déplacement en grille le long des axes de coordonnées :
+    \begin{equation*}
+      d_M(A, B) = \sum_{k=1}^p |x_{Ak} - x_{Bk}| = |x_{A1} - x_{B1}| + |x_{A2} - x_{B2}| + \dots + |x_{Ap} - x_{Bp}|
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique Comparée ($S_1$ vs $S_2$)}
+    \footnotesize
+    \begin{equation*}
+      d_M(S_1, S_2) = |1.0 - 2.0| + |2.0 - 1.0| = 1.0 + 1.0 = \mathbf{2.000}
+    \end{equation*}
+    \begin{itemize}
+      \item \textbf{Propriété clé :} La distance de Manhattan n'élève pas les écarts au carré.
+      \item \textbf{Conséquence biologique :} Elle est beaucoup moins sensible aux valeurs aberrantes ou extrêmes (\textit{outliers}) que la distance euclidienne.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 12 : Notion 10 : Distance de Corrélation ---
+\begin{frame}{Notion 10 : La Distance de Corrélation ($d_{\text{cor}} = 1 - r$)}
+  \begin{conceptbox}{Mesure de la Similarité de Forme / Cinétique}
+    \footnotesize
+    Lorsque deux profils présentent des cinétiques parallèles mais avec des échelles absolues différentes :
+    \begin{equation*}
+      d_{\text{cor}}(A, B) = 1 - r(A, B) \quad \text{où } r(A, B) \text{ est le coefficient de corrélation linéaire de Pearson.}
+    \end{equation*}
+    \begin{itemize}
+      \item Si $r = +1.0$ (profils parfaitement colinéaires) $\implies d_{\text{cor}} = 0.0$ (ressemblance parfaite).
+      \item Si $r = 0.0$ (profils indépendants) $\implies d_{\text{cor}} = 1.0$.
+      \item Si $r = -1.0$ (profils rigoureusement opposés) $\implies d_{\text{cor}} = 2.0$ (dissimilarité maximale).
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Cas Typique en Transcriptomique}
+    \footnotesize
+    Deux gènes induits simultanément suite à un choc thermique possèdent $d_{\text{cor}} \approx 0$, même si le gène A produit 500 copies d'ARNm et le gène B seulement 20 copies.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 13 : Notion 11 : Nécessité de la Standardisation ---
+\begin{frame}{Notion 11 : L'Impératif de Standardisation ($Z$-Score) des Variables}
+  \begin{conceptbox}{Le Piège des Unités et Ordres de Grandeur Hétérogènes}
+    \footnotesize
+    Considérons une étude clinique associant la Glycémie (en $\text{g/L}$, variance $s_1^2 = 0.06$) et les Transaminases ALAT (en $\text{UI/L}$, variance $s_2^2 = 900.0$) :
+    \begin{itemize}
+      \item Dans la formule de distance : $\Delta x_2^2 = (105 - 45)^2 = 3600$, écrasant complètement $\Delta x_1^2 = (1.6 - 1.1)^2 = 0.25$.
+      \item La distance euclidienne brute reflète à $99.9\%$ l'ALAT et ignore la glycémie !
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Règle d'Or en Biochimie}
+    \footnotesize
+    Toute CAH appliquée à des variables de natures et d'unités distinctes doit obligatoirement être précédée d'un \textbf{centrage-réduction} :
+    \begin{equation*}
+      z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j} \implies \text{Chaque paramètre acquiert un poids statistique strictement égal (variance } = 1\text{).}
+    \end{equation*}
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{La Matrice de Dissimilarité Initiale D0}
+% ========================================================
+
+% --- Diapositive 14 : Notion 12 : Structure de la Matrice D0 ---
+\begin{frame}{Notion 12 : Construction de la Matrice de Dissimilarité $D_0$ ($N \times N$)}
+  \begin{conceptbox}{Propriétés Algébriques de $D_0$}
+    \footnotesize
+    Pour $N$ échantillons, la matrice de dissimilarité $D_0$ recense les distances entre toutes les paires possibles :
+    \begin{equation*}
+      D_0 = \begin{pmatrix} 0 & d(S_1, S_2) & d(S_1, S_3) & \cdots & d(S_1, S_N) \\ d(S_2, S_1) & 0 & d(S_2, S_3) & \cdots & d(S_2, S_N) \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ d(S_N, S_1) & d(S_N, S_2) & d(S_N, S_3) & \cdots & 0 \end{pmatrix}
+    \end{equation*}
+    \begin{itemize}
+      \item \textbf{Diagonale Principale :} Nulle ($d(S_i, S_i) = 0$).
+      \item \textbf{Symétrie :} $d(S_i, S_j) = d(S_j, S_i) \implies$ on ne calcule que la partie \textbf{triangulaire inférieure}.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Complexité Combinatoire}
+    \footnotesize
+    Le nombre de distances deux-à-deux à évaluer s'élève à $\binom{N}{2} = \frac{N(N-1)}{2}$. Pour nos 4 souches : $\frac{4 \times 3}{2} = 6$ calculs.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 15 : Notion 13 : Calcul Explicite des Distances ---
+\begin{frame}{Notion 13 : Calcul Explicite des 6 Distances Euclidiennes de l'Exemple}
+  \begin{conceptbox}{Application de la Formule Euclidienne sur les 4 Isolats}
+    \footnotesize
+    Rappel des coordonnées : $S_1(1,2)$, $S_2(2,1)$, $S_3(5,5)$, $S_4(6,4)$.
+    \begin{align*}
+      d(S_1, S_2) &= \sqrt{(2-1)^2 + (1-2)^2} = \sqrt{1 + 1} = \sqrt{2} \approx \mathbf{1.414} \\
+      d(S_3, S_4) &= \sqrt{(6-5)^2 + (4-5)^2} = \sqrt{1 + 1} = \sqrt{2} \approx \mathbf{1.414} \\
+      d(S_1, S_3) &= \sqrt{(5-1)^2 + (5-2)^2} = \sqrt{4^2 + 3^2} = \sqrt{16 + 9} = \sqrt{25} = \mathbf{5.000} \\
+      d(S_2, S_3) &= \sqrt{(5-2)^2 + (5-1)^2} = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = \mathbf{5.000} \\
+      d(S_2, S_4) &= \sqrt{(6-2)^2 + (4-1)^2} = \sqrt{4^2 + 3^2} = \sqrt{16 + 9} = \sqrt{25} = \mathbf{5.000} \\
+      d(S_1, S_4) &= \sqrt{(6-1)^2 + (4-2)^2} = \sqrt{5^2 + 2^2} = \sqrt{25 + 4} = \sqrt{29} \approx \mathbf{5.385}
+    \end{align*}
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 16 : Notion 14 : Identification du Minimum ---
+\begin{frame}{Notion 14 : La Matrice Triangulaire Inférieure $D_0$ \& Première Fusion}
+  \begin{conceptbox}{Dressage de la Matrice $D_0$}
+    \footnotesize
+    En insérant les calculs dans la matrice triangulaire inférieure :
+    \begin{center}
+      \small
+      \begin{tabular}{c|cccc}
+        & $S_1$ & $S_2$ & $S_3$ & $S_4$ \\
+        \hline
+        $S_1$ & $0$ & & & \\
+        $S_2$ & \cellcolor{BioGreen!25}\textbf{1.414} & $0$ & & \\
+        $S_3$ & $5.000$ & $5.000$ & $0$ & \\
+        $S_4$ & $5.385$ & $5.000$ & \cellcolor{BioGreen!25}\textbf{1.414} & $0$ \\
+      \end{tabular}
+    \end{center}
+  \end{conceptbox}
+  \vspace{0.5mm}
+  \begin{biobox}{Décision Algorithmique}
+    \footnotesize
+    \begin{itemize}
+      \item Les plus petites distances sont ex aequo : $d(S_1, S_2) = 1.414$ et $d(S_3, S_4) = 1.414$.
+      \item Regroupements immédiats : \textbf{Cluster} $C_1 = \{S_1, S_2\}$ et \textbf{Cluster} $C_2 = \{S_3, S_4\}$.
+      \item Question clé : comment calculer désormais la distance entre ces deux nouveaux groupes ?
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{Stratégies de Liaison (Linkage Methods)}
+% ========================================================
+
+% --- Diapositive 17 : Notion 15 : Définition du Linkage ---
+\begin{frame}{Notion 15 : Définition du Problème : Distance Entre Deux Clusters}
+  \begin{conceptbox}{Le Passage de l'Élément au Groupe}
+    \footnotesize
+    Soient deux clusters $A = \{x_1, \dots, x_{n_A}\}$ et $B = \{y_1, \dots, y_{n_B}\}$ contenant respectivement $n_A$ et $n_B$ échantillons biologiques.
+    \begin{itemize}
+      \item Il existe $n_A \times n_B$ distances individuelles reliant un point de $A$ à un point de $B$.
+      \item Une méthode d'agrégation (\textit{Linkage Method}) est une règle mathématique permettant de synthétiser ces multiples distances en une valeur unique $D(A, B)$.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Impact Décisif sur la Morphologie de l'Arbre}
+    \footnotesize
+    Le choix de la méthode d'agrégation modifie profondément la structure géométrique des clusters détectés (formes sphériques, groupes allongés ou branches étirées).
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 18 : Notion 16 : Saut Minimum (Single Linkage) ---
+\begin{frame}{Notion 16 : Méthode du Saut Minimum (\textit{Single Linkage})}
+  \begin{conceptbox}{Règle du Plus Proche Voisin}
+    \footnotesize
+    La distance entre deux groupes est définie comme la \textbf{distance minimale} entre n'importe quelle paire d'éléments :
+    \begin{equation*}
+      D_{\min}(A, B) = \min_{x \in A, \, y \in B} d(x, y)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application à nos Deux Clusters $C_1 = \{S_1, S_2\}$ et $C_2 = \{S_3, S_4\}$}
+    \footnotesize
+    Les distances croisées valent : $d(S_1, S_3) = 5.0$, $d(S_1, S_4) = 5.385$, $d(S_2, S_3) = 5.0$, $d(S_2, S_4) = 5.0$.
+    \begin{equation*}
+      D_{\min}(C_1, C_2) = \min(5.000, \, 5.385, \, 5.000, \, 5.000) = \mathbf{5.000}
+    \end{equation*}
+    Deux groupes fusionnent dès qu'un seul élément périphérique de l'un est proche d'un élément de l'autre, peu importe l'éloignement des autres membres.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 19 : Notion 17 : Le Piège du Chaînage ---
+\begin{frame}{Notion 17 : Le Piège du Single Linkage : L'Effet de Chaînage (\textit{Chaining})}
+  \begin{conceptbox}{Mécanisme du Chaînage Artificiel}
+    \footnotesize
+    Si des individus biologiques isolés ou du bruit de fond expérimental forment une suite de « ponts » discrets entre deux populations distinctes :
+    \begin{itemize}
+      \item Le Single Linkage fusionne ces points de proche en proche un à un en un filament allongé.
+      \item Il produit des arbres asymétriques où des éléments isolés s'agrègent continuellement à un méga-groupe amorphe.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{warnbox}{Danger en Diagnostic Médical}
+    \footnotesize
+    En cytométrie en flux ou en séquençage single-cell, la présence d'artéfacts de mesure (doublets cellulaires) amène le Single Linkage à regrouper à tort des sous-populations immunitaires pourtant biologiquement antagonistes !
+  \end{warnbox}
+\end{frame}
+
+% --- Diapositive 20 : Notion 18 : Saut Maximum (Complete Linkage) ---
+\begin{frame}{Notion 18 : Méthode du Saut Maximum (\textit{Complete Linkage})}
+  \begin{conceptbox}{Règle du Plus Lointain Voisin (Diamètre Maximal)}
+    \footnotesize
+    La distance entre deux groupes est définie comme la \textbf{distance maximale} séparant deux éléments :
+    \begin{equation*}
+      D_{\max}(A, B) = \max_{x \in A, \, y \in B} d(x, y)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique ($C_1$ vs $C_2$)}
+    \footnotesize
+    \begin{equation*}
+      D_{\max}(C_1, C_2) = \max(5.000, \, 5.385, \, 5.000, \, 5.000) = \mathbf{5.385} \quad (\text{distance entre } S_1 \text{ et } S_4)
+    \end{equation*}
+    \begin{itemize}
+      \item Pour fusionner, \textbf{tous} les éléments des deux groupes doivent être raisonnablement proches.
+      \item Forme des clusters très compacts, denses et sphériques, mais très sensible aux valeurs extrêmes isolées.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 21 : Notion 19 : Lien Moyen (Average / UPGMA) ---
+\begin{frame}{Notion 19 : Méthode du Lien Moyen (\textit{Average Linkage} / UPGMA)}
+  \begin{conceptbox}{Moyenne Arithmétique des Distances Paires}
+    \footnotesize
+    La méthode UPGMA (\textit{Unweighted Pair Group Method with Arithmetic Mean}) calcule la moyenne de toutes les distances :
+    \begin{equation*}
+      D_{\text{avg}}(A, B) = \frac{1}{n_A \cdot n_B} \sum_{x \in A} \sum_{y \in B} d(x, y)
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Numérique ($C_1$ vs $C_2$)}
+    \footnotesize
+    \begin{equation*}
+      D_{\text{avg}}(C_1, C_2) = \frac{5.000 + 5.385 + 5.000 + 5.000}{2 \times 2} = \frac{20.385}{4} = \mathbf{5.096}
+    \end{equation*}
+    \begin{itemize}
+      \item Représente un compromis robuste et naturel entre le laxisme du Single et la sévérité du Complete.
+      \item Standard historique pour la reconstruction des arbres phylogénétiques en systématique moléculaire.
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 22 : Notion 20 : Comparaison des 4 Méthodes ---
+\begin{frame}{Notion 20 : Comparaison Visuelle des 4 Méthodes d'Agrégation (Figure)}
   \begin{center}
-    \includegraphics[height=0.48\textheight, keepaspectratio]{../figures/fig06_dendrogram_ward.png}
+    \includegraphics[height=0.48\textheight, keepaspectratio]{../figures/fig06_linkage_comparison.png}
   \end{center}
-  \vspace{-2mm}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      {\footnotesize \textbf{Hauteur des branches :} Représente le niveau de dissemblance entre sous-groupes fusionnés. Plus la branche verticale est longue, plus la séparation biologique est franche.}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      {\footnotesize \textbf{Ligne de coupure horizontale :} Choisie au niveau du saut d'inertie le plus grand. Ici, le trait rouge délimite parfaitement \textbf{3 clusters cliniques distincts} ($k=3$).}
-    \end{column}
-  \end{columns}
+  \vspace{-1mm}
+  \begin{takeawaybox}{Synthèse Visuelle pour le Biochimiste}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Single :} Arbres dissymétriques à branches étirées (chaînage). À proscrire pour les profils métaboliques.
+      \item \textbf{Complete \& Average :} Arbres structurés, bien adaptés aux études de taxonomie bactérienne.
+      \item \textbf{Ward :} Segmente l'échantillon en groupes homogènes d'inertie minimale. Méthode reine en biomédecine.
+    \end{itemize}
+  \end{takeawaybox}
 \end{frame}
 
-\begin{frame}{La Clustermap (Heatmap Bi-Clusterisée) en Biochimie}
-  \begin{columns}[onlytextwidth, T]
-    \begin{column}{0.48\linewidth}
-      \begin{conceptbox}{Le Double Clustering Simultané}
-        La Heatmap moderne croise deux CAH indépendantes :
-        \begin{enumerate}
-          \item \textbf{En colonnes :} Classification des biomarqueurs ou gènes (identifie les réseaux métaboliques co-activés).
-          \item \textbf{En lignes :} Classification des échantillons ou patients (isole les phénotypes pathologiques).
-        \end{enumerate}
-      \end{conceptbox}
-    \end{column}
-    \begin{column}{0.48\linewidth}
-      \begin{biobox}{Cas Réel : Résistance aux Antibiotiques}
-        Chez 15 souches de \textit{Pseudomonas aeruginosa} testées sur 12 molécules :
-        \vspace{1mm}
-        \par La heatmap regroupe visuellement les souches multi-résistantes exprimant simultanément une $\beta$-lactamase à spectre étendu (BLSE) et des pompes d'efflux.
-      \end{biobox}
-    \end{column}
-  \end{columns}
+% ========================================================
+\section{La Méthode de Ward (Variance Minimale \& Inertie)}
+% ========================================================
+
+% --- Diapositive 23 : Notion 21 : Théorème de Huygens ---
+\begin{frame}{Notion 21 : Fondement Physique : L'Inertie Totale \& Théorème de Huygens}
+  \begin{conceptbox}{Décomposition de la Variabilité Biologique}
+    \footnotesize
+    En mécanique comme en statistique, l'inertie totale $I_{\text{tot}}$ d'un nuage de $N$ points de centre de gravité $G$ se décompose rigoureusement selon la formule de Huygens :
+    \begin{equation*}
+      I_{\text{tot}} = I_{\text{intra}} + I_{\text{inter}}
+    \end{equation*}
+    \begin{itemize}
+      \item $I_{\text{intra}}$ (\textbf{Inertie Intra-Classe}) : Mesure la dispersion interne des points autour du centre de leur propre groupe (hétérogénéité résiduelle). On souhaite la \textbf{minimiser}.
+      \item $I_{\text{inter}}$ (\textbf{Inertie Inter-Classes}) : Mesure l'éloignement mutuel entre les différents groupes. On souhaite la \textbf{maximiser}.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Loi de Conservation}
+    \footnotesize
+    Comme $I_{\text{tot}}$ est constante pour un jeu de données fixé, \textbf{minimiser l'inertie intra-classe revient exactement à maximiser la séparation inter-classes !}
+  \end{takeawaybox}
 \end{frame}
 
+% --- Diapositive 24 : Notion 22 : Formule du Saut de Ward ---
+\begin{frame}{Notion 22 : La Formule du Saut d'Inertie de Ward ($\Delta I(A, B)$)}
+  \begin{conceptbox}{Critère de Minimisation de la Variance}
+    \footnotesize
+    Lorsqu'on fusionne deux clusters $A$ et $B$ d'effectifs $n_A, n_B$ et de centres de gravité $g_A, g_B$, l'inertie intra-classe augmente obligatoirement d'une quantité exacte appelée le \textbf{Saut d'Inertie} :
+    \begin{equation*}
+      \Delta I(A, B) = \frac{n_A \cdot n_B}{n_A + n_B} \cdot d_E^2(g_A, g_B)
+    \end{equation*}
+    \begin{itemize}
+      \item $d_E^2(g_A, g_B)$ : Carré de la distance euclidienne entre les barycentres des deux groupes.
+      \item $\frac{n_A \cdot n_B}{n_A + n_B}$ : Masse géométrique réduite pondérant la taille relative des deux groupes.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Règle Algorithmique de Ward}
+    \footnotesize
+    À chaque étape de l'algorithme, on fusionne la paire de groupes qui produit la \textbf{plus faible augmentation d'inertie intra-classe} : $\min \Delta I(A, B)$.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 25 : Notion 23 : Pourquoi Ward est la Référence ---
+\begin{frame}{Notion 23 : Pourquoi la Méthode de Ward est la Référence en Biomédecine}
+  \begin{conceptbox}{Propriétés Statistiques Uniques du Critère de Ward}
+    \footnotesize
+    \begin{enumerate}
+      \item \textbf{Groupes Compacts et Équilibrés :} Évite la formation de clusters résiduels contenant 99\% des échantillons et de multiples singletons sans intérêt.
+      \item \textbf{Lien Direct avec l'ANOVA :} Elle repose sur la même décomposition des carrés de dispersion ($SS_{\text{tot}} = SS_{\text{intra}} + SS_{\text{inter}}$) que l'analyse de variance enseignée aux chapitres I et II.
+      \item \textbf{Hauteurs Interprétables en Énergie / Inertie :} L'axe vertical du dendrogramme représente directement des unités réelles de variance biologique perdue.
+    \end{enumerate}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Standard International}
+    \footnotesize
+    Tous les grands consortiums de recherche biomédicale (TCGA en cancérologie, Human Microbiome Project) utilisent par défaut l'algorithme de Ward sur matrices centrées-réduites.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 26 : Notion 24 : Étape 1 : Fusion S1-S2 ---
+\begin{frame}{Notion 24 : Étape 1 : Fusion des Singletons $S_1$ et $S_2$ ($n_1 = 1, n_2 = 1$)}
+  \begin{conceptbox}{Calcul du Saut d'Inertie Initial}
+    \footnotesize
+    Pour deux points individuels isolés, $g_1 = S_1(1,2)$ et $g_2 = S_2(2,1)$ :
+    \begin{itemize}
+      \item Carré de la distance : $d_E^2(S_1, S_2) = (1 - 2)^2 + (2 - 1)^2 = 1 + 1 = 2.0$.
+      \item Facteur d'effectif : $\frac{n_1 \cdot n_2}{n_1 + n_2} = \frac{1 \times 1}{1 + 1} = \frac{1}{2} = 0.5$.
+    \end{itemize}
+    \begin{equation*}
+      \Delta I(S_1, S_2) = 0.5 \times 2.0 = \mathbf{1.000}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Coordonnées du Nouveau Barycentre $g_1$}
+    \footnotesize
+    Le centre de gravité du nouveau cluster $C_1 = \{S_1, S_2\}$ correspond à la moyenne des profils :
+    \begin{equation*}
+      g_1 = \left( \frac{1.0 + 2.0}{2} \,;\, \frac{2.0 + 1.0}{2} \right) = (\mathbf{1.500} \,;\, \mathbf{1.500})
+    \end{equation*}
+    Biologiquement, ce barycentre définit le profil moyen du groupe de souches sensibles.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 27 : Notion 25 : Étape 2 : Fusion S3-S4 ---
+\begin{frame}{Notion 25 : Étape 2 : Fusion des Singletons $S_3$ et $S_4$ ($n_3 = 1, n_4 = 1$)}
+  \begin{conceptbox}{Calcul du Saut d'Inertie Associé}
+    \footnotesize
+    Pour $S_3(5,5)$ et $S_4(6,4)$ :
+    \begin{itemize}
+      \item Carré de la distance : $d_E^2(S_3, S_4) = (5 - 6)^2 + (5 - 4)^2 = 1 + 1 = 2.0$.
+      \item Facteur d'effectif : $\frac{1 \times 1}{1 + 1} = 0.5$.
+    \end{itemize}
+    \begin{equation*}
+      \Delta I(S_3, S_4) = 0.5 \times 2.0 = \mathbf{1.000}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Coordonnées du Nouveau Barycentre $g_2$}
+    \footnotesize
+    Le centre de gravité du second cluster $C_2 = \{S_3, S_4\}$ vaut :
+    \begin{equation*}
+      g_2 = \left( \frac{5.0 + 6.0}{2} \,;\, \frac{5.0 + 4.0}{2} \right) = (\mathbf{5.500} \,;\, \mathbf{4.500})
+    \end{equation*}
+    Biologiquement, ce barycentre caractérise le clone bactérien surexprimant massivement les mécanismes de résistance.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 28 : Notion 26 : Étape 3 : Fusion Finale C1-C2 ---
+\begin{frame}{Notion 26 : Étape 3 : Fusion Finale des Deux Clusters ($C_1$ et $C_2$)}
+  \begin{conceptbox}{Calcul du Saut d'Inertie Majeur}
+    \footnotesize
+    Regroupons maintenant $C_1 = \{S_1, S_2\}$ ($n_1 = 2$) et $C_2 = \{S_3, S_4\}$ ($n_2 = 2$) :
+    \begin{itemize}
+      \item Écart entre barycentres : $g_2 - g_1 = (5.5 - 1.5 \,;\, 4.5 - 1.5) = (4.0 \,;\, 3.0)$.
+      \item Carré de la distance : $d_E^2(g_1, g_2) = 4.0^2 + 3.0^2 = 16.0 + 9.0 = \mathbf{25.0}$.
+      \item Facteur d'effectif pondéré : $\frac{n_1 \cdot n_2}{n_1 + n_2} = \frac{2 \times 2}{2 + 2} = \frac{4}{4} = \mathbf{1.0}$.
+    \end{itemize}
+    \begin{equation*}
+      \Delta I(C_1, C_2) = 1.0 \times 25.0 = \mathbf{25.000}
+    \end{equation*}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Révélation Biologique Majeure}
+    \footnotesize
+    La progression des sauts d'inertie est spectaculaire : $1.0 \to 1.0 \to \mathbf{25.0}$ !\\
+    La fusion des deux groupes détruit une quantité colossale d'homogénéité (25 fois plus que les fusions initiales), ce qui prouve de façon irréfutable que ces deux groupes correspondent à deux entités biologiques radicalement distinctes.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 29 : Notion 27 : Visualisation 2D ---
+\begin{frame}{Notion 27 : Visualisation Géométrique des Fusions \& Barycentres (Figure)}
+  \begin{center}
+    \includegraphics[height=0.50\textheight, keepaspectratio]{../figures/fig06_cah_2d_points_clustering.png}
+  \end{center}
+  \vspace{-1mm}
+  \begin{takeawaybox}{Synthèse Géométrique}
+    \footnotesize
+    Les cercles en pointillés délimitent les clusters initiaux très resserrés ($C_1, C_2$). Le vecteur pointillé reliant les croix $g_1$ et $g_2$ illustre l'immense distance ($d_E = 5.0$, $\Delta I = 25.0$) séparant les phénotypes sensibles des phénotypes multi-résistants.
+  \end{takeawaybox}
+\end{frame}
+
+% ========================================================
+\section{Le Dendrogramme : Lecture, Hauteurs \& Interprétation}
+% ========================================================
+
+% --- Diapositive 30 : Notion 28 : Anatomie du Dendrogramme ---
+\begin{frame}{Notion 28 : Anatomie d'un Dendrogramme (Feuilles, Nœuds, Tronc)}
+  \begin{conceptbox}{Structure Arborescente de la Classification}
+    \footnotesize
+    Le dendrogramme est un arbre binaire enraciné dont chaque composant possède une signification précise :
+    \begin{itemize}
+      \item \textbf{Feuilles (Bas de l'arbre) :} Les échantillons biologiques individuels ($S_1, S_2, \dots, S_N$). Dissimilarité nulle au départ ($h = 0$).
+      \item \textbf{Nœuds (Fourches horizontales) :} Chaque nœud représente la fusion de deux branches en un cluster unifié.
+      \item \textbf{Racine (Sommet de l'arbre) :} Le nœud terminal fusionnant l'intégralité des échantillons dans la population globale.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Sens de Lecture Rigoureux}
+    \footnotesize
+    La lecture chronologique de l'algorithme s'effectue strictement de bas en haut (ascendance). L'ordre horizontal des feuilles sur l'axe des abscisses est arbitraire et peut pivoter autour de chaque nœud sans altérer la topologie.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 31 : Notion 29 : Signification de la Hauteur ---
+\begin{frame}{Notion 29 : Signification Métrique de la Hauteur des Branches Verticales}
+  \begin{conceptbox}{Hauteur = Degré de Dissimilarité Biologique}
+    \footnotesize
+    L'ordonnée d'un nœud horizontal correspond exactement à la valeur de l'indice d'agrégation lors de la fusion :
+    \begin{itemize}
+      \item Dans une CAH de Ward : $h = \Delta I(A, B)$ (coût en inertie intra-classe de la réunion des deux groupes).
+      \item \textbf{Branches courtes :} Groupes très proches biologiquement, profils d'expression quasiment interchangeables.
+      \item \textbf{Branches verticales longues :} Séparation franche entre deux sous-types profondément différents.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Règle de Décision Clinique}
+    \footnotesize
+    Plus une branche verticale est haute avant de se ramifier, plus les groupes qu'elle porte sont robustes, reproductibles et cliniquement significatifs.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 32 : Notion 30 : Construction du Dendrogramme de l'Exemple ---
+\begin{frame}{Notion 30 : Construction Manuelle du Dendrogramme de nos 4 Isolats}
+  \begin{conceptbox}{Graduation Précise de l'Axe des Ordonnées}
+    \footnotesize
+    Reportons les résultats calculés aux Notions 24 à 26 sur le graphique :
+    \begin{itemize}
+      \item $h_1 = \Delta I(S_1, S_2) = \mathbf{1.0}$ : Premier nœud reliant les feuilles $S_1$ et $S_2$.
+      \item $h_2 = \Delta I(S_3, S_4) = \mathbf{1.0}$ : Deuxième nœud reliant les feuilles $S_3$ et $S_4$.
+      \item $h_3 = \Delta I(C_1, C_2) = \mathbf{25.0}$ : Nœud supérieur réunissant les deux branches à la hauteur 25.0.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Observation Visuelle}
+    \footnotesize
+    L'arbre comporte deux petits ponts horizontaux à hauteur $h = 1.0$, surmontés de deux très longues tiges verticales grimpant jusqu'à $h = 25.0$. Cette morphologie en « haltère » démontre sans ambiguïté une bipartition naturelle.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 33 : Notion 31 : Le Dendrogramme de Ward (Figure) ---
+\begin{frame}{Notion 31 : Le Dendrogramme de Ward avec Ligne de Coupure (Figure)}
+  \begin{center}
+    \includegraphics[height=0.50\textheight, keepaspectratio]{../figures/fig06_dendrogram_ward.png}
+  \end{center}
+  \vspace{-1mm}
+  \begin{takeawaybox}{Ligne de Coupure Optimale}
+    \footnotesize
+    Le trait rouge en pointillé matérialise la coupure horizontale optimale. Elle traverse les deux branches verticales les plus longues, divisant automatiquement l'échantillon en $k = 2$ clusters hautement contrastés.
+  \end{takeawaybox}
+\end{frame}
+
+% ========================================================
+\section{Détermination de la Partition Optimale (Seuil de Coupure)}
+% ========================================================
+
+% --- Diapositive 34 : Notion 32 : Principe de la Coupure ---
+\begin{frame}{Notion 32 : Le Principe de la Ligne de Coupure Horizontale}
+  \begin{conceptbox}{Du Dendrogramme Continu aux Classes Discrètes}
+    \footnotesize
+    Le dendrogramme fournit une hiérarchie complète (de $N$ individus à 1 groupe), mais le praticien a besoin d'une partition discrète en $k$ classes d'intérêt :
+    \begin{itemize}
+      \item Tracer une ligne horizontale de hauteur de coupe $h_{\text{cut}}$ coupe l'arbre en un certain nombre de branches verticales indépendantes.
+      \item Le nombre de branches traversées par la ligne définit exactement le nombre de classes $k$.
+      \item Chaque branche qui tombe sous le trait constitue un cluster d'échantillons.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application Diagnostique}
+    \footnotesize
+    Fixer la coupure revient à attribuer formellement chaque patient ou bactérie à une catégorie clinique (ex: Classe 1 = Sensible, Classe 2 = Résistante).
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 35 : Notion 33 : Critère du Plus Grand Saut d'Inertie ---
+\begin{frame}{Notion 33 : Où Couper ? Le Critère du Plus Grand Saut d'Inertie}
+  \begin{conceptbox}{Règle Mathématique du Saut Maximal}
+    \footnotesize
+    Pour choisir rationnellement la hauteur de coupure sans arbitraire :
+    \begin{itemize}
+      \item On classe les fusions par ordre décroissant de hauteur : $\Delta I_1 > \Delta I_2 > \Delta I_3 \dots$
+      \item On identifie le plus grand saut d'indice : $\max (\Delta I_m - \Delta I_{m+1})$.
+      \item \textbf{Règle d'or :} On positionne la ligne de coupure immédiatement sous le nœud dont la fusion provoquerait la perte d'homogénéité la plus brutale.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Application à nos Isolats}
+    \footnotesize
+    Le saut entre la fusion finale ($\Delta I = 25.0$) et les fusions précédentes ($\Delta I = 1.0$) est de $25.0 - 1.0 = \mathbf{24.0}$.\\
+    Couper entre 1.0 et 25.0 (par exemple à $h = 8.5$) isole parfaitement $k = 2$ classes sans dénaturer la cohérence des données.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 36 : Notion 34 : Règle du Coude sur l'Inertie (Figure) ---
+\begin{frame}{Notion 34 : La Règle du Coude sur le Graphe des Sauts d'Inertie (Figure)}
+  \begin{center}
+    \includegraphics[height=0.48\textheight, keepaspectratio]{../figures/fig06_inertia_jump_elbow.png}
+  \end{center}
+  \vspace{-1mm}
+  \begin{takeawaybox}{Lecture Graphique de l'Elbow Plot}
+    \footnotesize
+    La courbe bleue montre la chute drastique de l'inertie intra-classe résiduelle à $k = 2$, matérialisée par la barre orange géante du saut d'inertie ($\Delta I = 36.8$). Au-delà de $k = 2$, rajouter des classes ne gagne que des miettes de variance.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 37 : Notion 35 : Profilage Phénotypique des Classes ---
+\begin{frame}{Notion 35 : Profilage Biologique Moyen des Classes Obtenues ($k = 2$)}
+  \begin{conceptbox}{Calcul des Centroïdes de Classes}
+    \footnotesize
+    Une fois la partition validée, on calcule la moyenne de chaque biomarqueur au sein de chaque groupe :
+    \begin{center}
+      \resizebox{0.78\linewidth}{!}{%
+      \begin{tabular}{lccc}
+        \toprule
+        \textbf{Biomarqueur Quantifié} & \textbf{Classe 1 ($n=2$)} & \textbf{Classe 2 ($n=2$)} & \textbf{Ratio de Surexpression} \\
+        \midrule
+        \textbf{Gène $G_1$ (Efflux)} & $\frac{1.0 + 2.0}{2} = \mathbf{1.50}$ & $\frac{5.0 + 6.0}{2} = \mathbf{5.50}$ & $\times 3.67$ ($+267\%$) \\
+        \textbf{Gène $G_2$ ($\beta$-lactamase)} & $\frac{2.0 + 1.0}{2} = \mathbf{1.50}$ & $\frac{5.0 + 4.0}{2} = \mathbf{4.50}$ & $\times 3.00$ ($+200\%$) \\
+        \bottomrule
+      \end{tabular}%
+      }
+    \end{center}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Synthèse Phénotypique}
+    \footnotesize
+    La Classe 2 présente une surexpression conjointe et massive des deux systèmes de défense enzymatique et membranaire par rapport à la Classe 1.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 38 : Notion 36 : Caractérisation Clinique ---
+\begin{frame}{Notion 36 : Caractérisation Clinique \& Conséquences Thérapeutiques}
+  \begin{conceptbox}{Dénomination Nosologique des Groupes}
+    \footnotesize
+    L'analyse non-supervisée permet d'établir une nomenclature clinique claire et opérationnelle :
+    \begin{itemize}
+      \item \textbf{Classe 1 : « Souches Sensibles / Vulnérables » :} Niveaux basaux d'efflux et de $\beta$-lactamase.
+      \item \textbf{Classe 2 : « Clone Épidémique Multi-Résistant » :} Phénotype hautement pathogène capable d'échapper à la fois aux céphalosporines de 3\textsuperscript{e} génération et aux fluoroquinolones.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Impact Immédiat sur la Décision Médicale}
+    \footnotesize
+    \begin{itemize}
+      \item Isolement strict des patients porteurs du clone Classe 2 en chambre à pression négative.
+      \item Adaptation immédiate de l'antibiothérapie de première ligne (bascule vers la colistine ou un nouvel inhibiteur de $\beta$-lactamase comme le ceftazidime-avibactam).
+    \end{itemize}
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{La Clustermap (Heatmap Bi-Clusterisée) en Biochimie}
+% ========================================================
+
+% --- Diapositive 39 : Notion 37 : Le Double Clustering Simultané ---
+\begin{frame}{Notion 37 : Le Double Clustering Simultané (Lignes $\times$ Colonnes)}
+  \begin{conceptbox}{Principe de la Clustermap Bivariée}
+    \footnotesize
+    La Clustermap représente le summum de l'analyse exploratoire en omique en croisant deux CAH indépendantes sur la même matrice :
+    \begin{enumerate}
+      \item \textbf{CAH sur les Lignes (Échantillons / Patients) :} Réorganise l'ordre des patients pour rassembler les phénotypes similaires.
+      \item \textbf{CAH sur les Colonnes (Gènes / Protéines / Métabolites) :} Réorganise l'ordre des variables pour regrouper les molécules corégulées.
+    \end{enumerate}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Effet Visuel : L'Émergence de Blocs Colorés}
+    \footnotesize
+    Le réordonnancement simultané des deux axes transforme un nuage de pixels bruité en une mosaïque structurée de \textbf{blocs homogènes contrastés} (signatures moléculaires).
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 40 : Notion 38 : Dendrogramme des Biomarqueurs ---
+\begin{frame}{Notion 38 : Rôle du Dendrogramme Supérieur (Colonnes : Biomarqueurs)}
+  \begin{conceptbox}{Identification des Modules Fonctionnels Co-Activés}
+    \footnotesize
+    L'arbre horizontal placé au sommet de la carte classifie les biomarqueurs en fonction de leur corrélation mutuelle :
+    \begin{itemize}
+      \item Deux enzymes catalysant des étapes successives d'une même voie métabolique s'agrègent immédiatement en un sous-arbre commun.
+      \item Permet d'isoler des grappes fonctionnelles de gènes sans connaître préalablement la physiologie de la bactérie.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Exemple Concret}
+    \footnotesize
+    Les cytokines pro-inflammatoires (IL-6, TNF-$\alpha$, CRP) forment un cluster compact de colonnes, tandis que les enzymes antioxydantes (SOD, Catalase, GPx) constituent un second cluster bien distinct.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 41 : Notion 39 : Dendrogramme des Échantillons ---
+\begin{frame}{Notion 39 : Rôle du Dendrogramme Latéral (Lignes : Échantillons)}
+  \begin{conceptbox}{Stratification Clinique des Patients}
+    \footnotesize
+    L'arbre vertical placé à gauche de la carte classe les individus selon la globalité de leur profil biologique :
+    \begin{itemize}
+      \item Les témoins sains se regroupent naturellement dans une branche homogène.
+      \item Les patients sévères ou résistants forment une ou plusieurs branches pathologiques distinctes.
+      \item Permet de repérer instantanément des patients « atypiques » (répondeurs exceptionnels ou faux négatifs).
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{takeawaybox}{Double Information Intégrée}
+    \footnotesize
+    Chaque case colorée de la matrice se trouve désormais à l'intersection d'un \textbf{module moléculaire défini} et d'un \textbf{sous-groupe de patients caractérisé}.
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 42 : Notion 40 : La Clustermap en Action (Figure) ---
+\begin{frame}{Notion 40 : Visualisation Complète : La Clustermap en Action (Figure)}
+  \begin{center}
+    \includegraphics[height=0.45\textheight, keepaspectratio]{../figures/fig06_clustermap_heatmap.png}
+  \end{center}
+  \vspace{-1mm}
+  \begin{takeawaybox}{Clé de Lecture Visuelle}
+    \footnotesize
+    \begin{itemize}
+      \item \textbf{Rouge vif :} Forte surexpression ($Z$-score $> +1.0$).
+      \item \textbf{Bleu sombre :} Forte sous-expression ou répression ($Z$-score $< -1.0$).
+      \item Les patients infectés (Pat\_1 à Pat\_8) affichent un bloc rouge massif pour les marqueurs d'inflammation.
+    \end{itemize}
+  \end{takeawaybox}
+\end{frame}
+
+% --- Diapositive 43 : Notion 41 : Extraction de Signatures ---
+\begin{frame}{Notion 41 : Extraction de Signatures Moléculaires Pathologiques}
+  \begin{conceptbox}{Définition d'une Signature en Biochimie Médicale}
+    \footnotesize
+    Une signature moléculaire est la combinaison minimale de biomarqueurs dont l'expression conjointe caractérise de façon univoque une pathologie ou un stade évolutif :
+    \begin{itemize}
+      \item Dans la Clustermap, elle correspond à l'intersection d'un cluster de lignes et d'un cluster de colonnes.
+      \item Évite de doser des centaines de paramètres superflus en isolant les molécules sentinelles clés.
+    \end{itemize}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Validation Biologique}
+    \footnotesize
+    Si un nouveau patient inconnu arrive et présente la coloration caractéristique de la signature rouge, il est classé avec une très forte certitude dans le groupe pathologique sans nécessiter de confirmation invasive.
+  \end{biobox}
+\end{frame}
+
+% ========================================================
+\section{Pièges Méthodologiques, Validation \& Synthèse}
+% ========================================================
+
+% --- Diapositive 44 : Notion 42 : Piège 1 : Non-Standardisation ---
+\begin{frame}{Notion 42 : Piège Méthodologique 1 : L'Omission du Centrage-Réduction}
+  \begin{warnbox}{Le Biais d'Échelle Absolue}
+    \footnotesize
+    \begin{itemize}
+      \item Réaliser une CAH sur des concentrations brutes (mg/L vs $\mu$g/L vs UI/L) sans standardisation préalable fausse totalement les distances euclidiennes.
+      \item La variable ayant les valeurs numériques les plus massives dicte à 100\% les fusions, reléguant des marqueurs cellulaires ultra-sensibles au rang de bruit nul.
+    \end{itemize}
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{conceptbox}{La Bonne Pratique Obligatoire}
+    \footnotesize
+    Toujours appliquer la transformation $Z$-score ($z = \frac{x - \bar{x}}{s}$) sur l'ensemble des variables avant de calculer la matrice de dissimilarité $D_0$.
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 45 : Notion 43 : Piège 2 : Forcer une Partition Artificielle ---
+\begin{frame}{Notion 43 : Piège Méthodologique 2 : Forcer une Partition Sans Structure}
+  \begin{warnbox}{L'Algorithme Trouvera Toujours des Groupes, Même dans le Hasard !}
+    \footnotesize
+    \begin{itemize}
+      \item L'algorithme de CAH est purement déterministe : même si on lui injecte du pur bruit gaussien aléatoire, il construira quand même un dendrogramme complet !
+      \item \textbf{Erreur classique :} Couper arbitrairement l'arbre en 3 classes alors que les branches verticales sont minuscules et de longueurs équivalentes.
+    \end{itemize}
+  \end{warnbox}
+  \vspace{1mm}
+  \begin{conceptbox}{Critère de Réfutation}
+    \footnotesize
+    S'il n'existe aucun saut d'inertie majeur sur le graphique de coude, la population biologique est continue et homogène : il n'y a pas de sous-types distincts.
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 46 : Notion 44 : Validation Post-Hoc des Classes ---
+\begin{frame}{Notion 44 : Validation Statistique Post-Hoc des Classes Découvertes}
+  \begin{conceptbox}{Validation Croisée Biologique}
+    \footnotesize
+    Une partition obtenue par CAH ne doit jamais être considérée comme une vérité absolue sans confirmation statistique indépendante :
+    \begin{enumerate}
+      \item \textbf{ANOVA ou Test de Student :} Comparer les moyennes des biomarqueurs entre les clusters formés pour vérifier que les différences sont statistiquement significatives ($p < 0.001$).
+      \item \textbf{Reproductibilité sur Cohorte Indépendante :} Vérifier que les mêmes clusters émergent sur une nouvelle série d'échantillons prélevés dans un autre hôpital.
+      \item \textbf{Courbes de Survie (Kaplan-Meier) :} Vérifier si les clusters identifiés présentent des pronostics de survie cliniquement divergents.
+    \end{enumerate}
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 47 : Notion 45 : Comparatif ACP vs CAH ---
+\begin{frame}{Notion 45 : Tableau Comparatif : ACP vs CAH}
+  \begin{conceptbox}{Deux Approches Complémentaires en Biostatistiques}
+    \footnotesize
+    \begin{center}
+      \resizebox{\linewidth}{!}{%
+      \begin{tabular}{lp{6.2cm}p{6.2cm}}
+        \toprule
+        \textbf{Caractéristique} & \textbf{Analyse en Composantes Principales (ACP)} & \textbf{Classification Hiérarchique (CAH)} \\
+        \midrule
+        \textbf{Nature de la Réduction} & Réduction d'espace continu (projette les $p$ dimensions sur quelques axes orthogonaux PC1, PC2). & Réduction discrète (regroupe les $N$ échantillons en $k$ classes discontinues). \\
+        \midrule
+        \textbf{Sortie Visuelle Principale} & Plan factoriel continu \& Cercle des corrélations. & Arbre généalogique hiérarchique (Dendrogramme) \& Heatmap. \\
+        \midrule
+        \textbf{Hypothèse Sous-Jacente} & Recherche de gradients continus et de trajectoires linéaires globales. & Recherche de sous-populations isolées, discontinues et compactes. \\
+        \midrule
+        \textbf{Synergie Recommandée} & \multicolumn{2}{c}{\cellcolor{BioGreen!15}\textbf{Pratique optimale : Réaliser d'abord une ACP pour débruiter, puis classifier sur les scores factoriels !}} \\
+        \bottomrule
+      \end{tabular}%
+      }
+    \end{center}
+  \end{conceptbox}
+\end{frame}
+
+% --- Diapositive 48 : Notion 46 : Synthèse Globale ---
+\begin{frame}{Notion 46 : Synthèse Méthodologique Globale du Chapitre VI}
+  \begin{conceptbox}{Le Pipeline Idéal de la Classification en Biochimie}
+    \footnotesize
+    \begin{enumerate}
+      \item \textbf{Standardisation :} Centrage-réduction obligatoire ($Z$-scores) sur toutes les variables quantitatives.
+      \item \textbf{Matrice de Distance :} Calcul des distances euclidiennes (ou corrélation pour les cinétiques).
+      \item \textbf{Agrégation de Ward :} Minimisation de l'accroissement d'inertie intra-classe ($\Delta I$).
+      \item \textbf{Choix de $k$ :} Analyse du plus grand saut d'inertie sur le dendrogramme ou le graphe de coude.
+      \item \textbf{Clustermap :} Croisement bivarié lignes/colonnes pour extraire la signature moléculaire.
+    \end{enumerate}
+  \end{conceptbox}
+  \vspace{1mm}
+  \begin{biobox}{Objectif Ultime}
+    \footnotesize
+    Transformer des millions de données moléculaires brutes en une nomenclature clinique limpide, personnalisée et directement actionnable pour la prise en charge des patients.
+  \end{biobox}
+\end{frame}
+
+% --- Diapositive 49 : Clôture ---
 \begin{frame}[plain]
   \begin{center}
-    \vspace{1.8cm}
-    {\Huge\color{BioNavy}\textbf{Fin du Chapitre VI}}\\[0.8cm]
-    {\large Prochaine étape : Interprétation d'une Analyse Expérimentale}\\[1.2cm]
-    \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}\\
+    \vspace{1.5cm}
+    {\Huge\color{BioNavy}\textbf{Fin du Chapitre VI}}\\[0.6cm]
+    {\large\color{BioDark}Classification Ascendante Hiérarchique (CAH) \& Dendrogrammes}\\[1.0cm]
+    \textbf{Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)}\\
     \small Faculté des Sciences --- Département de Biologie\\
     \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}
   \end{center}

@@ -40,10 +40,10 @@ Le public est constitué d'étudiants en **Master 2 Biochimie / Biologie sans fo
 
 ---
 
-### 4. 🔄 Alignement Tripartite Obligatoire (Cours ↔ TD ↔ TP)
-Le cours, les travaux dirigés et les travaux pratiques forment un bloc pédagogique indivisible :
-- **Règle de synchronisation** : Dès qu'un chapitre de cours est enrichi ou modifié, le fascicule de TD (énoncé + corrigé dans `travaux_diriges/sources/`) et le TP Python interactif (notebook Jupyter dans `travaux_pratiques/`) doivent être immédiatement révisés pour s'aligner sur les mêmes concepts, notations et jeux de données.
-- **Continuité des données** : Les variables biologiques introduites dans le cours Beamer (ex: MDA hépatique, insuline, activité enzymatique) doivent être réinvesties dans les calculs de TD et les scripts Python de TP.
+### 4. 🔄 Alignement Pédagogique (Cours ↔ TD) & Suspension Temporaire des TP
+- **Instruction stricte (en vigueur) :** Pour le moment, **ignorer totalement les Travaux Pratiques (TP / notebooks Jupyter)**. Ne pas modifier, créer ni synchroniser de fichiers dans `travaux_pratiques/`.
+- L'alignement et la synchronisation pédagogique portent pour l'instant exclusivement sur le binôme **Cours Beamer ↔ Fiches TD** (énoncés et corrigés dans `travaux_diriges/sources/`).
+- **Continuité des données :** Les variables biologiques introduites dans le cours Beamer (ex: gamme Bradford, MDA hépatique, insuline, etc.) doivent être rigoureusement réinvesties dans les énoncés et corrigés de TD.
 
 ---
 

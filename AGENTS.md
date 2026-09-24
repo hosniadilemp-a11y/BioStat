@@ -19,8 +19,9 @@ Ce fichier définit les directives obligatoires pour tout agent ou modèle IA in
    - Accompagner chaque notion d'un exemple concret de biochimie/biologie (ex : ELISA, spectrophotométrie, qPCR, peroxydation lipidique MDA, modèles animaux).
    - Expliquer la signification biologique du paramètre pour des étudiants en Master 2 sans formation informatique.
 
-4. **Alignement Tripartite (Cours ↔ TD ↔ TP)** :
-   - Toute modification ou extension d'un chapitre de cours doit être répercutée dans le TD correspondant (`travaux_diriges/sources/`) et le TP Jupyter correspondant (`travaux_pratiques/`).
+4. **Alignement Pédagogique (Cours ↔ TD) & Suspension Temporaire des TP** :
+   - **Instruction temporaire :** Ignorer totalement les Travaux Pratiques (TP / notebooks Jupyter) pour le moment. Ne pas modifier, créer ni synchroniser de fichiers dans `travaux_pratiques/`.
+   - La synchronisation et l'alignement portent pour l'instant exclusivement sur le binôme **Cours Beamer ↔ Fiches TD** (`travaux_diriges/sources/`).
 
 5. **Tableau de Bord Enseignant (`admin/gestion_cours.py`)** :
    - Serveur Python standard, multithreadé (`ThreadingHTTPServer`), avec `errors="replace"` sur les subprocess et sauvegarde directe dans `website/downloads/`.

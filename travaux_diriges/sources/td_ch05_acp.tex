@@ -40,7 +40,7 @@ Dans une étude omique portant sur $p = 5$ biomarqueurs de stress oxydatif et d'
 \begin{exercicebox}{Exercice 3 : Interprétation du Cercle des Corrélations \& Métriques}
 Sur le cercle des corrélations du premier plan factoriel (PC1, PC2), les coordonnées factorielles (qui représentent les corrélations linéaires $r(X_j, \text{PC}_k)$) des 5 biomarqueurs sont :
 \begin{center}
-  \small
+  \resizebox{\linewidth}{!}{%
   \begin{tabular}{lccccc}
     \toprule
     \textbf{Biomarqueur} & \textbf{PC1 ($F_1$)} & \textbf{PC2 ($F_2$)} & \textbf{$\cos^2(\text{PC1})$} & \textbf{$\cos^2(\text{PC2})$} & \textbf{Qualité Globale ($\cos^2_{1+2}$)} \\
@@ -51,7 +51,8 @@ Sur le cercle des corrélations du premier plan factoriel (PC1, PC2), les coordo
     \textbf{Catalase (Antioxydant)}    & $-0.80$ & $-0.45$ & ? & ? & ? \\
     \textbf{SOD (Antioxydant)}         & $-0.10$ & $+0.85$ & ? & ? & ? \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}%
+  }
 \end{center}
 
 \textbf{Questions :}
