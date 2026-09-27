@@ -21,6 +21,18 @@ Ce chapitre fournit au futur biochimiste la boîte à outils méthodologique pou
 
 Face à un jeu de données expérimental, le choix du test statistique obéit à un algorithme décisionnel strict :
 
+\begin{figurebox}{Arbre Décisionnel des Tests Statistiques en Biologie}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig00_decision_tree_tests.png}
+\end{center}
+\textbf{Cheminement méthodologique pour sélectionner le bon test :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Type de variable :} Déterminer si la réponse est quantitative continue (absorbance, concentration, poids) ou qualitative discrète (survie, présence/absence).
+  \item \textbf{Vérification des postulats :} Tester la normalité (Shapiro-Wilk) et l'égalité des variances (Levene/Bartlett). Si $p < 0.05$ ou effectifs très réduits ($n < 6$), basculer impérativement vers les tests non paramétriques (Wilcoxon, Mann-Whitney, Kruskal-Wallis).
+  \item \textbf{Structure expérimentale :} Identifier si les mesures sont indépendantes (lots séparés) ou appariées/répétées (même animal suivi dans le temps).
+\end{itemize}
+\end{figurebox}
+
 \begin{center}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{llll}
@@ -60,6 +72,17 @@ L'effectif nécessaire par groupe pour $\alpha = 0.05$ et une puissance de $80\%
 \end{equation*}
 \end{conceptbox}
 
+\begin{figurebox}{Courbes de Puissance Statistique ($1 - \beta$) vs Taille d'Échantillon ($N$)}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig07_power_sample_size_curve.png}
+\end{center}
+\textbf{Analyse des profils de puissance et du seuil cible de 80\% :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Impact de la taille d'effet ($d$) :} Pour un effet modeste ($d = 0.2$), même $N = 50$ sujets ne suffit pas à atteindre 80\% de puissance. Pour un effet majeur ($d = 0.8$), $N = 25$ suffit amplement.
+  \item \textbf{Danger des petits effectifs ($N \le 5$) :} Quelle que soit la puissance théorique, travailler avec des effectifs minuscules condamne l'étude à un risque massif de faux négatif ($\beta > 70\%$).
+\end{itemize}
+\end{figurebox}
+
 \begin{warnbox}{Le Piège des Petits Échantillons \& la « Malédiction du Vainqueur »}
 Avec $n = 3$ souris par lot, la puissance statistique est souvent inférieure à $20\%$. Dans ce régime de sous-puissance :
 \begin{enumerate}
@@ -76,14 +99,28 @@ Lorsqu'un chercheur teste simultanément $m = 20$ gènes ou métabolites sans co
 \end{equation*}
 Il y a plus de 64\% de chances de déclarer à tort au moins une variable significative par pur hasard !
 
-\begin{itemize}[leftmargin=*, label=\faAngleRight]
-  \item \textbf{Correction de Bonferroni :} Seuil sévère $\alpha' = \alpha / m$. Élimine tous les faux positifs mais détruit la puissance statistique (trop conservatrice en omique).
-  \item \textbf{Procédure FDR de Benjamini-Hochberg :} Contrôle la proportion de fausses découvertes parmi les variables rejetées ($Q = 5\%$). C'est le standard des puces à ADN et de la spectrométrie de masse.
-\end{itemize}
+\subsection{L'Algorithme Pas-à-Pas de Benjamini-Hochberg (FDR)}
+\begin{enumerate}[leftmargin=*, label=\faCalculator\ \textbf{\arabic*.}]
+  \item Classer les $m$ valeurs $p$ brutes par ordre croissant : $p_{(1)} \le p_{(2)} \le \dots \le p_{(m)}$.
+  \item Pour chaque rang $i \in \{1, \dots, m\}$, calculer le seuil critique proportionnel : $q_i = \frac{i}{m} \times Q$ (où $Q$ est le taux de fausses découvertes toléré, souvent $Q = 0.05$).
+  \item Identifier le plus grand rang $k$ tel que $p_{(k)} \le \frac{k}{m} \times Q$.
+  \item Rejeter toutes les hypothèses nulles pour les rangs $1, 2, \dots, k$ (déclarées biologiquement significatives).
+\end{enumerate}
 
 \section{Transparence Graphique : L'Abandon des Barplots « Dynamite »}
 
 Pendant des décennies, la biologie a représenté les données quantitatives sous forme d'histogrammes en barres pleines surmontées d'un écart-type.
+
+\begin{figurebox}{Transparence Graphique : Barplot Dynamite vs Boxplot de Tukey + Jitter}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig07_barplot_vs_boxplot_transparency.png}
+\end{center}
+\textbf{Comparaison sans appel entre les deux représentations :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Barplot « Dynamite » (Gauche) :} Donne une illusion trompeuse d'homogénéité. Deux populations aux distributions diamétralement opposées (l'une normale, l'autre bimodale avec deux sous-groupes cliniques) produisent exactement le même barplot !
+  \item \textbf{Boxplot + Jitter Plot (Droite) :} Révèle instantanément la véritable structure des données : la médiane, l'écart interquartile, les valeurs extrêmes et la présence de deux sous-populations distinctes de patients répondeurs.
+\end{itemize}
+\end{figurebox}
 
 \begin{takeawaybox}{Règle de Publication : Le Boxplot Enrichi des Points Individuels}
 Les revues majeures (\textit{Nature, Cell, PLOS}) interdisent formellement les barplots pour les petits effectifs ($n < 30$) car une barre pleine :

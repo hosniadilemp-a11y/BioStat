@@ -86,6 +86,13 @@ On divise par $n-1$ et non par $n$ car la moyenne de l'échantillon $\bar{X}$ es
 \end{center}
 \end{warnbox}
 
+\begin{figurebox}{Distinction Visuelle Fondamentale : $SD$ vs $SEM$}
+\begin{center}
+  \includegraphics[width=0.84\linewidth]{../../sources/figures/fig00_distributions_sd_sem.png}
+\end{center}
+\textbf{Interprétation pour le biologiste :} Le panneau de gauche montre la dispersion biologique intrinsèque ($SD$) qui caractérise la variabilité naturelle entre individus d'une même espèce. Le panneau de droite montre la distribution d'échantillonnage de la moyenne ($SEM = SD/\sqrt{n}$) : plus la taille d'échantillon $n$ croît, plus l'incertitude sur la moyenne s'amenuise. Dans les articles scientifiques, il est impératif d'indiquer explicitement si les barres d'erreur représentent $\bar{X} \pm SD$ ou $\bar{X} \pm SEM$.
+\end{figurebox}
+
 \subsection{Anatomie du Boxplot de Tukey (Boîte à Moustaches)}
 Pour visualiser la distribution sans hypothèse de normalité :
 \begin{itemize}[leftmargin=*, label=\faAngleRight]
@@ -94,6 +101,13 @@ Pour visualiser la distribution sans hypothèse de normalité :
   \item \textbf{Les Moustaches :} S'étendent au maximum jusqu'à $Q_1 - 1.5 \times IQR$ et $Q_3 + 1.5 \times IQR$.
   \item \textbf{Les Outliers (Points isolés) :} Toute observation au-delà des moustaches est considérée comme valeur suspecte / atypique.
 \end{itemize}
+
+\begin{figurebox}{Lecture Anatomique d'un Boxplot de Tukey \& Détection des Outliers}
+\begin{center}
+  \includegraphics[width=0.84\linewidth]{../../sources/figures/fig00_boxplots_outliers_tukey.png}
+\end{center}
+\textbf{Règle de laboratoire :} Les points individuels situés au-delà des clôtures de Tukey ($1.5 \times IQR$) sont des candidats anomalies (erreur de pipetage, bulle d'air dans la cuve optique, ou variant génétique exceptionnel). Ils doivent être examinés avant de lancer un test $t$ ou une ANOVA.
+\end{figurebox}
 
 \section{Probabilités \& Diagnostic Biologique (Sensibilité, Spécificité \& Bayes)}
 
@@ -122,6 +136,13 @@ VPP = P(M^+ | T^+) = \frac{P(T^+ | M^+) \cdot P(M^+)}{P(T^+)} = \frac{Se \cdot \
 \end{equation*}
 \textbf{Le Paradoxe Épidémiologique :} Même avec un test excellent ($Se=99\%, Sp=95\%$), si une maladie est rare ($\text{Prévalence} = 0.1\% = 0.001$), la majorité des tests positifs seront des faux positifs ($VPP \approx 2\%$) !
 \end{conceptbox}
+
+\begin{figurebox}{Arbre de Décision Bayésien \& Impact de la Prévalence sur le Diagnostic}
+\begin{center}
+  \includegraphics[width=0.84\linewidth]{../../sources/figures/fig00_bayes_diagnostic_elisa.png}
+\end{center}
+\textbf{Explication clinique :} Cette arborescence démontre visuellement pourquoi un test de laboratoire ne s'interprète jamais isolément de la prévalence de la pathologie dans la population cible.
+\end{figurebox}
 
 \section{La Loi Normale \& le Théorème Central Limite (TCL)}
 
@@ -159,6 +180,13 @@ Tester une hypothèse scientifique suit un raisonnement par l'absurde en 5 étap
     \item Si $p \ge 0.05$ (ou $|t_{obs}| \le t_{crit}$) : Non-rejet de $H_0$ $\rightarrow$ Les données ne permettent pas de prouver un effet significatif.
   \end{itemize}
 \end{enumerate}
+
+\begin{figurebox}{Les Deux Risques du Test d'Hypothèse ($\alpha$ vs $\beta$) \& Zones Critiques}
+\begin{center}
+  \includegraphics[width=0.84\linewidth]{../../sources/figures/fig00_hypothesis_testing_alpha_beta.png}
+\end{center}
+\textbf{Signification biologique des surfaces :} La distribution sous $H_0$ délimite la zone critique de rejet au seuil $\alpha = 5\%$ (en rouge). La distribution sous $H_1$ illustre la probabilité d'erreur de seconde espèce $\beta$ (en bleu, manquer une découverte réelle). La puissance du test $1-\beta$ représente la probabilité de rejeter $H_0$ à raison.
+\end{figurebox}
 
 \section{Grand Exemple Numérique : Le Test $t$ de Student}
 

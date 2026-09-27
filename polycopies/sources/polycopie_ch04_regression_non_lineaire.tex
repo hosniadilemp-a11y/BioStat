@@ -51,20 +51,39 @@ La transformation en double réciproque induit une \textbf{distorsion dramatique
 $\implies$ Les revues scientifiques internationales exigent aujourd'hui l'ajustement direct non linéaire par Moindres Carrés Ordinaires (NLLS).
 \end{warnbox}
 
+\begin{figurebox}{Comparaison Visuelle : Ajustement Direct NLLS vs Linéarisation Lineweaver-Burk}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig04_nlls_vs_lineweaver_burk.png}
+\end{center}
+\textbf{Analyse comparative des deux approches :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Graphique de Gauche (Ajustement Direct NLLS) :} L'hyperbole de Michaelis-Menten est ajustée directement sur les données réelles $[S]$ vs $v$. Les barres d'erreur restent uniformes et les bandes de confiance à 95\% reflètent la véritable précision expérimentale sans altération.
+  \item \textbf{Graphique de Droite (Double Réciproque de Lineweaver-Burk) :} En inversant $1/[S]$ et $1/v$, les barres d'erreur minuscules à forte concentration sont comprimées près de l'origine, tandis que les barres d'erreur à faible concentration sont disproportionnellement étirées. Une infime imprécision sur le premier point fait basculer toute la droite, faussant lourdement $V_{\max}$ et $K_m$.
+\end{itemize}
+\end{figurebox}
+
 \section{Algorithme de Levenberg-Marquardt \& Inférence NLLS}
 
-L'algorithme NLLS cherche le vecteur de paramètres $\hat{\theta} = (\hat{V}_{\max}, \hat{K}_m)$ qui minimise la somme des carrés des résidus :
+L'algorithme NLLS cherche le vecteur de paramètres $\hat{\theta} = (\hat{V}_{\max}, \hat{K}_m)^T$ qui minimise la somme des carrés des résidus :
 \begin{equation*}
-  SS_{\text{res}} = \sum_{i=1}^n \left( v_i - f([S]_i; \theta) \right)^2
+  SS_{\text{res}}(\theta) = \sum_{i=1}^n \left( v_i - f([S]_i; \theta) \right)^2
 \end{equation*}
 
-L'algorithme de \textbf{Levenberg-Marquardt} est un standard d'ingénierie qui combine :
-\begin{enumerate}
-  \item La \textbf{descente de gradient} (robuste lorsque l'estimation initiale est éloignée du minimum).
-  \item La \textbf{méthode de Gauss-Newton} (convergence quadratique ultra-rapide près de la solution).
+L'algorithme de \textbf{Levenberg-Marquardt (LM)} est un standard d'ingénierie qui résout le système itératif :
+\begin{equation*}
+  \left( J^T J + \lambda \, \text{diag}(J^T J) \right) \Delta \theta = J^T (y - \hat{y})
+\end{equation*}
+où $J$ est la matrice Jacobienne des dérivées partielles ($\partial f / \partial \theta_j$) et $\lambda$ le paramètre d'amortissement :
+\begin{enumerate}[leftmargin=*, label=\faCheck\ \textbf{\arabic*.}]
+  \item \textbf{Si $\lambda$ est grand :} L'algorithme se comporte comme une \textbf{descente de gradient} pure, idéale pour s'approcher du minimum global même avec des estimations initiales grossières.
+  \item \textbf{Si $\lambda \rightarrow 0$ :} L'algorithme bascule vers la méthode de \textbf{Gauss-Newton}, assurant une convergence quadratique ultra-rapide au voisinage immédiat de la solution optimale.
 \end{enumerate}
 
-L'inversion de la matrice d'information de Fisher fournit les erreurs-types asymptotiques $SE(V_{\max})$ et $SE(K_m)$, permettant de dresser les intervalles de confiance à 95\% :
+La matrice de covariance asymptotique des paramètres s'obtient par l'inverse de la matrice d'information de Fisher :
+\begin{equation*}
+  \widehat{\text{Cov}}(\hat{\theta}) = s^2 \cdot (J^T J)^{-1} \quad \text{avec} \quad s^2 = \frac{SS_{\text{res}}}{n - p}
+\end{equation*}
+Les racines carrées des éléments diagonaux fournissent les erreurs-types asymptotiques $SE(V_{\max})$ et $SE(K_m)$, permettant de dresser les intervalles de confiance à 95\% :
 \begin{equation*}
   IC_{95\%}(K_m) = \left[ \hat{K}_m \pm t_{0.05}(n - 2) \cdot SE(K_m) \right]
 \end{equation*}
@@ -80,6 +99,30 @@ Pour les enzymes oligomériques à sous-unités multiples (ex : Phosphofructokin
   \item \textbf{$n_H = 1$ :} Cas limite michaelien (absence d'allostérie).
   \item \textbf{$n_H < 1$ (Coopérativité négative) :} La fixation du premier ligand défavorise les sites voisins.
 \end{itemize}
+
+\section{Modèle Logistique à 4 Paramètres (4PL) en Immuno-Analyse (ELISA)}
+
+Dans les dosages immunologiques de type ELISA, ECLIA ou Luminex, la liaison anticorps-antigène suit une réponse sigmoïde en échelle logarithmique de concentration, modélisée par l'équation \textbf{4PL (Four-Parameter Logistic)} :
+\begin{equation*}
+  Y = D + \frac{A - D}{1 + \left( \frac{X}{C} \right)^B}
+\end{equation*}
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item \textbf{$A$ (Asymptote inférieure / Bruit de fond) :} Signal optique théorique en l'absence totale d'analyte ($X = 0$).
+  \item \textbf{$D$ (Asymptote supérieure / Saturation) :} Signal optique maximal à saturation complète des puits par l'anticorps.
+  \item \textbf{$C$ (Point d'inflexion / $EC_{50}$) :} Concentration d'analyte produisant $50\%$ du signal spécifique utile ($Y = \frac{A+D}{2}$).
+  \item \textbf{$B$ (Pente de Hill / Facteur de forme) :} Pente relative au point d'inflexion ; détermine la dynamique de la plage utile de mesure.
+\end{itemize}
+
+\begin{figurebox}{Courbes Sigmoïdes : Modèle 4PL (ELISA) \& Allostérie de Hill}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig04_sigmoidal_4pl_elisa.png}
+\end{center}
+\textbf{Analyse des profils sigmoïdes non linéaires :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Modèle 4PL d'ELISA (Gauche) :} La zone centrale quasi-rectiligne entourant le point $C = EC_{50}$ définit la \textbf{plage dynamique de dosage}. En dehors de cette zone (plateaux $A$ et $D$), la méthode perd toute sensibilité : une grande variation de concentration n'entraîne quasiment aucune modification du signal optique.
+  \item \textbf{Modèle de Hill (Droite) :} Comparaison des profils pour $n_H = 0.5$, $n_H = 1$ (hyperbole michaelienne), et $n_H = 2$ ou $4$. Plus le coefficient de Hill $n_H$ est élevé, plus la courbe prend un aspect vertical abrupt (« interrupteur moléculaire »).
+\end{itemize}
+\end{figurebox}
 
 \section{Exercices d'Application \& Solutions}
 

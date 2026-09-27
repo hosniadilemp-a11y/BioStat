@@ -36,6 +36,19 @@ Chaque niveau de B est combiné avec chaque niveau de A. & Les niveaux de B sont
 \end{center}
 \end{conceptbox}
 
+\begin{figurebox}{Architecture Arborescente d'un Plan Hiérarchisé ($B \subset A$)}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig02_nested_design_tree.png}
+\end{center}
+\textbf{Analyse du schéma d'emboîtement expérimental :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Niveau 1 (Facteur Principal A, fixé) :} Les deux conditions ou souches expérimentales ($A_1$ et $A_2$).
+  \item \textbf{Niveau 2 (Facteur Emboîté B, aléatoire) :} Les unités biologiques indépendantes (bioréacteurs, animaux, cuves). Remarquez que les cuves $B_1, B_2, B_3$ n'existent que sous la souche 1, tandis que les cuves $B_4, B_5, B_6$ n'existent que sous la souche 2. Il n'y a \textbf{aucun croisement possible}.
+  \item \textbf{Niveau 3 (Sous-échantillons / Aliquotes) :} Les répétitions techniques au sein de chaque cuve ($R_1, R_2, R_3$). Elles mesurent uniquement la précision instrumentale (erreur de mesure).
+  \item \textbf{Pourquoi tester $A$ par rapport à $B(A)$ ?} La variabilité entre les moyennes des souches ($\bar{x}_{1\cdot\cdot}$ et $\bar{x}_{2\cdot\cdot}$) doit surpasser les fluctuations biologiques aléatoires d'une cuve à l'autre au sein de la même souche ($MS_{B(A)}$). Si l'on comparait $MS_A$ à l'erreur de pipetage $MS_R$, on risquerait de déclarer une souche supérieure alors qu'il ne s'agit que d'un simple effet de cuve non reproductible.
+\end{itemize}
+\end{figurebox}
+
 \section{Modèle Linéaire d'Emboîtement \& Décomposition de la Variance}
 
 \subsection{Équation du Modèle}
@@ -121,6 +134,41 @@ Dans une ANOVA standard, on divise toujours par le carré moyen résiduel $MS_R$
 \end{tabular}%
 }
 \end{center}
+
+\subsection{Justification Théorique : Espérances des Carrés Moyens $E(MS)$}
+
+La théorie des modèles mixtes établit rigoureusement les espérances mathématiques des carrés moyens :
+\begin{align*}
+  E(MS_R) &= \sigma_R^2 \quad \text{(Variance pure de l'appareil de mesure / pipetage)} \\[1mm]
+  E(MS_{B(A)}) &= \sigma_R^2 + n \cdot \sigma_{B(A)}^2 \quad \text{(Variance technique} + n \times \text{Variance biologique inter-cuves)} \\[1mm]
+  E(MS_A) &= \sigma_R^2 + n \cdot \sigma_{B(A)}^2 + b \cdot n \cdot \frac{\sum \alpha_i^2}{a - 1} \quad \text{(Composantes résiduelle, cuve et effet de souche)}
+\end{align*}
+
+\begin{conceptbox}{Démonstration du Dénominateur de $F_A$}
+Sous l'hypothèse nulle d'absence d'effet du facteur principal ($H_0 : \alpha_1 = \dots = \alpha_a = 0$) :
+\begin{equation*}
+  E(MS_A) = \sigma_R^2 + n \cdot \sigma_{B(A)}^2 = E(MS_{B(A)})
+\end{equation*}
+Le rapport $\frac{MS_A}{MS_{B(A)}}$ est donc centré sur 1 et suit rigoureusement une loi de Fisher $\mathcal{F}(a-1, \, a(b-1))$.\\
+Si un expérimentateur commettait l'erreur de diviser $MS_A$ par $MS_R$, son ratio sous $H_0$ vaudrait :
+\begin{equation*}
+  \frac{E(MS_A)}{E(MS_R)} = \frac{\sigma_R^2 + n \sigma_{B(A)}^2}{\sigma_R^2} = 1 + n \frac{\sigma_{B(A)}^2}{\sigma_R^2} > 1
+\end{equation*}
+Le test $F$ serait artificiellement gonflé dès qu'il existe une variabilité biologique entre les cuves ($\sigma_{B(A)}^2 > 0$), conduisant à une explosion incontrôlée des faux positifs !
+\end{conceptbox}
+
+\begin{biobox}{Décomposition des Composantes de Variance \& Contrôle Qualité}
+L'ANOVA hiérarchisée permet d'estimer quantitativement chaque source de variance biologique et technique :
+\begin{align*}
+  \hat{\sigma}_R^2 &= MS_R \quad \text{(Variance technique de répétabilité)} \\[1mm]
+  \hat{\sigma}_{B(A)}^2 &= \frac{MS_{B(A)} - MS_R}{n} \quad \text{(Variance biologique inter-cuves nette)}
+\end{align*}
+La proportion de variance due aux fluctuations de fermentation (cuves) par rapport à la variance non contrôlée totale vaut :
+\begin{equation*}
+  \% \text{ Variance Biologique} = \frac{\hat{\sigma}_{B(A)}^2}{\hat{\sigma}_{B(A)}^2 + \hat{\sigma}_R^2} \times 100
+\end{equation*}
+Si cette fraction dépasse $50\%$, le biologiste doit prioritairement homogénéiser ses conditions d'aération et de température dans les cuves plutôt que d'acheter un lecteur de microplaques plus précis.
+\end{biobox}
 
 \section{Exemple Numérique : Bioproduction en Bioréacteurs}
 

@@ -88,9 +88,40 @@ L'intervalle de confiance à $95\%$ est :
   IC_{95\%}(\hat{x}_0) = \left[ \hat{x}_0 \pm t_{0.05}(n - 2) \cdot s_{\hat{x}_0} \right]
 \end{equation*}
 
-\begin{warnbox}{Le Piège de l'Extrapolation}
-L'intervalle de Mandel s'élargit en forme d'hyperbole dès qu'on s'éloigne du centre de gravité $\bar{y}$. Ne jamais prédire en dehors de l'intervalle étalonné $[x_{\min}, x_{\max}]$ !
-\end{warnbox}
+\begin{figurebox}{Gamme d'Étalonnage de Bradford \& Fuseau Hyperbolique de Mandel}
+\begin{center}
+\includegraphics[width=0.84\linewidth]{../../sources/figures/fig03_bradford_calibration.png}
+\end{center}
+\textbf{Analyse du graphique d'étalonnage spectrophotométrique :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Droite des Moindres Carrés Ordinaires ($\hat{y} = ax + b$) :} Elle ajuste la relation linéaire théorique entre l'absorbance à $595\,\text{nm}$ et la concentration en protéine standard (BSA). La pente $a$ représente la sensibilité analytique.
+  \item \textbf{Bandes de confiance à 95\% (Formule de Mandel) :} Observez le profil caractéristique en sablier (hyperbole) des limites supérieure et inférieure. L'intervalle de confiance est le plus étroit au niveau du barycentre des points $(\bar{x}, \bar{y})$.
+  \item \textbf{Conséquence pratique pour l'expérimentateur :} C'est au milieu de la gamme ($[4 - 6]\,\mu\text{g/mL}$) que l'incertitude sur la concentration dosée est minimale. Plus on s'approche des extrémités de la gamme, plus l'incertitude augmente rapidement.
+\end{itemize}
+\end{figurebox}
+
+\section{Diagnostic des Résidus \& Validation des Hypothèses de Gauss-Markov}
+
+L'estimation par les Moindres Carrés n'est optimale (\textit{théorème de Gauss-Markov : estimateur BLUE}) que si les résidus $\hat{\varepsilon}_i = y_i - \hat{y}_i$ vérifient quatre hypothèses fondamentales :
+\begin{enumerate}[leftmargin=*, label=\faCheck\ \textbf{\arabic*.}]
+  \item \textbf{Linéarité :} La vraie relation sous-jacente est bien rectiligne ($E(\varepsilon_i) = 0$).
+  \item \textbf{Homoscédasticité :} La variance de l'erreur est constante sur toute l'étendue de mesure ($\text{Var}(\varepsilon_i) = \sigma^2$).
+  \item \textbf{Normalité :} Les erreurs aléatoires suivent une loi gaussienne $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$.
+  \item \textbf{Indépendance :} Les résidus entre tubes sont mutuellement indépendants ($\text{Cov}(\varepsilon_i, \varepsilon_j) = 0$).
+\end{enumerate}
+
+\begin{figurebox}{Les 4 Graphiques Clés du Diagnostic des Résidus}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig03_residuals_diagnostics.png}
+\end{center}
+\textbf{Guide d'interprétation visuelle pour le biologiste :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Résidus vs Valeurs Ajustées (Haut Gauche) :} Vérifie la linéarité. Les résidus doivent s'éparpiller aléatoirement autour de la ligne horizontale $0$ sans former de profil en parabole ou en $U$ (qui trahirait une cinétique non linéaire).
+  \item \textbf{Diagramme Quantile-Quantile Normal (Q-Q Plot, Haut Droit) :} Vérifie la normalité. Les résidus standardisés doivent s'aligner rigoureusement sur la droite diagonale en pointillés. Un décrochage aux extrémités signale des queues lourdes ou des points atypiques.
+  \item \textbf{Graphique Scale-Location (Bas Gauche) :} Vérifie l'homoscédasticité en traçant $\sqrt{|\text{Résidus standardisés}|}$. Une ligne de tendance horizontale confirme que le bruit optique ne croît pas avec l'absorbance.
+  \item \textbf{Résidus vs Levier \& Distance de Cook (Bas Droit) :} Identifie les points influents. Les points possédant un levier élevé ($h_{ii}$) et une forte distance de Cook ($D_i > 1$) agissent comme un bras de levier et faussent la pente de l'étalonnage.
+\end{itemize}
+\end{figurebox}
 
 \section{Limites Analytiques Réglementaires (ICH Q2R1 : LOD \& LOQ)}
 
@@ -98,6 +129,13 @@ D'après les normes internationales de validation bioanalytique (ICH Q2R1) :
 \begin{equation*}
   \mathbf{LOD = \frac{3.3 \cdot s_{y/x}}{a}} \quad \text{(Limite de Détection)} \qquad\qquad \mathbf{LOQ = \frac{10 \cdot s_{y/x}}{a}} \quad \text{(Limite de Quantification)}
 \end{equation*}
+
+\begin{biobox}{Différence Biologique Cruciale entre LOD et LOQ}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{LOD :} Plus faible concentration d'analyte qui produit un signal discernable avec certitude du bruit de fond du blanc ($S/N \ge 3.3$). \textit{À cette concentration, on sait que la molécule est présente, mais on ne peut pas quantifier sa valeur exacte.}
+  \item \textbf{LOQ :} Plus faible concentration qui peut être dosée avec une exactitude et une fidélité acceptables ($S/N \ge 10$, $RSD \le 15\%$). \textit{Toute concentration mesurée inférieure à la LOQ doit être rapportée dans le cahier de laboratoire comme « $<$ LOQ » et non comme une valeur numérique chiffrée.}
+\end{itemize}
+\end{biobox}
 
 \section{Exercices d'Application \& Solutions}
 
@@ -120,6 +158,7 @@ Un biochimiste prépare une gamme étalon d'albumine bovine (BSA) à $n = 5$ con
   \item Déterminez le coefficient de corrélation linéaire de Pearson ($r$).
   \item Calculez la pente $a$, l'ordonnée à l'origine $b$ et écrivez l'équation de la droite d'étalonnage.
   \item Calculez le coefficient de détermination $R^2$. La méthode satisfait-elle le critère de validation accréditée ($R^2 \ge 0.995$) ?
+  \item Calculez les résidus $e_i = y_i - \hat{y}_i$ pour les 5 tubes. Vérifiez numériquement la propriété fondamentale de régression $\sum e_i = 0$ et déduisez-en $s_{y/x}$.
 \end{enumerate}
 \end{exercicebox}
 
@@ -138,8 +177,7 @@ Un biochimiste prépare une gamme étalon d'albumine bovine (BSA) à $n = 5$ con
   \item \textbf{Droite des moindres carrés :}
   \begin{align*}
     a &= \frac{SP_{xy}}{SS_{xx}} = \frac{2.540}{40.0} = \mathbf{0.0635\,\text{OD}/(\mu\text{g/mL})} \\
-    b &= \bar{y} - a \bar{x} = \frac{1.880}{5} - 0.0635 \times \frac{30.0}{5} \\
-    &= 0.376 - 0.381 = \mathbf{-0.005\,\text{OD}}
+    b &= \bar{y} - a \bar{x} = \frac{1.880}{5} - 0.0635 \times \frac{30.0}{5} = 0.376 - 0.381 = \mathbf{-0.005\,\text{OD}}
   \end{align*}
   Équation : $\mathbf{\hat{y} = 0.0635\,x - 0.005}$.
   \item \textbf{Coefficient de détermination \& Décision :}
@@ -147,6 +185,20 @@ Un biochimiste prépare une gamme étalon d'albumine bovine (BSA) à $n = 5$ con
     R^2 = r^2 = (0.99813)^2 = \mathbf{0.9963} \quad (99.63\%)
   \end{equation*}
   Puisque $R^2 = 0.9963 \ge 0.995$, la gamme étalon satisfait rigoureusement le critère de linéarité internationale.
+  \item \textbf{Calcul détaillé des résidus individuels ($e_i = y_i - \hat{y}_i$) :}
+  \begin{itemize}[leftmargin=*, label=\faAngleRight]
+    \item Tube 1 ($x_1=2.0$) : $\hat{y}_1 = 0.0635(2.0) - 0.005 = 0.1220 \implies e_1 = 0.125 - 0.1220 = \mathbf{+0.0030}$
+    \item Tube 2 ($x_2=4.0$) : $\hat{y}_2 = 0.0635(4.0) - 0.005 = 0.2490 \implies e_2 = 0.245 - 0.2490 = \mathbf{-0.0040}$
+    \item Tube 3 ($x_3=6.0$) : $\hat{y}_3 = 0.0635(6.0) - 0.005 = 0.3760 \implies e_3 = 0.380 - 0.3760 = \mathbf{+0.0040}$
+    \item Tube 4 ($x_4=8.0$) : $\hat{y}_4 = 0.0635(8.0) - 0.005 = 0.5030 \implies e_4 = 0.495 - 0.5030 = \mathbf{-0.0080}$
+    \item Tube 5 ($x_5=10.0$) : $\hat{y}_5 = 0.0635(10.0) - 0.005 = 0.6300 \implies e_5 = 0.635 - 0.6300 = \mathbf{+0.0050}$
+  \end{itemize}
+  \textbf{Somme des résidus :} $\sum e_i = +0.0030 - 0.0040 + 0.0040 - 0.0080 + 0.0050 = \mathbf{0.0000}$ !\\
+  \textbf{Somme des carrés résiduelle ($SCR$) :}
+  \begin{equation*}
+    SCR = \sum e_i^2 = 10^{-6} \times (9 + 16 + 16 + 64 + 25) = 130 \times 10^{-6} = \mathbf{0.000130}
+  \end{equation*}
+  \textbf{Écart-type résiduel :} $s_{y/x} = \sqrt{\frac{SCR}{n - 2}} = \sqrt{\frac{0.000130}{3}} \approx \mathbf{0.00658\,\text{OD}}$.
 \end{enumerate}
 \end{solutionbox}
 

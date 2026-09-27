@@ -36,18 +36,50 @@ L'algorithme calcule au départ la \textbf{matrice de dissimilarité} $D_0$ de d
   \item \textbf{Lien Moyen (\textit{Average Linkage} / UPGMA) :} Moyenne arithmétique de toutes les distances inter-paires. Très utilisé en phylogénie moléculaire.
 \end{itemize}
 
-\begin{conceptbox}{Le Critère de Ward (Minimum Variance Method)}
+\begin{figurebox}{Comparaison Visuelle des 4 Stratégies de Liaison (Linkage)}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig06_linkage_comparison.png}
+\end{center}
+\textbf{Analyse des comportements géométriques d'agrégation :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Single Linkage (Saut Minimum) :} Très sensible aux points aberrants et sujet au « chaînage » (formation de longs filaments reliant artificiellement des groupes distincts).
+  \item \textbf{Complete Linkage (Saut Maximum) :} Favorise des groupes sphériques très compacts, mais peut casser artificiellement de grands clusters naturels.
+  \item \textbf{Average Linkage (Lien Moyen - UPGMA) :} Compromis robuste, très populaire pour les arbres phylogénétiques de séquences d'ADN/protéines.
+  \item \textbf{Méthode de Ward (Variance Minimale) :} Standard en biomédecine. Produit des groupes réguliers et homogènes en minimisant la variance interne de chaque cluster.
+\end{itemize}
+\end{figurebox}
+
+\begin{conceptbox}{Le Critère de Ward \& Théorème de Décomposition d'Huygens}
 La méthode de référence absolue en biochimie clinique et en médecine translationnelle est le \textbf{Critère de Ward}. 
-Au lieu d'une simple distance géométrique, Ward fusionne à chaque pas la paire de groupes $(A, B)$ qui \textbf{minimise l'augmentation d'inertie intra-classe} ($\Delta I$) :
+D'après le \textbf{théorème d'Huygens}, l'inertie totale du nuage de points est invariante :
+\begin{equation*}
+  I_{\text{totale}} = I_{\text{intra}} + I_{\text{inter}} = \text{Constante}
+\end{equation*}
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item Au départ ($n$ classes de 1 individu) : $I_{\text{intra}} = 0$ et $I_{\text{inter}} = I_{\text{totale}}$.
+  \item À la fin (1 seule classe) : $I_{\text{intra}} = I_{\text{totale}}$ et $I_{\text{inter}} = 0$.
+\end{itemize}
+À chaque étape, la fusion de deux groupes $(A, B)$ engendre une \textbf{augmentation de l'inertie intra-classe} :
 \begin{equation*}
   \Delta I(A, B) = \frac{n_A \cdot n_B}{n_A + n_B} \cdot d_E^2(g_A, g_B)
 \end{equation*}
-où $g_A$ et $g_B$ désignent les centres de gravité (barycentres) respectifs des deux groupes.
+où $g_A$ et $g_B$ sont les barycentres des clusters. L'algorithme de Ward choisit systématiquement la fusion qui minimise cette perte d'homogénéité interne ($\min \Delta I$).
 \end{conceptbox}
 
 \section{Le Dendrogramme \& Choix Optimal du Nombre de Classes ($k$)}
 
-Le dendrogramme représente graphiquement l'historique de toutes les fusions successives. L'axe vertical porte la hauteur de fusion ($\Delta I$).
+Le dendrogramme représente graphiquement l'arbre de classification. L'axe vertical porte la hauteur de fusion ($\Delta I$).
+
+\begin{figurebox}{Dendrogramme de Ward \& Seuil Optimal de Coupure Horizontale}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig06_dendrogram_ward.png}
+\end{center}
+\textbf{Méthodologie de coupure de l'arbre taxonomique :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Hauteur des branches verticales :} La longueur d'une branche verticale est proportionnelle au coût en inertie ($\Delta I$). Une longue branche signifie que l'on agrège deux sous-populations radicalement différentes.
+  \item \textbf{Ligne de coupure horizontale :} On sectionne l'arbre juste avant le saut d'inertie majeur. Le nombre de tiges verticales traversées définit le nombre de phénotypes distincts $k$.
+\end{itemize}
+\end{figurebox}
 
 \begin{takeawaybox}{Règle de Coupe Horizontale du Dendrogramme}
 Pour déterminer le nombre biologique optimal de sous-groupes ($k$) :
@@ -57,6 +89,26 @@ Pour déterminer le nombre biologique optimal de sous-groupes ($k$) :
   \item Le nombre de branches verticales coupées correspond exactement au nombre naturel de classes phénotypiques $k$.
 \end{enumerate}
 \end{takeawaybox}
+
+\section{La Heatmap Clustérisée Bidirectionnelle (Clustermap Omique)}
+
+En biochimie, protéomique et séquençage ARN, la restitution finale d'une CAH s'effectue quasi-systématiquement sous forme de \textbf{Clustermap} :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item Un dendrogramme vertical regroupe les \textbf{échantillons ou patients} en colonnes selon leur similarité d'expression.
+  \item Un dendrogramme horizontal regroupe les \textbf{gènes ou biomarqueurs} en lignes selon leur co-régulation fonctionnelle.
+  \item La matrice centrale est colorée en dégradé continu (ex : rouge pour surexpression, bleu pour sous-expression), mettant immédiatement en évidence les signatures moléculaires spécifiques de chaque groupe.
+\end{itemize}
+
+\begin{figurebox}{Heatmap Clustérisée Bidirectionnelle (Biomarqueurs $\times$ Échantillons)}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig06_clustermap_heatmap.png}
+\end{center}
+\textbf{Lecture de la signature moléculaire en double clustering :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item Les blocs de couleur homogènes mettent en évidence des \textbf{modules de biomarqueurs co-régulés}.
+  \item La classification simultanée des patients permet d'identifier des groupes répondeurs et non-répondeurs à une thérapie ciblée sans aucun étiquetage clinique préalable.
+\end{itemize}
+\end{figurebox}
 
 \section{Exercices d'Application \& Solutions}
 

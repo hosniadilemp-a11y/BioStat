@@ -23,6 +23,18 @@ L'ACP construit de nouvelles variables synthétiques appelées \textbf{Composant
 \end{enumerate}
 \end{conceptbox}
 
+\begin{figurebox}{Rotation Orthogonale \& Construction des Axes Principaux}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig05_mice_pca_axes_rotation.png}
+\end{center}
+\textbf{Intuition géométrique de la décomposition spectrale :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Espace d'origine corrélé :} Les variables biologiques initiales (ex : glycémie et insulinémie) présentent une forte corrélation oblique, générant une redondance d'information.
+  \item \textbf{Rotation optimale vers $\text{PC}_1$ et $\text{PC}_2$ :} L'ACP effectue une rotation rigide des axes sans déformer les distances inter-individuelles. Le premier axe $\text{PC}_1$ s'aligne exactement sur le grand axe d'élongation de l'ellipse de dispersion, captant le maximum de variance possible.
+  \item \textbf{Orthogonalité stricte :} Le second axe $\text{PC}_2$ est orienté à $90^\circ$ du premier. Il capture la variabilité résiduelle indépendante, éliminant toute corrélation parasite entre composantes.
+\end{itemize}
+\end{figurebox}
+
 \section{Centrage-Réduction : L'Obligation de l'ACP Normée}
 
 En biologie, les variables sont mesurées dans des unités et avec des amplitudes radicalement hétérogènes :
@@ -41,37 +53,58 @@ L'ACP réalisée sur ces données centrées-réduites s'appelle une \textbf{ACP 
 
 \section{Valeurs Propres ($\lambda_k$) \& Choix du Nombre d'Axes}
 
-L'inertie totale du nuage de points standardisé est égale au nombre total de variables $p$. Chaque composante principale $\text{PC}_k$ est associée à une \textbf{valeur propre} $\lambda_k$ :
+L'inertie totale du nuage de points standardisé est égale au nombre total de variables $p$. Chaque composante principale $\text{PC}_k$ est associée à une \textbf{valeur propre} $\lambda_k$ issue de la diagonalisation de la matrice des corrélations $R \cdot u_k = \lambda_k \cdot u_k$ :
 \begin{equation*}
-  \% \text{ Inertie}(\text{PC}_k) = \frac{\lambda_k}{p} \times 100
+  \% \text{ Inertie}(\text{PC}_k) = \frac{\lambda_k}{p} \times 100 \qquad\qquad \sum_{k=1}^p \lambda_k = p
 \end{equation*}
 
-Pour sélectionner le nombre optimal d'axes à retenir :
-\begin{enumerate}[leftmargin=*, label=\faCheck]
-  \item \textbf{La Règle de Kaiser :} On ne retient que les axes dont la valeur propre est supérieure à la moyenne :
-  \begin{equation*}
-    \lambda_k \ge 1.0 \quad \text{(un axe qui explique plus de variance qu'une variable originale standardisée)}
-  \end{equation*}
-  \item \textbf{Le Critère du Coude (Scree plot) :} On trace l'éboulis des valeurs propres et l'on retient les axes situés avant le décrochage net (le coude d'éboulis).
+Pour sélectionner le nombre optimal d'axes factoriels à retenir :
+\begin{enumerate}[leftmargin=*, label=\faCheck\ \textbf{\arabic*.}]
+  \item \textbf{La Règle de Kaiser-Guttman :} On ne retient que les axes dont la valeur propre est supérieure à la moyenne ($\lambda_k \ge 1.0$). Un axe avec $\lambda < 1$ apporte moins d'information qu'une seule variable brute standardisée.
+  \item \textbf{Le Critère du Coude (Scree Plot de Cattell) :} On ordonne les valeurs propres de manière décroissante sur un graphique d'éboulis. On conserve les axes situés à gauche du point d'inflexion (le « coude »), au-delà duquel l'éboulis ne reflète que du bruit statistique résiduel.
 \end{enumerate}
 
-\section{Le Cercle des Corrélations (Interprétation des Variables)}
-
-Sur le cercle de rayon 1 formé par le plan factoriel $(\text{PC}_1, \text{PC}_2)$ :
+\begin{figurebox}{Éboulis des Valeurs Propres (Scree Plot) \& Seuil de Kaiser}
+\begin{center}
+\includegraphics[width=0.86\linewidth]{../../sources/figures/fig05_scree_plot_kaiser.png}
+\end{center}
+\textbf{Analyse du graphique d'éboulis spectral :}
 \begin{itemize}[leftmargin=*, label=\faAngleRight]
-  \item La coordonnée d'une variable $X_j$ sur l'axe $\text{PC}_k$ est égale à son coefficient de corrélation linéaire : $r(X_j, \text{PC}_k)$.
-  \item \textbf{Qualité de représentation ($\cos^2$) :} 
-  \begin{equation*}
-    \cos^2(\text{PC}_k) = \left[ r(X_j, \text{PC}_k) \right]^2 \qquad\qquad \cos^2_{1+2} = \cos^2(\text{PC}_1) + \cos^2(\text{PC}_2)
-  \end{equation*}
-  Une variable proche de la circonférence ($\cos^2_{1+2} \rightarrow 1$) est parfaitement interprétable sur ce plan.
-  \item \textbf{Signification biologique des angles entre flèches :}
-  \begin{itemize}
-    \item Flèches très proches (angle $\approx 0^\circ$) $\implies$ Forte corrélation biologique positive (synergie fonctionnelle).
-    \item Flèches opposées (angle $\approx 180^\circ$) $\implies$ Forte corrélation négative (antagonisme métabolique).
-    \item Flèches à angle droit (angle $\approx 90^\circ$) $\implies$ Indépendance biologique totale.
-  \end{itemize}
+  \item \textbf{Seuil horizontal de Kaiser ($\lambda = 1.0$) :} La ligne en pointillés rouges matérialise la coupure objective. Seuls les axes situés au-dessus de cette ligne sont retenus pour l'interprétation biologique approfondie.
+  \item \textbf{Règle du Coude :} Le décrochage majeur se produit après le 2\textsuperscript{e} axe. Les composantes $\text{PC}_1$ et $\text{PC}_2$ suffisent à capturer l'essentiel de l'information omique, permettant de réduire la dimensionnalité sans sacrifier le signal biologique.
 \end{itemize}
+\end{figurebox}
+
+\section{Le Plan Factoriel : Cercle des Corrélations \& Carte des Individus}
+
+L'interprétation conjointe de l'ACP repose sur deux graphiques complémentaires :
+
+\subsection{1. Le Cercle des Corrélations (Espace des Variables)}
+Sur le cercle de rayon unité ($r = 1$) dans le plan $(\text{PC}_1, \text{PC}_2)$ :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item La coordonnée d'une variable $X_j$ sur l'axe $\text{PC}_k$ est son coefficient de corrélation linéaire : $F_{jk} = r(X_j, \text{PC}_k)$.
+  \item \textbf{Qualité de représentation ($\cos^2$) :} $\cos^2_{1+2} = r^2(X_j, \text{PC}_1) + r^2(X_j, \text{PC}_2)$. Une flèche atteignant la circonférence ($\cos^2 \approx 1$) est parfaitement interprétable sur ce plan.
+  \item \textbf{Contribution relative ($\text{CTR}_j$) :} Fraction de variance de l'axe $\text{PC}_k$ imputable à la variable $X_j$ :
+  \begin{equation*}
+    \text{CTR}_j(\text{PC}_k) = \frac{r^2(X_j, \text{PC}_k)}{\lambda_k} \times 100
+  \end{equation*}
+  Une variable contribue significativement si sa contribution dépasse le seuil moyen $100/p\,\%$.
+\end{itemize}
+
+\subsection{2. La Carte des Individus (Scores Factoriels)}
+Chaque échantillon biologique $i$ reçoit des coordonnées de score : $s_{ik} = \sum_{j=1}^p z_{ij} \cdot u_{jk}$.
+Deux échantillons proches sur la carte partagent des profils biochimiques quasi-identiques.
+
+\begin{figurebox}{Cercle des Corrélations (Variables) \& Projection 2D des Individus (Scores)}
+\begin{center}
+\includegraphics[width=0.88\linewidth]{../../sources/figures/fig05_pca_correlation_and_scores.png}
+\end{center}
+\textbf{Lecture croisée de l'ACP biomédicale :}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Cercle des Corrélations (Gauche) :} Le groupe de vecteurs pointant vers la droite associe étroitement les biomarqueurs pro-inflammatoires et oxydatifs, tandis que les enzymes antioxydantes pointent dans la direction opposée, révélant un antagonisme fonctionnel direct.
+  \item \textbf{Plan des Scores Individuels (Droite) :} Les points représentant les animaux ou patients se séparent nettement en clusters distincts (Témoins vs Diabétiques vs Traités) le long de l'axe $\text{PC}_1$, démontrant la capacité de l'ACP à phénotyper sans supervision préalable les états pathologiques.
+\end{itemize}
+\end{figurebox}
 
 \section{Exercices d'Application \& Solutions}
 
