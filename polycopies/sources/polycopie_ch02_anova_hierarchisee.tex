@@ -3,7 +3,7 @@
 
 \begin{document}
 
-\makepolycopieheader{Analyse de la Variance Hiérarchisée (Nested ANOVA)}{Facteurs Emboîtés, Lutte contre la Pseudoréplication \& Calculs Pas-à-Pas}{CHAPITRE 2}
+\makepolycopieheader{Analyse de la Variance Hiérarchisée (Nested ANOVA)}{Facteurs Emboîtés \& Lutte contre la Pseudoréplication}{CHAPITRE 2}
 
 \section{Introduction : Pourquoi l'ANOVA Hiérarchisée ?}
 
@@ -122,7 +122,7 @@ Dans une ANOVA standard, on divise toujours par le carré moyen résiduel $MS_R$
 }
 \end{center}
 
-\section{Exemple Numérique Pas-à-Pas : Bioproduction en Bioréacteurs}
+\section{Exemple Numérique : Bioproduction en Bioréacteurs}
 
 \paragraph{Problématique Biologique :}
 Une équipe de bio-ingénierie optimise le rendement de production d'une protéine recombinante thérapeutique (en g/L de surnageant de fermentation) :
@@ -226,7 +226,7 @@ Analysez les deux situations expérimentales suivantes rapportées par des stagi
 \end{enumerate}
 \end{exercicebox}
 
-\begin{solutionbox}{Solution de l'Exercice 1}
+\begin{solutionbox}{Solution : Exercice 1}
 \begin{enumerate}[label=\textbf{\alph*.}]
   \item \textbf{Diagnostic du Protocole 1 :}
   \textbf{Oui, il y a pseudoréplication flagrante.} Les 5 coupes de cerveau issues d'un même animal ne sont pas des individus indépendants, mais des \textbf{réplicats techniques (aliquotes histologiques)} d'un seul animal. Le véritable échantillon biologique est de \textbf{$N = 2$ rats par lot} (taille d'échantillon dramatiquement insuffisante, $df = 2 + 2 - 2 = 2$).
@@ -271,7 +271,7 @@ Un laboratoire biopharmaceutique compare deux Procédés de purification d'un va
 \end{enumerate}
 \end{exercicebox}
 
-\begin{solutionbox}{Solution de l'Exercice 2}
+\begin{solutionbox}{Solution : Exercice 2}
 \begin{enumerate}[label=\textbf{\alph*.}]
   \item \textbf{Moyennes :}
   $\bar{x}_{1\cdot\cdot} = \frac{12.0 + 10.0}{2} = 11.0\,\mu\text{g/mL}$ ; $\bar{x}_{2\cdot\cdot} = \frac{20.0 + 18.0}{2} = 19.0\,\mu\text{g/mL}$.\\

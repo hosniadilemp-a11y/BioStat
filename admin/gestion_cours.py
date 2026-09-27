@@ -33,6 +33,11 @@ POLYCOPIES_MAP = {
     "00": ("polycopies/sources", "polycopie_ch00_intro.tex", "Polycopie_Chapitre_00_Introduction_Biostatistiques.pdf"),
     "01": ("polycopies/sources", "polycopie_ch01_anova_croisee.tex", "Polycopie_Chapitre_01_ANOVA_Croisee.pdf"),
     "02": ("polycopies/sources", "polycopie_ch02_anova_hierarchisee.tex", "Polycopie_Chapitre_02_ANOVA_Hierarchisee.pdf"),
+    "03": ("polycopies/sources", "polycopie_ch03_regression_lineaire.tex", "Polycopie_Chapitre_03_Regression_Lineaire.pdf"),
+    "04": ("polycopies/sources", "polycopie_ch04_regression_non_lineaire.tex", "Polycopie_Chapitre_04_Regression_Non_Lineaire.pdf"),
+    "05": ("polycopies/sources", "polycopie_ch05_acp.tex", "Polycopie_Chapitre_05_ACP.pdf"),
+    "06": ("polycopies/sources", "polycopie_ch06_cah.tex", "Polycopie_Chapitre_06_CAH.pdf"),
+    "07": ("polycopies/sources", "polycopie_ch07_interpretation.tex", "Polycopie_Chapitre_07_Interpretation.pdf"),
 }
 
 TD_MAP = [

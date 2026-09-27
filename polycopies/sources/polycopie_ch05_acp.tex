@@ -1,0 +1,180 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/polycopie_style}
+
+\begin{document}
+
+\makepolycopieheader{Analyse en Composantes Principales (ACP)}{Réduction de Dimension, Décomposition Spectrale \& Phénotypage Omique}{CHAPITRE 5}
+
+\section{Introduction : Le Défi de la Haute Dimensionnalité Omique}
+
+En biochimie moderne, l'expérimentateur ne mesure plus une seule variable à la fois :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Protéomique et Métabolomique :} Des dizaines de métabolites ou cytokines sont quantifiés simultanément chez les mêmes patients.
+  \item \textbf{Phénotypage multi-paramétrique :} Paramètres sanguins, enzymatiques, histologiques et d'imagerie.
+\end{itemize}
+
+Face à un tableau de données de $n$ échantillons et $p$ variables corrélées entre elles ($p > 3$), l'esprit humain ne peut pas visualiser un espace à $p$ dimensions. \textbf{L'Analyse en Composantes Principales (ACP)} est la méthode non supervisée reine qui projette ce nuage de points multidimensionnel sur un plan 2D optimal en \textbf{préservant le maximum de variabilité biologique (inertie)}.
+
+\begin{conceptbox}{Le Principe Fondamental de l'ACP}
+L'ACP construit de nouvelles variables synthétiques appelées \textbf{Composantes Principales} ($\text{PC}_1, \text{PC}_2, \dots$), qui sont des combinaisons linéaires des variables initiales :
+\begin{enumerate}
+  \item Elles sont \textbf{strictement orthogonales (indépendantes)} entre elles (corrélation nulle).
+  \item Elles sont classées par \textbf{ordre décroissant de variance expliquée} : $\text{PC}_1$ capture le plus grand axe d'éparpillement des données, puis $\text{PC}_2$ capture le second axe orthogonal, etc.
+\end{enumerate}
+\end{conceptbox}
+
+\section{Centrage-Réduction : L'Obligation de l'ACP Normée}
+
+En biologie, les variables sont mesurées dans des unités et avec des amplitudes radicalement hétérogènes :
+\begin{itemize}[leftmargin=*, label=\faTimesCircle]
+  \item Glycémie : $\approx 1.10 \pm 0.25\,\text{g/L}$ (variance $\sigma^2 = 0.0625$).
+  \item Transaminases ALAT : $\approx 45 \pm 30\,\text{UI/L}$ (variance $\sigma^2 = 900$).
+\end{itemize}
+
+\begin{warnbox}{Le Piège de l'Effet d'Échelle en Biologie}
+Si l'on appliquait l'ACP sur les données brutes, l'ALAT capterait à elle seule plus de $99\%$ de la variance totale, simplement parce que son unité produit de grands nombres ! Pour que chaque variable pèse équitablement avec un poids de 1, il faut impérativement \textbf{centrer et réduire} chaque mesure :
+\begin{equation*}
+  z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j}
+\end{equation*}
+L'ACP réalisée sur ces données centrées-réduites s'appelle une \textbf{ACP normée} (elle diagonalise la matrice des corrélations $R$, dont la trace vaut $\sum \lambda_j = p$).
+\end{warnbox}
+
+\section{Valeurs Propres ($\lambda_k$) \& Choix du Nombre d'Axes}
+
+L'inertie totale du nuage de points standardisé est égale au nombre total de variables $p$. Chaque composante principale $\text{PC}_k$ est associée à une \textbf{valeur propre} $\lambda_k$ :
+\begin{equation*}
+  \% \text{ Inertie}(\text{PC}_k) = \frac{\lambda_k}{p} \times 100
+\end{equation*}
+
+Pour sélectionner le nombre optimal d'axes à retenir :
+\begin{enumerate}[leftmargin=*, label=\faCheck]
+  \item \textbf{La Règle de Kaiser :} On ne retient que les axes dont la valeur propre est supérieure à la moyenne :
+  \begin{equation*}
+    \lambda_k \ge 1.0 \quad \text{(un axe qui explique plus de variance qu'une variable originale standardisée)}
+  \end{equation*}
+  \item \textbf{Le Critère du Coude (Scree plot) :} On trace l'éboulis des valeurs propres et l'on retient les axes situés avant le décrochage net (le coude d'éboulis).
+\end{enumerate}
+
+\section{Le Cercle des Corrélations (Interprétation des Variables)}
+
+Sur le cercle de rayon 1 formé par le plan factoriel $(\text{PC}_1, \text{PC}_2)$ :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item La coordonnée d'une variable $X_j$ sur l'axe $\text{PC}_k$ est égale à son coefficient de corrélation linéaire : $r(X_j, \text{PC}_k)$.
+  \item \textbf{Qualité de représentation ($\cos^2$) :} 
+  \begin{equation*}
+    \cos^2(\text{PC}_k) = \left[ r(X_j, \text{PC}_k) \right]^2 \qquad\qquad \cos^2_{1+2} = \cos^2(\text{PC}_1) + \cos^2(\text{PC}_2)
+  \end{equation*}
+  Une variable proche de la circonférence ($\cos^2_{1+2} \rightarrow 1$) est parfaitement interprétable sur ce plan.
+  \item \textbf{Signification biologique des angles entre flèches :}
+  \begin{itemize}
+    \item Flèches très proches (angle $\approx 0^\circ$) $\implies$ Forte corrélation biologique positive (synergie fonctionnelle).
+    \item Flèches opposées (angle $\approx 180^\circ$) $\implies$ Forte corrélation négative (antagonisme métabolique).
+    \item Flèches à angle droit (angle $\approx 90^\circ$) $\implies$ Indépendance biologique totale.
+  \end{itemize}
+\end{itemize}
+
+\section{Exercices d'Application \& Solutions}
+
+\begin{exercicebox}{Exercice 1 : Centrage-Réduction \& Critère de Kaiser}
+Une étude omique mesure $p = 5$ biomarqueurs de stress oxydatif et d'inflammation (MDA, Catalase, SOD, IL-6, TNF-$\alpha$) chez $N = 40$ patients.
+La matrice de corrélation $R$ diagonalisée fournit les 5 valeurs propres ordonnées :
+\begin{center}
+  $\lambda_1 = 2.65, \quad \lambda_2 = 1.25, \quad \lambda_3 = 0.60, \quad \lambda_4 = 0.35, \quad \lambda_5 = 0.15$
+\end{center}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la somme des valeurs propres $\sum_{j=1}^5 \lambda_j$. Pourquoi est-elle exactement égale à 5 ?
+  \item Calculez le pourcentage de variance expliquée par chaque axe et le pourcentage cumulé.
+  \item Selon la règle de Kaiser ($\lambda \ge 1.0$), combien d'axes factoriels doit-on retenir ?
+  \item Quel pourcentage cumulé de l'information biologique totale le premier plan factoriel (PC1 -- PC2) résume-t-il ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution : Exercice 1}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Somme des valeurs propres :}
+  \begin{equation*}
+    \sum_{j=1}^5 \lambda_j = 2.65 + 1.25 + 0.60 + 0.35 + 0.15 = \mathbf{5.00}
+  \end{equation*}
+  Elle vaut exactement $p = 5$ car dans une ACP normée, chaque variable centrée-réduite a une variance de 1, et la trace de la matrice des corrélations est égale à la somme des éléments diagonaux : $\text{Tr}(R) = \sum_{j=1}^p 1 = 5$.
+  \item \textbf{Pourcentages de variance par axe :}
+  \begin{align*}
+    \text{PC}_1 &: \frac{2.65}{5} \times 100 = \mathbf{53.0\%} \quad (\text{Cumulé : } 53.0\%) \\
+    \text{PC}_2 &: \frac{1.25}{5} \times 100 = \mathbf{25.0\%} \quad (\text{Cumulé : } 78.0\%) \\
+    \text{PC}_3 &: \frac{0.60}{5} \times 100 = \mathbf{12.0\%} \quad (\text{Cumulé : } 90.0\%) \\
+    \text{PC}_4 &: \frac{0.35}{5} \times 100 = \mathbf{7.0\%} \quad (\text{Cumulé : } 97.0\%) \\
+    \text{PC}_5 &: \frac{0.15}{5} \times 100 = \mathbf{3.0\%} \quad (\text{Cumulé : } 100.0\%)
+  \end{align*}
+  \item \textbf{Règle de Kaiser :}
+  Seuls les axes ayant $\lambda_k \ge 1.0$ sont retenus :
+  $\lambda_1 = 2.65 \ge 1.0$ et $\lambda_2 = 1.25 \ge 1.0$, tandis que $\lambda_3 = 0.60 < 1.0$.
+  On retient donc exactement \textbf{2 axes factoriels ($\text{PC}_1$ et $\text{PC}_2$)}.
+  \item \textbf{Qualité globale du résumé 2D :}
+  Le plan factoriel $(\text{PC}_1, \text{PC}_2)$ restitue $\mathbf{78.0\%}$ de l'inertie biologique totale de l'étude (perte d'information limitée à $22\%$).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{exercicebox}{Exercice 2 : Interprétation du Cercle des Corrélations}
+Sur le cercle des corrélations du premier plan factoriel $(\text{PC}_1, \text{PC}_2)$, les coordonnées des 5 biomarqueurs sont :
+\begin{center}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Biomarqueur} & \textbf{$\text{PC}_1$ ($r$)} & \textbf{$\text{PC}_2$ ($r$)} & \textbf{$\cos^2(\text{PC}_1)$} & \textbf{$\cos^2(\text{PC}_2)$} \\
+\midrule
+\textbf{MDA (Peroxydation)} & $+0.88$ & $-0.20$ & $0.774$ & $0.040$ \\
+\textbf{IL-6 (Cytokine)} & $+0.92$ & $-0.15$ & $0.846$ & $0.023$ \\
+\textbf{TNF-$\alpha$ (Cytokine)} & $+0.85$ & $-0.25$ & $0.723$ & $0.063$ \\
+\textbf{Catalase (Antioxydant)} & $-0.80$ & $-0.45$ & $0.640$ & $0.203$ \\
+\textbf{SOD (Antioxydant)} & $-0.10$ & $+0.85$ & $0.010$ & $0.723$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la qualité de représentation globale $\cos^2_{1+2}$ pour la cytokine IL-6 et pour la SOD. Sont-elles bien représentées ?
+  \item Quels biomarqueurs sont fortement corrélés positivement entre eux sur $\text{PC}_1$ ? Quelle est leur signification pathologique ?
+  \item Interprétez l'opposition entre le cluster inflammatoire (MDA, IL-6, TNF-$\alpha$) et la Catalase.
+  \item Donnez une signification biologique concise pour l'axe $\text{PC}_1$ et pour l'axe $\text{PC}_2$.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution : Exercice 2}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Qualité de représentation ($\cos^2_{1+2}$) :}
+  \begin{align*}
+    \text{Pour l'IL-6 :} \quad \cos^2_{1+2} &= 0.846 + 0.023 = \mathbf{0.869} \quad (86.9\%) \\
+    \text{Pour la SOD :} \quad \cos^2_{1+2} &= 0.010 + 0.723 = \mathbf{0.733} \quad (73.3\%)
+  \end{align*}
+  Toutes deux sont largement supérieures à $0.50$ : elles sont très fidèlement représentées dans ce premier plan factoriel.
+  \item \textbf{Corrélations positives sur $\text{PC}_1$ :}
+  L'IL-6 ($+0.92$), le MDA ($+0.88$) et le TNF-$\alpha$ ($+0.85$) pointent ensemble vers le côté positif de $\text{PC}_1$.
+  \textbf{Signification biologique :} Il existe une association étroite entre l'orage cytokinique inflammatoire et la peroxydation lipidique des membranes cellulaires.
+  \item \textbf{Opposition Antioxydante vs Inflammatoire :}
+  La Catalase a une coordonnée négative élevée sur $\text{PC}_1$ ($-0.80$), diamétralement opposée au MDA et à l'IL-6 (angle proche de $180^\circ$).
+  \textbf{Signification biologique :} L'effondrement des défenses enzymatiques antioxydantes est directement corrélé à la flambée de l'inflammation tissulaire.
+  \item \textbf{Dénomination biologique des axes factoriels :}
+  \begin{itemize}
+    \item \textbf{Axe $\text{PC}_1$ (53\% d'inertie) :} \textit{Axe de l'atteinte inflammatoire et du stress oxydatif} (oppose les patients très enflammés à droite aux patients protégés à gauche).
+    \item \textbf{Axe $\text{PC}_2$ (25\% d'inertie) :} \textit{Axe du statut enzymatique SOD} (différencie les profils de régulation de la superoxyde dismutase).
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\section*{Formulaire Récapitulatif : Métriques de l'ACP Normée}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+\textbf{Métrique ACP} & \textbf{Formule} & \textbf{Signification en Biologie} \\
+\midrule
+Standardisation ($Z$-score) & $z_{ij} = (x_{ij} - \bar{x}_j) / s_j$ & Égalisation du poids de toutes les variables \\
+Inertie totale & $\sum_{k=1}^p \lambda_k = p$ & Somme des variances de toutes les variables \\
+Proportion de variance & $\% = (\lambda_k / p) \times 100$ & Poids informatif d'un axe factoriel \\
+Règle de Kaiser & Retenir si $\lambda_k \ge 1.0$ & Seuil de pertinence statistique \\
+Coordonnée factorielle & $F_{jk} = r(X_j, \text{PC}_k)$ & Corrélation de la variable avec l'axe \\
+Qualité de représentation & $\cos^2(\text{PC}_k) = r^2(X_j, \text{PC}_k)$ & Part de la variance de la variable captée par l'axe \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\end{document}

@@ -1,0 +1,164 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/polycopie_style}
+
+\begin{document}
+
+\makepolycopieheader{Classification Ascendante Hiérarchique (CAH)}{Clustering Non Supervisé, Critère de Ward \& Typologie Moléculaire}{CHAPITRE 6}
+
+\section{Introduction : La Taxonomie Moléculaire du Vivant}
+
+En microbiologie, oncologie et biotechnologie, le biologiste cherche fréquemment à regrouper des échantillons en sous-types homogènes sans étiquette préalable :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item Identifier des souches bactériennes hospitalières partageant le même profil d'antibiorésistance.
+  \item Découvrir de nouveaux sous-types moléculaires de tumeurs mammaires d'après leur transcriptome.
+  \item Classer des isolats environnementaux selon leurs activités enzymatiques sécrétées.
+\end{itemize}
+
+\textbf{La Classification Ascendante Hiérarchique (CAH)} est un algorithme itératif non supervisé qui part des individus isolés et les agrège deux à deux de manière emboîtée jusqu'à former un groupe unique, visualisé sous la forme d'un \textbf{dendrogramme} (arbre de classification).
+
+\section{Métriques de Dissimilarité : La Matrice des Distances ($D_0$)}
+
+Pour quantifier la proximité phénotypique entre deux échantillons biologiques $A = (x_{A1}, \dots, x_{Ap})$ et $B = (x_{B1}, \dots, x_{Bp})$ décrits par $p$ paramètres :
+\begin{align*}
+  \text{\textbf{Distance Euclidienne :}} \quad & d_E(A, B) = \sqrt{\sum_{j=1}^p (x_{Aj} - x_{Bj})^2} \\[1mm]
+  \text{\textbf{Distance de Manhattan ($L_1$) :}} \quad & d_M(A, B) = \sum_{j=1}^p |x_{Aj} - x_{Bj}|
+\end{align*}
+
+L'algorithme calcule au départ la \textbf{matrice de dissimilarité} $D_0$ de dimension $n \times n$, symétrique et à diagonale nulle ($d(i,i) = 0$).
+
+\section{Stratégies de Liaison (Linkage Methods)}
+
+À chaque étape, après la fusion de deux individus, comment mesure-t-on la distance entre deux groupes d'échantillons $C_1$ et $C_2$ ?
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Saut Minimum (\textit{Single Linkage}) :} $D(C_1, C_2) = \min_{x \in C_1, y \in C_2} d(x, y)$.\\
+  \textit{Défaut majeur en biologie :} Phénomène de chaînage (\textit{chaining effect}) qui fusionne artificiellement des groupes distincts reliés par un seul point bruit transitoire.
+  \item \textbf{Saut Maximum (\textit{Complete Linkage}) :} $D(C_1, C_2) = \max d(x, y)$. Forme des clusters très compacts et sphériques.
+  \item \textbf{Lien Moyen (\textit{Average Linkage} / UPGMA) :} Moyenne arithmétique de toutes les distances inter-paires. Très utilisé en phylogénie moléculaire.
+\end{itemize}
+
+\begin{conceptbox}{Le Critère de Ward (Minimum Variance Method)}
+La méthode de référence absolue en biochimie clinique et en médecine translationnelle est le \textbf{Critère de Ward}. 
+Au lieu d'une simple distance géométrique, Ward fusionne à chaque pas la paire de groupes $(A, B)$ qui \textbf{minimise l'augmentation d'inertie intra-classe} ($\Delta I$) :
+\begin{equation*}
+  \Delta I(A, B) = \frac{n_A \cdot n_B}{n_A + n_B} \cdot d_E^2(g_A, g_B)
+\end{equation*}
+où $g_A$ et $g_B$ désignent les centres de gravité (barycentres) respectifs des deux groupes.
+\end{conceptbox}
+
+\section{Le Dendrogramme \& Choix Optimal du Nombre de Classes ($k$)}
+
+Le dendrogramme représente graphiquement l'historique de toutes les fusions successives. L'axe vertical porte la hauteur de fusion ($\Delta I$).
+
+\begin{takeawaybox}{Règle de Coupe Horizontale du Dendrogramme}
+Pour déterminer le nombre biologique optimal de sous-groupes ($k$) :
+\begin{enumerate}
+  \item On repère le \textbf{plus grand saut vertical} entre deux paliers de fusion successifs (perte d'inertie maximale).
+  \item On trace une \textbf{ligne de coupure horizontale} au niveau de ce saut majeur.
+  \item Le nombre de branches verticales coupées correspond exactement au nombre naturel de classes phénotypiques $k$.
+\end{enumerate}
+\end{takeawaybox}
+
+\section{Exercices d'Application \& Solutions}
+
+\begin{exercicebox}{Exercice 1 : Matrice de Distance \& Première Étape de Fusion (RT-qPCR)}
+Le profil d'expression relative ($\Delta\Delta C_t$) de deux gènes de résistance ($G_1$ : pompe d'efflux, $G_2$ : $\beta$-lactamase) est quantifié chez 4 isolats bactériens cliniques ($S_1, S_2, S_3, S_4$) :
+\begin{center}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Isolat Bactérien} & $S_1$ & $S_2$ & $S_3$ & $S_4$ \\
+\midrule
+\textbf{Gène $G_1$ (Efflux)} & 1.0 & 2.0 & 5.0 & 6.0 \\
+\textbf{Gène $G_2$ ($\beta$-lactamase)} & 2.0 & 1.0 & 5.0 & 4.0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez les carrés des distances euclidiennes $d_E^2$ entre chaque paire d'isolats.
+  \item Établissez la matrice des distances euclidiennes $D_0$ ($4 \times 4$).
+  \item Quels sont les deux premiers isolats qui fusionnent ?
+  \item Quelle est la seconde paire d'isolats qui fusionne à la même distance ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution : Exercice 1}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Calcul des distances euclidiennes au carré ($d_E^2$) :}
+  \begin{align*}
+    d^2(S_1, S_2) &= (2-1)^2 + (1-2)^2 = 1 + 1 = \mathbf{2.0} \implies d(S_1, S_2) = \sqrt{2} \approx \mathbf{1.414} \\
+    d^2(S_1, S_3) &= (5-1)^2 + (5-2)^2 = 16 + 9 = \mathbf{25.0} \implies d(S_1, S_3) = \mathbf{5.000} \\
+    d^2(S_1, S_4) &= (6-1)^2 + (4-2)^2 = 25 + 4 = \mathbf{29.0} \implies d(S_1, S_4) = \sqrt{29} \approx \mathbf{5.385} \\
+    d^2(S_2, S_3) &= (5-2)^2 + (5-1)^2 = 9 + 16 = \mathbf{25.0} \implies d(S_2, S_3) = \mathbf{5.000} \\
+    d^2(S_2, S_4) &= (6-2)^2 + (4-1)^2 = 16 + 9 = \mathbf{25.0} \implies d(S_2, S_4) = \mathbf{5.000} \\
+    d^2(S_3, S_4) &= (6-5)^2 + (4-5)^2 = 1 + 1 = \mathbf{2.0} \implies d(S_3, S_4) = \sqrt{2} \approx \mathbf{1.414}
+  \end{align*}
+  \item \textbf{Matrice triangulaire inférieure des distances ($D_0$) :}
+  \begin{equation*}
+    D_0 = \begin{pmatrix}
+      0 & & & \\
+      \mathbf{1.414} & 0 & & \\
+      5.000 & 5.000 & 0 & \\
+      5.385 & 5.000 & \mathbf{1.414} & 0
+    \end{pmatrix}
+  \end{equation*}
+  \item \textbf{Première fusion :}
+  La distance minimale dans la matrice est $d(S_1, S_2) = 1.414$. Les deux premiers isolats agrégés sont donc \textbf{$(S_1, S_2)$}.
+  \item \textbf{Deuxième fusion :}
+  La seconde distance minimale est $d(S_3, S_4) = 1.414$. Le second groupe formé est donc \textbf{$(S_3, S_4)$}.
+\end{enumerate}
+\end{solutionbox}
+
+\begin{exercicebox}{Exercice 2 : Critère de Ward, Barycentres \& Dendrogramme}
+À partir des deux clusters formés à l'Exercice 1 : $C_1 = \{S_1, S_2\}$ et $C_2 = \{S_3, S_4\}$ :
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez les coordonnées des barycentres $g_1$ du groupe $C_1$ et $g_2$ du groupe $C_2$.
+  \item Calculez la distance euclidienne au carré entre les deux barycentres : $d_E^2(g_1, g_2)$.
+  \item Calculez l'augmentation d'inertie $\Delta I(C_1, C_2)$ lors de la fusion finale selon la formule de Ward.
+  \item Comparez $\Delta I(C_1, C_2)$ aux premières fusions ($\Delta I = 1.0$). Où doit-on couper l'arbre et quelle est l'interprétation microbiologique finale ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution : Exercice 2}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Coordonnées des barycentres :}
+  \begin{align*}
+    g_1 &= \left( \frac{1.0 + 2.0}{2} \,;\, \frac{2.0 + 1.0}{2} \right) = \mathbf{(1.5 \,;\, 1.5)} \\
+    g_2 &= \left( \frac{5.0 + 6.0}{2} \,;\, \frac{5.0 + 4.0}{2} \right) = \mathbf{(5.5 \,;\, 4.5)}
+  \end{align*}
+  \item \textbf{Distance entre barycentres :}
+  \begin{equation*}
+    d_E^2(g_1, g_2) = (5.5 - 1.5)^2 + (4.5 - 1.5)^2 = 4.0^2 + 3.0^2 = 16.0 + 9.0 = \mathbf{25.0}
+  \end{equation*}
+  \item \textbf{Augmentation d'inertie de Ward lors de la fusion finale ($n_1 = 2, n_2 = 2$) :}
+  \begin{equation*}
+    \Delta I(C_1, C_2) = \frac{n_1 \cdot n_2}{n_1 + n_2} \cdot d_E^2(g_1, g_2) = \frac{2 \times 2}{2 + 2} \times 25.0 = \frac{4}{4} \times 25.0 = \mathbf{25.0}
+  \end{equation*}
+  (Pour chaque fusion initiale d'individus isolés, $\Delta I = \frac{1 \times 1}{2} \times 2.0 = \mathbf{1.0}$).
+  \item \textbf{Coupe du dendrogramme \& Décision microbiologique :}
+  Il y a un saut d'inertie massif entre $\Delta I = 1.0$ (variabilité intra-groupe très faible) et $\Delta I = 25.0$ (disparité inter-groupe gigantesque).
+  La ligne de coupure horizontale se place entre $1.0$ et $25.0$ (vers une hauteur de 10), isolant sans ambiguïté \textbf{$k = 2$ classes biologiques distinctes} :
+  \begin{itemize}
+    \item \textbf{Cluster 1 ($S_1, S_2$) :} Profil sensible à expression basale des gènes de résistance ($G_1 \le 2, G_2 \le 2$).
+    \item \textbf{Cluster 2 ($S_3, S_4$) :} Profil multi-résistant avec surexpression conjointe de la pompe d'efflux et de la $\beta$-lactamase ($G_1 \ge 5, G_2 \ge 4$).
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\section*{Formulaire Récapitulatif : Algorithme de la CAH}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+\textbf{Étape / Méthode} & \textbf{Formule Mathématique} & \textbf{Propriété en Biologie} \\
+\midrule
+Distance Euclidienne & $d(A, B) = \sqrt{\sum (x_{Aj} - x_{Bj})^2}$ & Écart géométrique réel dans l'espace des descripteurs \\
+Inertie intra-classe de Ward & $\Delta I(A, B) = \frac{n_A n_B}{n_A + n_B} d_E^2(g_A, g_B)$ & Minimise la dispersion interne des sous-groupes \\
+Single Linkage & $\min d(x_i, y_j)$ & Risque de chaînage artificiel \\
+Complete Linkage & $\max d(x_i, y_j)$ & Favorise les clusters compacts et sphériques \\
+Critère de coupure & Saut vertical maximal dans le dendrogramme & Définit le nombre de phénotypes majeurs ($k$) \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\end{document}
