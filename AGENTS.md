@@ -5,7 +5,7 @@
 Ce fichier définit les directives obligatoires pour tout agent ou modèle IA intervenant sur ce projet :
 
 1. **Emplacement Unique des PDFs** :
-   - Tous les fichiers PDF finaux doivent être générés et stockés **exclusivement** dans `website/downloads/` (`website/downloads/cours/` pour les diapositives Beamer, `website/downloads/td_enonces/` pour les énoncés TD).
+   - Tous les fichiers PDF finaux doivent être générés et stockés **exclusivement** dans `website/downloads/` (`website/downloads/cours/` pour les diapositives Beamer, `website/downloads/polycopies/` pour les supports de cours rédigés A4, `website/downloads/td_enonces/` pour les énoncés TD).
    - Ne jamais créer de répertoires parallèles de PDF (ex : aucun dossier `courses_pdf/`).
 
 2. **Zéro Débordement Beamer** :

@@ -802,6 +802,9 @@ a {
   transition: var(--transition);
 }
 
+.btn-polycopie { background: rgba(13, 148, 136, 0.12); color: #0d9488; font-weight: 700; border: 1px solid rgba(13, 148, 136, 0.3); }
+.btn-polycopie:hover { background: #0d9488; color: white; border-color: #0d9488; box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3); }
+
 .btn-cours { background: rgba(37, 99, 235, 0.1); color: var(--accent-blue); }
 .btn-cours:hover { background: var(--accent-blue); color: white; }
 
@@ -1087,6 +1090,9 @@ a {
   gap: 0.45rem;
   transition: var(--transition);
 }
+
+.btn-action-polycopie { background: #0d9488; color: white; box-shadow: 0 3px 10px rgba(13, 148, 136, 0.25); }
+.btn-action-polycopie:hover { background: #0f766e; }
 
 .btn-action-cours { background: var(--accent-blue); color: white; }
 .btn-action-cours:hover { background: #1d4ed8; }

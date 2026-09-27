@@ -1,0 +1,375 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/polycopie_style}
+
+\begin{document}
+
+\makepolycopieheader{Généralités, Statistique Descriptive \& Démarche Expérimentale}{Socle Fondamental, Variabilité du Vivant \& Test de Student Pas-à-Pas}{CHAPITRE 0}
+
+\section{Introduction : Pourquoi les Biostatistiques en Biologie ?}
+
+En biochimie et en biologie cellulaire, l'expérimentateur est constamment confronté à un défi fondamental : \textbf{le vivant est intrinsèquement variable}. Contrairement à la physique théorique où deux billes d'acier identiques réagissent de manière strictement reproductible, deux cellules génétiquement identiques issues d'une même culture ou deux souris consanguines traitées avec la même dose d'un composé ne donneront jamais un résultat strictement identique.
+
+\begin{conceptbox}{L'Équation Fondamentale de la Mesure de Laboratoire}
+Chaque valeur $Y$ mesurée sur la paillasse est la somme de trois composantes distinctes :
+\begin{equation*}
+Y = \text{Signal Biologique Réel} + \text{Variabilité Biologique Naturelle} + \text{Erreur Technique Aléatoire}
+\end{equation*}
+\textbf{Le rôle des biostatistiques} n'est pas d'aligner des formules mathématiques abstraites, mais de fournir une méthode rigoureuse pour \textbf{séparer le signal biologique vrai du bruit de fond}.
+\end{conceptbox}
+
+\subsection{Variabilité Biologique vs Erreur Technique}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{La Variabilité Biologique (Inhérente) :} Elle provient de l'âge des cellules, du statut métabolique individuel, du rythme circadien, ou de fluctuations d'expression génique. Elle est \textit{l'objet même} de notre recherche.
+  \item \textbf{L'Erreur Technique (Bruit de mesure) :} Elle provient de l'incertitude du pipetage, de la dérive optique du spectrophotomètre, ou de légères variations de température lors d'une incubation.
+\end{itemize}
+
+\begin{warnbox}{Réplicats Biologiques ($N$) vs Réplicats Techniques ($k$)}
+\begin{itemize}
+  \item \textbf{Réplicats techniques ($k$) :} Doser un même tube d'extrait protéique 3 fois en triplicat spectrophotométrique permet uniquement de mesurer la précision de l'appareil. La moyenne de ces 3 puits constitue \textbf{un seul point de donnée biologique} ($n=1$).
+  \item \textbf{Réplicats biologiques ($N$) :} Administrer un traitement à 5 animaux indépendants ou 5 flacons de culture distincts constitue un échantillon de taille $N=5$.
+  \item \textbf{Règle d'or :} Les tests statistiques portent \textbf{toujours} sur les réplicats biologiques ($N$). Confondre réplicats techniques et biologiques s'appelle la \textbf{pseudoréplication} et invalide complètement une étude scientifique.
+\end{itemize}
+\end{warnbox}
+
+\section{Typologie des Variables \& Structuration des Données}
+
+Avant de lancer un calcul, le biologiste doit impérativement identifier la \textbf{nature des variables} mesurées :
+
+\begin{center}
+\small
+\begin{tabularx}{\linewidth}{lXp{4.5cm}}
+\toprule
+\textbf{Type de Variable} & \textbf{Définition \& Propriétés} & \textbf{Exemples Concrets en Laboratoire} \\
+\midrule
+\textbf{Quantitative Continue} & Mesurée sur une échelle continue, admet des décimales infinies. & Glycémie (g/L), Activité enzymatique (U/mg), Absorbance ($A_{595}$). \\
+\textbf{Quantitative Discrète} & Résultat d'un dénombrement (nombres entiers $\ge 0$). & Nombre d'UFC bactériennes, Nombre de lésions nécrotiques. \\
+\textbf{Qualitative Nominale} & Catégories sans ordre ni hiérarchie mathématique. & Génotype (Sauvage / Mutant), Sexe (Mâle / Femelle), Milieu (A / B). \\
+\textbf{Qualitative Ordinale} & Catégories présentant un ordre biologique naturel. & Stade tumoral (I, II, III, IV), Score d'inflammation (Nul, Léger, Sévère). \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Statistique Descriptive : Position \& Dispersion}
+
+Pour résumer une série de $n$ mesures biologiques $x_1, x_2, \dots, x_n$ :
+
+\subsection{Paramètres de Tendance Centrale (Position)}
+\begin{itemize}[leftmargin=*, label=\faCircle]
+  \item \textbf{Moyenne Arithmétique ($\bar{X}$) :} Centre de gravité des données.
+  \begin{equation*}
+    \bar{X} = \frac{1}{n}\sum_{i=1}^n x_i = \frac{x_1 + x_2 + \dots + x_n}{n}
+  \end{equation*}
+  \textit{Propriété :} Très sensible aux valeurs aberrantes (outliers) et aux distributions dissymétriques.
+  \item \textbf{Médiane ($Med$) :} Valeur centrale qui sépare la série ordonnée en deux moitiés égales (50\% au-dessus, 50\% au-dessous). Elle est robuste aux valeurs extrêmes.
+\end{itemize}
+
+\subsection{Paramètres de Dispersion (Variabilité)}
+\begin{conceptbox}{La Correction de Bessel ($n-1$) : Pourquoi diviser par $n-1$ ?}
+La variance d'un échantillon estime la variance de la population totale :
+\begin{equation*}
+s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{X})^2 \quad \text{et l'Écart-Type :} \quad s = SD = \sqrt{s^2}
+\end{equation*}
+On divise par $n-1$ et non par $n$ car la moyenne de l'échantillon $\bar{X}$ est elle-même estimée à partir des données, ce qui consomme \textbf{un degré de liberté}. Diviser par $n$ sous-estimerait systématiquement la véritable variabilité biologique (estimateur biaisé).
+\end{conceptbox}
+
+\begin{warnbox}{Confusion Fréquente : Écart-Type (SD) vs Erreur Standard de la Moyenne (SEM)}
+\begin{center}
+\begin{tabularx}{\linewidth}{p{6.5cm}X}
+\toprule
+\textbf{Écart-Type ($SD = s$)} & \textbf{Erreur Standard ($SEM = \frac{SD}{\sqrt{n}}$)} \\
+\midrule
+\faCheck\ Mesure la \textbf{dispersion biologique} réelle des individus autour de la moyenne. & \faCheck\ Mesure la \textbf{précision de l'estimation} de la moyenne de l'échantillon. \\
+\faTimes\ Ne diminue pas quand la taille $n$ augmente. & \faTimes\ Diminue proportionnellement à $\sqrt{n}$. \\
+\textbf{Utilisation recommandée :} Décrire la variabilité naturelle d'un groupe d'animaux ou de patients. & \textbf{Utilisation recommandée :} Dans les barres d'erreur de graphiques pour comparer des moyennes. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{warnbox}
+
+\subsection{Anatomie du Boxplot de Tukey (Boîte à Moustaches)}
+Pour visualiser la distribution sans hypothèse de normalité :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{La Boîte :} Bord inférieur = Premier Quartile ($Q_1$, 25\% des valeurs) ; Ligne centrale = Médiane ($Q_2$) ; Bord supérieur = Troisième Quartile ($Q_3$, 75\% des valeurs).
+  \item \textbf{L'Écart Interquartile ($IQR$) :} $IQR = Q_3 - Q_1$, contenant 50\% des individus centraux.
+  \item \textbf{Les Moustaches :} S'étendent au maximum jusqu'à $Q_1 - 1.5 \times IQR$ et $Q_3 + 1.5 \times IQR$.
+  \item \textbf{Les Outliers (Points isolés) :} Toute observation au-delà des moustaches est considérée comme valeur suspecte / atypique.
+\end{itemize}
+
+\section{Probabilités \& Diagnostic Biologique (Sensibilité, Spécificité \& Bayes)}
+
+Lorsqu'un laboratoire développe un kit de diagnostic (ex : test antigénique rapide, ELISA), la performance du test est caractérisée par deux probabilités intrinsèques :
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{Malade Réel ($M^+$)} & \textbf{Sain Réel ($M^-$)} \\
+\midrule
+\textbf{Test Positif ($T^+$)} & Vrais Positifs ($VP$) & Faux Positifs ($FP$) \\
+\textbf{Test Négatif ($T^-$)} & Faux Négatifs ($FN$) & Vrais Négatifs ($VN$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}[leftmargin=*, label=\faCheckCircle]
+  \item \textbf{Sensibilité ($Se = P(T^+ | M^+)$) :} Capacité du test à détecter un individu malade ($Se = \frac{VP}{VP+FN}$).
+  \item \textbf{Spécificité ($Sp = P(T^- | M^-)$) :} Capacité du test à déclarer négatif un individu sain ($Sp = \frac{VN}{VN+FP}$).
+\end{itemize}
+
+\begin{conceptbox}{Théorème de Bayes \& Valeur Prédictive Positive (VPP)}
+Pour un praticien recevant un patient avec un test positif, la question cruciale est : \textbf{« Quelle est la probabilité que le patient soit réellement malade ? »} C'est la \textbf{VPP} :
+\begin{equation*}
+VPP = P(M^+ | T^+) = \frac{P(T^+ | M^+) \cdot P(M^+)}{P(T^+)} = \frac{Se \cdot \text{Prévalence}}{Se \cdot \text{Prévalence} + (1 - Sp) \cdot (1 - \text{Prévalence})}
+\end{equation*}
+\textbf{Le Paradoxe Épidémiologique :} Même avec un test excellent ($Se=99\%, Sp=95\%$), si une maladie est rare ($\text{Prévalence} = 0.1\% = 0.001$), la majorité des tests positifs seront des faux positifs ($VPP \approx 2\%$) !
+\end{conceptbox}
+
+\section{La Loi Normale \& le Théorème Central Limite (TCL)}
+
+La majorité des tests dits « paramétriques » (Student, ANOVA) reposent sur l'hypothèse que la variable suit une \textbf{Loi Normale de Gauss} $\mathcal{N}(\mu, \sigma^2)$ :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item Courbe en cloche symétrique centrée sur la moyenne $\mu$.
+  \item \textbf{Règle empirique :} $68.3\%$ des observations se trouvent dans $[\mu \pm 1\sigma]$ ; $95.4\%$ dans $[\mu \pm 2\sigma]$ ; $99.7\%$ dans $[\mu \pm 3\sigma]$.
+\end{itemize}
+
+\begin{conceptbox}{Le Théorème Central Limite (TCL) : Le Pilier des Biostatistiques}
+Quelle que soit la forme de la population d'origine (même fortement asymétrique ou inconnue), la distribution de la \textbf{moyenne d'un échantillon} de taille $n$ converge vers une loi normale dès que la taille $n$ devient suffisamment grande ($n \ge 30$) :
+\begin{equation*}
+\bar{X} \sim \mathcal{N}\left(\mu, \frac{\sigma^2}{n}\right) \quad \text{d'où} \quad SEM = \frac{\sigma}{\sqrt{n}}
+\end{equation*}
+C'est grâce au TCL qu'on peut appliquer des tests sur les moyennes d'échantillons en toute confiance.
+\end{conceptbox}
+
+\section{La Démarche du Test d'Hypothèse Statistique}
+
+Tester une hypothèse scientifique suit un raisonnement par l'absurde en 5 étapes universelles :
+
+\begin{enumerate}[leftmargin=*, label=\textbf{Étape \arabic* :}]
+  \item \textbf{Poser les deux hypothèses en compétition :}
+  \begin{itemize}
+    \item $H_0$ (\textbf{Hypothèse nulle}) : Absence d'effet, égalité stricte ($\mu_1 = \mu_2$). Le traitement ne fonctionne pas.
+    \item $H_1$ (\textbf{Hypothèse alternative}) : Présence d'un effet réel ($\mu_1 \neq \mu_2$). Le traitement a un effet.
+  \end{itemize}
+  \item \textbf{Fixer le seuil de signification $\alpha$ (Risque de Type I) :}
+  Conventionnellement fixé à $\alpha = 0.05$ ($5\%$). C'est le risque d'affirmer à tort qu'un effet existe alors qu'il n'y a que du hasard (faux positif).
+  \item \textbf{Calculer la statistique de test observée} ($t_{obs}$ ou $F_{obs}$) à partir des données de paillasse.
+  \item \textbf{Déterminer la zone de rejet :} Soit en comparant la statistique observée à une valeur critique théorique ($t_{crit}$ ou $F_{crit}$), soit en évaluant la $p$-value.
+  \item \textbf{Prendre la décision \& Conclure biologiquement :}
+  \begin{itemize}
+    \item Si $p < 0.05$ (ou $|t_{obs}| > t_{crit}$) : Rejet de $H_0$ au profit de $H_1$ $\rightarrow$ Différence statistiquement significative.
+    \item Si $p \ge 0.05$ (ou $|t_{obs}| \le t_{crit}$) : Non-rejet de $H_0$ $\rightarrow$ Les données ne permettent pas de prouver un effet significatif.
+  \end{itemize}
+\end{enumerate}
+
+\section{Grand Exemple Numérique Pas-à-Pas : Le Test $t$ de Student}
+
+\subsection{Problématique Biologique}
+Un biochimiste teste l'efficacité d'un nouvel extrait végétal hypoglycémiant sur un modèle murin de diabète. Il constitue deux groupes indépendants de $n = 5$ souris :
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item \textbf{Groupe 1 (Témoins) :} Reçoivent un placebo (véhicule).
+  \item \textbf{Groupe 2 (Traités) :} Reçoivent l'extrait végétal ($100\,\text{mg/kg}$).
+\end{itemize}
+La glycémie à jeun (en g/L) est mesurée après 14 jours de traitement.
+
+\begin{stepbox}{Tableau des Données Brutes}
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Groupe} & \textbf{Souris 1} & \textbf{Souris 2} & \textbf{Souris 3} & \textbf{Souris 4} & \textbf{Souris 5} \\
+\midrule
+\textbf{Témoins ($X_1$)} & 1.20 & 1.30 & 1.15 & 1.25 & 1.10 \\
+\textbf{Traités ($X_2$)} & 0.90 & 0.95 & 0.85 & 1.00 & 0.80 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{stepbox}
+
+\subsection{Calcul Détaillé Étape par Étape}
+
+\begin{stepbox}{1. Calcul des Moyennes des Deux Groupes}
+\begin{align*}
+\bar{x}_1 &= \frac{1.20 + 1.30 + 1.15 + 1.25 + 1.10}{5} = \frac{6.00}{5} = \mathbf{1.20\,\text{g/L}} \\[2mm]
+\bar{x}_2 &= \frac{0.90 + 0.95 + 0.85 + 1.00 + 0.80}{5} = \frac{4.50}{5} = \mathbf{0.90\,\text{g/L}}
+\end{align*}
+\end{stepbox}
+
+\begin{stepbox}{2. Calcul des Variances Échantillonnales ($s_1^2$ et $s_2^2$)}
+Pour le Groupe Témoin ($n_1 = 5$, $\bar{x}_1 = 1.20$) :
+\begin{align*}
+(1.20 - 1.20)^2 &= 0.0000 \\
+(1.30 - 1.20)^2 &= (+0.10)^2 = 0.0100 \\
+(1.15 - 1.20)^2 &= (-0.05)^2 = 0.0025 \\
+(1.25 - 1.20)^2 &= (+0.05)^2 = 0.0025 \\
+(1.10 - 1.20)^2 &= (-0.10)^2 = 0.0100 \\[1mm]
+\sum (x_{1i} - \bar{x}_1)^2 &= 0.0000 + 0.0100 + 0.0025 + 0.0025 + 0.0100 = 0.0250 \\[2mm]
+s_1^2 &= \frac{0.0250}{5 - 1} = \frac{0.0250}{4} = \mathbf{0.00625} \implies s_1 = \sqrt{0.00625} \approx 0.079\,\text{g/L}
+\end{align*}
+
+Pour le Groupe Traité ($n_2 = 5$, $\bar{x}_2 = 0.90$) :
+\begin{align*}
+(0.90 - 0.90)^2 &= 0.0000 \\
+(0.95 - 0.90)^2 &= (+0.05)^2 = 0.0025 \\
+(0.85 - 0.90)^2 &= (-0.05)^2 = 0.0025 \\
+(1.00 - 0.90)^2 &= (+0.10)^2 = 0.0100 \\
+(0.80 - 0.90)^2 &= (-0.10)^2 = 0.0100 \\[1mm]
+\sum (x_{2i} - \bar{x}_2)^2 &= 0.0000 + 0.0025 + 0.0025 + 0.0100 + 0.0100 = 0.0250 \\[2mm]
+s_2^2 &= \frac{0.0250}{5 - 1} = \frac{0.0250}{4} = \mathbf{0.00625} \implies s_2 = \sqrt{0.00625} \approx 0.079\,\text{g/L}
+\end{align*}
+\end{stepbox}
+
+\begin{stepbox}{3. Calcul de la Variance Commune Poolée ($s_p^2$)}
+Les deux variances étant homogènes ($s_1^2 = s_2^2$), on calcule la variance résiduelle poolée :
+\begin{equation*}
+s_p^2 = \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \frac{4(0.00625) + 4(0.00625)}{4 + 4} = \frac{0.050}{8} = \mathbf{0.00625}
+\end{equation*}
+L'erreur standard de la différence entre les deux moyennes est :
+\begin{equation*}
+SE_{\text{diff}} = \sqrt{s_p^2 \left(\frac{1}{n_1} + \frac{1}{n_2}\right)} = \sqrt{0.00625 \left(\frac{1}{5} + \frac{1}{5}\right)} = \sqrt{0.00625 \times 0.40} = \sqrt{0.0025} = \mathbf{0.050\,\text{g/L}}
+\end{equation*}
+\end{stepbox}
+
+\begin{stepbox}{4. Calcul de la Statistique $t_{obs}$ de Student}
+\begin{equation*}
+t_{obs} = \frac{|\bar{x}_1 - \bar{x}_2|}{SE_{\text{diff}}} = \frac{|1.20 - 0.90|}{0.050} = \frac{0.30}{0.050} = \mathbf{6.00}
+\end{equation*}
+\end{stepbox}
+
+\begin{stepbox}{5. Règle de Décision Statistique}
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item Nombre de degrés de liberté : $df = n_1 + n_2 - 2 = 5 + 5 - 2 = 8$.
+  \item Seuil de signification : $\alpha = 0.05$ (test bilatéral).
+  \item Valeur critique lue dans la table de Student à 8 ddl :
+  \begin{equation*}
+    t_{\text{critique}} = t_{0.05}(8) = \mathbf{2.306}
+  \end{equation*}
+  \item \textbf{Comparaison :}
+  \begin{equation*}
+    t_{obs} = 6.00 > t_{\text{critique}} = 2.306 \quad (p < 0.001)
+  \end{equation*}
+\end{itemize}
+\end{stepbox}
+
+\begin{takeawaybox}{Conclusion Biologique Rédigée}
+Puisque la statistique observée $t_{obs} = 6.00$ est largement supérieure à la valeur critique théorique $2.306$, \textbf{nous rejetons l'hypothèse nulle $H_0$ au seuil $\alpha = 5\%$}.
+
+\textbf{Signification biologique :} L'administration de l'extrait végétal entraîne une diminution hautement significative de la glycémie moyenne chez les souris diabétiques ($0.90 \pm 0.035\,\text{g/L}$ vs $1.20 \pm 0.035\,\text{g/L}$, $p < 0.001$). L'extrait possède donc un effet hypoglycémiant réel démontré avec succès.
+\end{takeawaybox}
+
+\section{Exercices d'Application avec Solutions Détaillées}
+
+\begin{exercicebox}{Exercice 1 : Paramètres Descriptifs \& Précision ($SD$ vs $SEM$)}
+Dans le cadre du contrôle qualité d'un dosage d'Alpha-Amylase par spectrophotométrie, une laborantine réalise le dosage chez $n = 5$ individus sains. Les activités enzymatiques mesurées (en $\text{U/mL}$) sont :
+\begin{center}
+\textbf{24.0 \quad 28.0 \quad 25.0 \quad 27.0 \quad 26.0}
+\end{center}
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la moyenne arithmétique $\bar{X}$.
+  \item Calculez la variance corrigée de Bessel $s^2$ en explicitant chaque écart $(x_i - \bar{X})^2$.
+  \item En déduire l'écart-type $SD$ et l'erreur standard de la moyenne $SEM$.
+  \item Rédigez le résultat sous forme biologique standard ($\bar{X} \pm SD$) et justifiez la différence avec $SEM$.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution de l'Exercice 1}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Moyenne arithmétique :}
+  \begin{equation*}
+    \bar{X} = \frac{24.0 + 28.0 + 25.0 + 27.0 + 26.0}{5} = \frac{130.0}{5} = \mathbf{26.0\,\text{U/mL}}
+  \end{equation*}
+  \item \textbf{Variance corrigée ($s^2$) :}
+  Calculons les 5 écarts au carré :
+  \begin{align*}
+    (24.0 - 26.0)^2 &= (-2.0)^2 = 4.0 \\
+    (28.0 - 26.0)^2 &= (+2.0)^2 = 4.0 \\
+    (25.0 - 26.0)^2 &= (-1.0)^2 = 1.0 \\
+    (27.0 - 26.0)^2 &= (+1.0)^2 = 1.0 \\
+    (26.0 - 26.0)^2 &= (0.0)^2 = 0.0 \\[1mm]
+    \sum_{i=1}^5 (x_i - \bar{X})^2 &= 4.0 + 4.0 + 1.0 + 1.0 + 0.0 = \mathbf{10.0} \\[2mm]
+    s^2 &= \frac{\sum (x_i - \bar{X})^2}{n - 1} = \frac{10.0}{5 - 1} = \frac{10.0}{4} = \mathbf{2.50\,(\text{U/mL})^2}
+  \end{align*}
+  \item \textbf{Écart-type ($SD$) et Erreur Standard ($SEM$) :}
+  \begin{align*}
+    SD &= \sqrt{s^2} = \sqrt{2.50} \approx \mathbf{1.58\,\text{U/mL}} \\[2mm]
+    SEM &= \frac{SD}{\sqrt{n}} = \frac{1.58}{\sqrt{5}} = \frac{1.58}{2.236} \approx \mathbf{0.71\,\text{U/mL}}
+  \end{align*}
+  \item \textbf{Présentation \& Interprétation Biologique :}
+  \begin{itemize}
+    \item Pour décrire la \textbf{dispersion biologique} de l'amylase dans la population saine : $\mathbf{26.0 \pm 1.58\,\text{U/mL}}$ (l'intervalle $[\bar{X} \pm 1 SD] = [24.42\,;\,27.58]$ englobe environ $68\%$ des sujets normaux).
+    \item Le $SEM$ ($0.71\,\text{U/mL}$) quantifie l'\textbf{incertitude de la moyenne estimée} et sert lors de la comparaison statistique avec un groupe pathologique.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\begin{exercicebox}{Exercice 2 : Test $t$ de Student Complet (Effet d'un Régime Hypolipidique)}
+On évalue l'impact d'un régime hypolipidique sur la teneur en cholestérol hépatique (en $\text{mg/g}$ de tissu) chez le rat. Deux lots indépendants de $n = 4$ animaux sont comparés :
+\begin{itemize}
+  \item \textbf{Lot Témoin (Régime Standard) :} 4.0, 4.4, 4.1, 4.3 (Moyenne $\bar{x}_1 = 4.20\,\text{mg/g}$).
+  \item \textbf{Lot Traité (Régime Hypolipidique) :} 3.4, 3.6, 3.3, 3.7 (Moyenne $\bar{x}_2 = 3.50\,\text{mg/g}$).
+\end{itemize}
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Énoncez les hypothèses nulles $H_0$ et alternative $H_1$.
+  \item Calculez les variances $s_1^2$ et $s_2^2$, puis la variance commune poolée $s_p^2$.
+  \item Calculez l'erreur standard de la différence $SE_{\text{diff}}$ et la statistique observée $t_{\text{obs}}$.
+  \item Déterminez le nombre de ddl et la valeur critique $t_{0.05}$ dans la table de Student.
+  \item Concluez au seuil $\alpha = 5\%$ en termes biologiques.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution de l'Exercice 2}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Hypothèses :}
+  $H_0 : \mu_1 = \mu_2$ (Pas d'effet du régime sur le cholestérol hépatique) vs $H_1 : \mu_1 \neq \mu_2$ (Différence réelle).
+  \item \textbf{Variances et variance commune poolée ($s_p^2$) :}
+  \begin{align*}
+    \text{Lot Témoin :} \quad & \sum (x_{1i} - 4.2)^2 = (-0.2)^2 + (0.2)^2 + (-0.1)^2 + (0.1)^2 = 0.10 \\
+    & s_1^2 = \frac{0.10}{4 - 1} = \frac{0.10}{3} \approx 0.0333 \\[1mm]
+    \text{Lot Traité :} \quad & \sum (x_{2i} - 3.5)^2 = (-0.1)^2 + (0.1)^2 + (-0.2)^2 + (0.2)^2 = 0.10 \\
+    & s_2^2 = \frac{0.10}{4 - 1} = \frac{0.10}{3} \approx 0.0333 \\[2mm]
+    s_p^2 &= \frac{3(0.0333) + 3(0.0333)}{6} = \frac{0.20}{6} = \mathbf{0.0333}
+  \end{align*}
+  \item \textbf{Erreur standard de la différence \& Statistique $t_{\text{obs}}$ :}
+  \begin{align*}
+    SE_{\text{diff}} &= \sqrt{s_p^2 \left(\frac{1}{n_1} + \frac{1}{n_2}\right)} = \sqrt{0.0333 \times \left(\frac{1}{4} + \frac{1}{4}\right)} \\
+    &= \sqrt{0.0333 \times 0.50} = \sqrt{0.01667} \approx \mathbf{0.129\,\text{mg/g}} \\[2mm]
+    t_{\text{obs}} &= \frac{|\bar{x}_1 - \bar{x}_2|}{SE_{\text{diff}}} = \frac{|4.20 - 3.50|}{0.129} = \frac{0.70}{0.129} \approx \mathbf{5.42}
+  \end{align*}
+  \item \textbf{Degrés de liberté \& Valeur critique :}
+  $df = n_1 + n_2 - 2 = 4 + 4 - 2 = \mathbf{6}$.\\
+  Dans la table de Student bilatérale à $\alpha = 0.05$ et $df = 6$ : $\mathbf{t_{\text{critique}} = 2.447}$.
+  \item \textbf{Décision \& Conclusion Biologique :}
+  Puisque $t_{\text{obs}} = 5.42 > t_{\text{critique}} = 2.447$ ($p < 0.01$), \textbf{nous rejetons $H_0$ au seuil de 5\%}.\\
+  \textbf{Conclusion biologique :} Le régime hypolipidique induit une diminution statistiquement très significative du cholestérol hépatique ($3.50\,\text{mg/g}$ vs $4.20\,\text{mg/g}$, réduction de $-16.7\%$).
+\end{enumerate}
+\end{solutionbox}
+
+\section*{Annexe : Extrait de la Table de Student ($t$ bilatéral)}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{ccccccc}
+\toprule
+\textbf{ddl ($df$)} & $\alpha = \mathbf{0.20}$ & $\alpha = \mathbf{0.10}$ & $\alpha = \mathbf{0.05}$ & $\alpha = \mathbf{0.02}$ & $\alpha = \mathbf{0.01}$ & $\alpha = \mathbf{0.001}$ \\
+\midrule
+1 & 3.078 & 6.314 & 12.706 & 31.821 & 63.657 & 636.619 \\
+2 & 1.886 & 2.920 & 4.303 & 6.965 & 9.925 & 31.599 \\
+3 & 1.638 & 2.353 & 3.182 & 4.541 & 5.841 & 12.924 \\
+4 & 1.533 & 2.132 & 2.776 & 3.747 & 4.604 & 8.610 \\
+5 & 1.476 & 2.015 & 2.571 & 3.365 & 4.032 & 6.869 \\
+\rowcolor{BioTealLight}
+\textbf{6 (Exercice 2)} & 1.440 & 1.943 & \textbf{2.447} & 3.143 & 3.707 & 5.959 \\
+7 & 1.415 & 1.895 & 2.365 & 2.998 & 3.499 & 5.408 \\
+\rowcolor{BioTealLight}
+\textbf{8 (Cours)} & 1.397 & 1.860 & \textbf{2.306} & 2.896 & 3.355 & 5.041 \\
+9 & 1.383 & 1.833 & 2.262 & 2.821 & 3.250 & 4.781 \\
+10 & 1.372 & 1.812 & 2.228 & 2.764 & 3.169 & 4.587 \\
+12 & 1.356 & 1.782 & 2.179 & 2.681 & 3.055 & 4.318 \\
+15 & 1.341 & 1.753 & 2.131 & 2.602 & 2.947 & 4.073 \\
+20 & 1.325 & 1.725 & 2.086 & 2.528 & 2.845 & 3.850 \\
+30 & 1.310 & 1.697 & 2.042 & 2.457 & 2.750 & 3.646 \\
+$\infty$ & 1.282 & 1.645 & 1.960 & 2.326 & 2.576 & 3.291 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\end{document}

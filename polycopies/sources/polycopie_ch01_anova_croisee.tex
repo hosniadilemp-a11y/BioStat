@@ -1,0 +1,492 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/polycopie_style}
+
+\begin{document}
+
+\makepolycopieheader{Analyse de la Variance (ANOVA) à Un et Deux Facteurs Croisés}{Décomposition des Sommes de Carrés, Notion d'Interaction \& Calculs Pas-à-Pas}{CHAPITRE 1}
+
+\section{Introduction : Pourquoi l'ANOVA ?}
+
+Dans la démarche expérimentale en biochimie, on souhaite très fréquemment comparer les effets de plusieurs milieux de culture, de plusieurs concentrations d'un inhibiteur, ou de combinaisons de molécules thérapeutiques.
+
+\begin{warnbox}{Le Piège Mortel de la Répétition des Tests de Student}
+Supposons que nous souhaitions comparer l'efficacité de 4 nouveaux antibiotiques. Une erreur classique consisterait à effectuer des tests de Student deux à deux : (1 vs 2), (1 vs 3), (1 vs 4), (2 vs 3), (2 vs 4), (3 vs 4), soit $\binom{4}{2} = 6$ tests statistiques successifs.
+\begin{itemize}[leftmargin=*, label=\faTimes]
+  \item Si chaque test individuel est conduit avec un risque d'erreur $\alpha = 0.05$ ($5\%$), la probabilité de commettre \textbf{au moins un faux positif} sur l'ensemble de l'expérience explose :
+  \begin{equation*}
+    \alpha_{\text{global}} = 1 - (1 - 0.05)^6 = 1 - (0.95)^6 = 1 - 0.735 = \mathbf{26.5\%}
+  \end{equation*}
+  \item Avec 6 groupes (15 comparaisons), le risque de faux positif dépasse les \textbf{53\%} !
+\end{itemize}
+\textbf{Conclusion :} L'\textbf{ANOVA} (ANalysis Of VAriance) résout définitivement ce problème en réalisant un \textbf{test d'hypothèse global unique} qui garantit que le risque d'erreur global reste strictement bridé à $\alpha = 5\%$.
+\end{warnbox}
+
+\begin{conceptbox}{Le Paradoxe de l'ANOVA : Comparer des Moyennes en Analysant des Variances}
+Bien que l'objectif biologique soit de déterminer si les \textbf{moyennes} des groupes sont différentes, la méthode statistique procède en décomposant et en comparant les \textbf{variances} :
+\begin{equation*}
+F_{\text{observé}} = \frac{\text{Variabilité expliquée par les Traitements (Inter-groupes)}}{\text{Variabilité aléatoire résiduelle (Intra-groupes)}}
+\end{equation*}
+Si la variabilité entre les groupes est significativement plus grande que le bruit de fond intra-groupe ($F \gg 1$), nous concluons que le traitement a un effet biologique réel !
+\end{conceptbox}
+
+\vspace{3mm}
+\hrule height 1pt color BioNavy
+\vspace{3mm}
+
+\section{Partie 1 : ANOVA à Un Facteur (One-Way ANOVA)}
+
+\subsection{Modèle \& Notations}
+On étudie une variable quantitative continue $Y$ mesurée sur $k$ populations ou lots indépendants correspondant aux $k$ modalités d'un facteur unique.
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item $k$ : Nombre de groupes expérimentaux ($i = 1, 2, \dots, k$).
+  \item $n_i$ : Nombre de réplicats biologiques dans le groupe $i$ ($j = 1, 2, \dots, n_i$).
+  \item $N = \sum_{i=1}^k n_i$ : Nombre total d'observations dans l'expérience.
+  \item $x_{ij}$ : Mesure biologique individuelle du réplicat $j$ dans le groupe $i$.
+  \item $\bar{x}_i$ : Moyenne arithmétique de l'échantillon du groupe $i$.
+  \item $\bar{X}$ : Moyenne générale de toutes les $N$ observations.
+\end{itemize}
+
+\subsection{Hypothèses Testées}
+\begin{equation*}
+H_0 : \mu_1 = \mu_2 = \dots = \mu_k \quad \text{(Égalité des moyennes, pas d'effet du facteur)}
+\end{equation*}
+contre
+\begin{equation*}
+H_1 : \exists (i, j) \text{ tel que } \mu_i \neq \mu_j \quad \text{(Au moins deux groupes ont des moyennes différentes)}
+\end{equation*}
+
+\subsection{Conditions d'Application}
+Pour que le test $F$ de Fisher soit mathématiquement valide, 3 conditions doivent être réunies :
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}]
+  \item \textbf{Normalité des populations :} La variable suit une distribution gaussienne dans chaque groupe (vérifiée par test de Shapiro-Wilk ou graphe Q-Q).
+  \item \textbf{Homoscédasticité (Homogénéité des variances) :} Toutes les populations ont la même variance $\sigma_1^2 = \sigma_2^2 = \dots = \sigma_k^2 = \sigma^2$ (vérifiée par test de Levene ou Bartlett).
+  \item \textbf{Indépendance des observations :} Les mesures sont réalisées sur des individus ou cultures totalement indépendants.
+\end{enumerate}
+
+\subsection{Décomposition Fondamentale des Écarts \& Sommes de Carrés}
+Pour chaque mesure $x_{ij}$, l'écart à la moyenne générale se décompose en deux composantes :
+\begin{equation*}
+\underbrace{(x_{ij} - \bar{X})}_{\text{Écart Total}} = \underbrace{(\bar{x}_i - \bar{X})}_{\text{Écart Factoriel (Inter-groupes)}} + \underbrace{(x_{ij} - \bar{x}_i)}_{\text{Écart Résiduel (Intra-groupe)}}
+\end{equation*}
+
+En élevant au carré et en sommant sur toutes les observations, les doubles produits s'annulent :
+\begin{equation*}
+\mathbf{SCT = SCE + SCR}
+\end{equation*}
+
+\begin{itemize}[leftmargin=*, label=\faCircle]
+  \item \textbf{Somme des Carrés Totale (SCT) :} Variabilité totale de l'expérience ($df = N - 1$).
+  \begin{equation*}
+    SCT = \sum_{i=1}^k \sum_{j=1}^{n_i} (x_{ij} - \bar{X})^2
+  \end{equation*}
+  \item \textbf{Somme des Carrés Expliquée par le Facteur (SCE) :} Variabilité due aux traitements ($df = k - 1$).
+  \begin{equation*}
+    SCE = \sum_{i=1}^k n_i (\bar{x}_i - \bar{X})^2
+  \end{equation*}
+  \item \textbf{Somme des Carrés Résiduelle (SCR) :} Variabilité résiduelle / bruit biologique ($df = N - k$).
+  \begin{equation*}
+    SCR = \sum_{i=1}^k \sum_{j=1}^{n_i} (x_{ij} - \bar{x}_i)^2
+  \end{equation*}
+\end{itemize}
+
+\subsection{Le Tableau Récapitulatif d'ANOVA à 1 Facteur}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Source de Variation} & \textbf{ddl ($df$)} & \textbf{Somme des Carrés (SC)} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} & \textbf{Décision ($\alpha=5\%$)} \\
+\midrule
+\textbf{Facteur (Inter-groupes)} & $k - 1$ & $SCE$ & $MS_E = \frac{SCE}{k - 1}$ & $\mathbf{F_{\text{obs}} = \frac{MS_E}{MS_R}}$ & Rejet de $H_0$ si \\
+\textbf{Résiduelle (Intra-groupes)} & $N - k$ & $SCR$ & $MS_R = \frac{SCR}{N - k}$ & & $F_{\text{obs}} > F_{0.05}(k-1, N-k)$ \\
+\midrule
+\textbf{Total} & $N - 1$ & $SCT$ & & & \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\subsection{Grand Exemple Numérique Pas-à-Pas : Prolifération Cellulaire \& Milieux}
+
+\paragraph{Problématique Biologique :}
+Un laboratoire de biotechnologie compare l'effet de $k = 3$ milieux de culture différents sur la prolifération de cellules souches mésenchymateuses :
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item \textbf{Milieu 1 :} Milieu de base standard (Témoin).
+  \item \textbf{Milieu 2 :} Milieu enrichi en facteurs de croissance (Facteur A).
+  \item \textbf{Milieu 3 :} Milieu enrichi en biomolécules marines (Facteur B).
+\end{itemize}
+Pour chaque milieu, $n = 4$ flacons indépendants sont ensemencés ($N = 3 \times 4 = 12$ flacons au total). La densité cellulaire est mesurée à J+5 (en $10^5\,\text{cellules/mL}$).
+
+\begin{stepbox}{Tableau des Données Brutes}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Milieu de Culture} & \textbf{Flacon 1} & \textbf{Flacon 2} & \textbf{Flacon 3} & \textbf{Flacon 4} & \textbf{Moyenne du Groupe ($\bar{x}_i$)} \\
+\midrule
+\textbf{Milieu 1 (Standard)} & 10 & 12 & 11 & 11 & $\bar{x}_1 = \frac{10+12+11+11}{4} = \mathbf{11.0}$ \\
+\textbf{Milieu 2 (Enrichi A)} & 14 & 16 & 15 & 15 & $\bar{x}_2 = \frac{14+16+15+15}{4} = \mathbf{15.0}$ \\
+\textbf{Milieu 3 (Enrichi B)} & 18 & 20 & 19 & 19 & $\bar{x}_3 = \frac{18+20+19+19}{4} = \mathbf{19.0}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{stepbox}
+
+\begin{stepbox}{Étape 1 : Calcul de la Moyenne Générale ($\bar{X}$)}
+\begin{equation*}
+\bar{X} = \frac{\sum x_{ij}}{N} = \frac{44 + 60 + 76}{12} = \frac{180}{12} = \mathbf{15.0} \times 10^5\,\text{cellules/mL}
+\end{equation*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 2 : Calcul de la Somme des Carrés Expliquée ($SCE$)}
+Chaque moyenne de groupe $\bar{x}_i$ est comparée à la moyenne générale $\bar{X} = 15.0$ et pondérée par $n_i = 4$ :
+\begin{align*}
+\text{Milieu 1 :} \quad & 4 \times (11.0 - 15.0)^2 = 4 \times (-4.0)^2 = 4 \times 16 = 64 \\
+\text{Milieu 2 :} \quad & 4 \times (15.0 - 15.0)^2 = 4 \times (0.0)^2 = 4 \times 0 = 0 \\
+\text{Milieu 3 :} \quad & 4 \times (19.0 - 15.0)^2 = 4 \times (+4.0)^2 = 4 \times 16 = 64 \\[2mm]
+\mathbf{SCE} &= 64 + 0 + 64 = \mathbf{128.0}
+\end{align*}
+Degrés de liberté : $df_{\text{facteur}} = k - 1 = 3 - 1 = \mathbf{2}$.
+\end{stepbox}
+
+\begin{stepbox}{Étape 3 : Calcul de la Somme des Carrés Résiduelle ($SCR$)}
+Chaque mesure individuelle est comparée à la moyenne de son propre groupe $\bar{x}_i$ :
+\begin{align*}
+\text{Milieu 1 :} \quad & (10-11)^2 + (12-11)^2 + (11-11)^2 + (11-11)^2 = 1 + 1 + 0 + 0 = 2 \\
+\text{Milieu 2 :} \quad & (14-15)^2 + (16-15)^2 + (15-15)^2 + (15-15)^2 = 1 + 1 + 0 + 0 = 2 \\
+\text{Milieu 3 :} \quad & (18-19)^2 + (20-19)^2 + (19-19)^2 + (19-19)^2 = 1 + 1 + 0 + 0 = 2 \\[1mm]
+\mathbf{SCR} &= 2 + 2 + 2 = \mathbf{6.0}
+\end{align*}
+Degrés de liberté : $df_{\text{résiduelle}} = N - k = 12 - 3 = \mathbf{9}$.\\
+\textbf{Vérification de la somme totale :} $SCT = SCE + SCR = 128.0 + 6.0 = 134.0$ avec $df = N - 1 = 11$.
+\end{stepbox}
+
+\begin{stepbox}{Étape 4 : Remplissage du Tableau d'ANOVA \& Calcul du Ratio $F_{\text{obs}}$}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Source} & \textbf{ddl} & \textbf{Somme des Carrés} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{critique}}(2, 9)$} \\
+\midrule
+\textbf{Milieu (Facteur)} & 2 & 128.0 & $MS_E = \frac{128.0}{2} = \mathbf{64.0}$ & \multirow{2}{*}{$\mathbf{\frac{64.0}{0.667} = 96.0}$} & \multirow{2}{*}{\textbf{4.26}} \\
+\textbf{Résiduelle} & 9 & 6.0 & $MS_R = \frac{6.0}{9} = \mathbf{0.667}$ & & \\
+\midrule
+\textbf{Total} & 11 & 134.0 & & & \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{stepbox}
+
+\begin{takeawaybox}{Décision \& Interprétation Biologique}
+\begin{itemize}[leftmargin=*, label=\faCheckCircle]
+  \item \textbf{Comparaison :} $F_{\text{obs}} = 96.0 \gg F_{\text{critique}} = 4.26$ ($p < 0.0001$).
+  \item \textbf{Décision statistique :} Nous rejetons catégoriquement $H_0$ au seuil $\alpha = 5\%$.
+  \item \textbf{Conclusion biologique :} La nature du milieu de culture exerce un effet hautement significatif sur la prolifération des cellules souches. Le Milieu 3 permet d'atteindre la densité la plus élevée ($19.0 \times 10^5\,\text{cellules/mL}$).
+\end{itemize}
+\end{takeawaybox}
+
+\vspace{4mm}
+\hrule height 1pt color BioNavy
+\vspace{4mm}
+
+\section{Partie 2 : ANOVA à Deux Facteurs Croisés avec Répétitions}
+
+\subsection{Définition \& Notion Fondamentale d'Interaction}
+Dans la majorité des protocoles de biologie appliquée, on ne teste pas un facteur isolé, mais deux facteurs simultanément pour étudier leur synergie ou leur antagonisme.
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item \textbf{Facteur A} comportant $p$ modalités ($i = 1, 2, \dots, p$).
+  \item \textbf{Facteur B} comportant $q$ modalités ($j = 1, 2, \dots, q$).
+  \item Chaque case $(A_i, B_j)$ reçoit $n$ réplicats biologiques ($k = 1, 2, \dots, n$).
+  \item Nombre total d'observations : $N = p \times q \times n$.
+\end{itemize}
+
+\begin{conceptbox}{Qu'est-ce que l'Interaction ($A \times B$) en Biologie ?}
+Il y a \textbf{interaction} lorsque l'effet du Facteur A sur la réponse biologique n'est pas le même selon la modalité du Facteur B.
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item \textbf{Absence d'interaction (Effets additifs stricts) :} Les courbes de réponse sont rigoureusement \textbf{parallèles}. L'effet de A s'ajoute simplement à celui de B.
+  \item \textbf{Synergie positive :} L'association des deux facteurs produit un effet biologique bien supérieur à la somme de leurs effets séparés (courbes divergentes).
+  \item \textbf{Antagonisme / Inhibition :} Un facteur bloque ou inverse l'action de l'autre (courbes qui se croisent).
+\end{itemize}
+\end{conceptbox}
+
+\subsection{Modèle Linéaire \& Décomposition des Sommes de Carrés}
+Le modèle s'écrit pour chaque observation $x_{ijk}$ :
+\begin{equation*}
+x_{ijk} = \mu + \alpha_i + \beta_j + (\alpha\beta)_{ij} + \varepsilon_{ijk}
+\end{equation*}
+La variabilité totale $SCT$ se décompose en 4 composantes orthogonales indépendantes :
+\begin{equation*}
+\mathbf{SCT = SCA + SCB + SCAB + SCR}
+\end{equation*}
+
+\begin{itemize}[leftmargin=*, label=\faCircle]
+  \item \textbf{Effet Principal A ($SCA$) :} $SCA = q \cdot n \sum_{i=1}^p (\bar{x}_{i\cdot\cdot} - \bar{X})^2$ avec $df_A = p - 1$.
+  \item \textbf{Effet Principal B ($SCB$) :} $SCB = p \cdot n \sum_{j=1}^q (\bar{x}_{\cdot j\cdot} - \bar{X})^2$ avec $df_B = q - 1$.
+  \item \textbf{Interaction ($SCAB$) :} $SCAB = n \sum_{i=1}^p \sum_{j=1}^q (\bar{x}_{ij\cdot} - \bar{x}_{i\cdot\cdot} - \bar{x}_{\cdot j\cdot} + \bar{X})^2$ avec $df_{AB} = (p-1)(q-1)$.\\
+  \textit{Formule pratique :} $SCAB = SC_{\text{Sous-Total (cases)}} - SCA - SCB$.
+  \item \textbf{Erreur Résiduelle ($SCR$) :} $SCR = \sum_{i=1}^p \sum_{j=1}^q \sum_{k=1}^n (x_{ijk} - \bar{x}_{ij\cdot})^2$ avec $df_{\text{res}} = p \cdot q(n-1)$.
+\end{itemize}
+
+\subsection{Tableau Récapitulatif de l'ANOVA à Deux Facteurs Croisés}
+On réalise \textbf{trois tests $F$ distincts} en utilisant systématiquement le carré moyen résiduel $MS_R$ comme dénominateur :
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Source de Variation} & \textbf{ddl} & \textbf{Somme des Carrés} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} & \textbf{Valeur Critique ($\alpha=5\%$)} \\
+\midrule
+\textbf{Facteur A} & $p - 1$ & $SCA$ & $MS_A = \frac{SCA}{p - 1}$ & $\mathbf{F_A = \frac{MS_A}{MS_R}}$ & $F_{0.05}(p-1, df_{\text{res}})$ \\[1.5mm]
+\textbf{Facteur B} & $q - 1$ & $SCB$ & $MS_B = \frac{SCB}{q - 1}$ & $\mathbf{F_B = \frac{MS_B}{MS_R}}$ & $F_{0.05}(q-1, df_{\text{res}})$ \\[1.5mm]
+\textbf{Interaction $A \times B$} & $(p-1)(q-1)$ & $SCAB$ & $MS_{AB} = \frac{SCAB}{(p-1)(q-1)}$ & $\mathbf{F_{AB} = \frac{MS_{AB}}{MS_R}}$ & $F_{0.05}(df_{AB}, df_{\text{res}})$ \\[1.5mm]
+\textbf{Résiduelle} & $pq(n-1)$ & $SCR$ & $MS_R = \frac{SCR}{pq(n-1)}$ & --- & --- \\
+\midrule
+\textbf{Total} & $N - 1$ & $SCT$ & & & \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\subsection{Grand Exemple Numérique Pas-à-Pas : Activité Enzymatique Hépatique}
+
+\paragraph{Problématique Biologique :}
+On étudie l'activité de la Catalase hépatique (en U/mg de protéines) chez des hépatocytes en culture soumis à deux facteurs :
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item \textbf{Facteur A (Traitement Protecteur Polyphénol) :} $p = 2$ modalités : Sans Polyphénol ($A_1$) vs Avec Polyphénol ($A_2$).
+  \item \textbf{Facteur B (Stress Oxydant $\text{H}_2\text{O}_2$) :} $q = 3$ modalités : Nul ($B_1$), Modéré ($B_2$), Sévère ($B_3$).
+  \item Chaque condition comprend $n = 3$ boîtes de culture indépendantes ($N = 2 \times 3 \times 3 = 18$ boîtes au total).
+\end{itemize}
+
+\begin{stepbox}{Tableau des Données Brutes \& Moyennes par Condition ($n=3$)}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Traitement (Facteur A)} & \textbf{Stress Nul ($B_1$)} & \textbf{Stress Modéré ($B_2$)} & \textbf{Stress Sévère ($B_3$)} & \textbf{Moyenne Marginale A ($\bar{x}_{i\cdot\cdot}$)} \\
+\midrule
+\textbf{Sans Polyphénol ($A_1$)} & 20, 22, 21 $\implies \mathbf{21.0}$ & 14, 16, 15 $\implies \mathbf{15.0}$ & 8, 10, 9 $\implies \mathbf{9.0}$ & $\bar{x}_{1\cdot\cdot} = \frac{21+15+9}{3} = \mathbf{15.0}$ \\[1mm]
+\textbf{Avec Polyphénol ($A_2$)} & 26, 28, 27 $\implies \mathbf{27.0}$ & 24, 26, 25 $\implies \mathbf{25.0}$ & 22, 24, 23 $\implies \mathbf{23.0}$ & $\bar{x}_{2\cdot\cdot} = \frac{27+25+23}{3} = \mathbf{25.0}$ \\
+\midrule
+\textbf{Moyenne Marginale B ($\bar{x}_{\cdot j\cdot}$)} & $\bar{x}_{\cdot 1\cdot} = \frac{21+27}{2} = \mathbf{24.0}$ & $\bar{x}_{\cdot 2\cdot} = \frac{15+25}{2} = \mathbf{20.0}$ & $\bar{x}_{\cdot 3\cdot} = \frac{9+23}{2} = \mathbf{16.0}$ & $\mathbf{\bar{X} = \frac{15.0+25.0}{2} = 20.0}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{stepbox}
+
+\begin{stepbox}{Étape 1 : Moyenne Générale ($\bar{X}$)}
+\begin{equation*}
+\bar{X} = 20.0\,\text{U/mg}
+\end{equation*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 2 : Somme des Carrés du Facteur A (Polyphénol)}
+$p = 2$, nombre total d'observations par modalité de A = $q \times n = 3 \times 3 = 9$ :
+\begin{align*}
+\text{Sans Polyphénol ($A_1$) :} \quad & 9 \times (15.0 - 20.0)^2 = 9 \times (-5.0)^2 = 9 \times 25 = 225.0 \\
+\text{Avec Polyphénol ($A_2$) :} \quad & 9 \times (25.0 - 20.0)^2 = 9 \times (+5.0)^2 = 9 \times 25 = 225.0 \\[2mm]
+\mathbf{SCA} &= 225.0 + 225.0 = \mathbf{450.0} \quad \text{avec } df_A = p - 1 = 2 - 1 = \mathbf{1}
+\end{align*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 3 : Somme des Carrés du Facteur B (Stress Oxydant)}
+$q = 3$, nombre total d'observations par modalité de B = $p \times n = 2 \times 3 = 6$ :
+\begin{align*}
+\text{Stress Nul ($B_1$) :} \quad & 6 \times (24.0 - 20.0)^2 = 6 \times (+4.0)^2 = 6 \times 16 = 96.0 \\
+\text{Stress Modéré ($B_2$) :} \quad & 6 \times (20.0 - 20.0)^2 = 6 \times (0.0)^2 = 6 \times 0 = 0.0 \\
+\text{Stress Sévère ($B_3$) :} \quad & 6 \times (16.0 - 20.0)^2 = 6 \times (-4.0)^2 = 6 \times 16 = 96.0 \\[2mm]
+\mathbf{SCB} &= 96.0 + 0.0 + 96.0 = \mathbf{192.0} \quad \text{avec } df_B = q - 1 = 3 - 1 = \mathbf{2}
+\end{align*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 4 : Somme des Carrés de l'Interaction ($SCAB$)}
+On calcule d'abord la variabilité inter-cases ($SC_{\text{cases}}$ avec $n = 3$ par case) :
+\begin{align*}
+SC_{\text{cases}} &= 3 \times \left[ (21-20)^2 + (15-20)^2 + (9-20)^2 + (27-20)^2 + (25-20)^2 + (23-20)^2 \right] \\
+&= 3 \times \left[ 1^2 + (-5)^2 + (-11)^2 + 7^2 + 5^2 + 3^2 \right] \\
+&= 3 \times \left[ 1 + 25 + 121 + 49 + 25 + 9 \right] = 3 \times 230 = \mathbf{690.0} \\[2mm]
+\mathbf{SCAB} &= SC_{\text{cases}} - SCA - SCB = 690.0 - 450.0 - 192.0 = \mathbf{48.0}
+\end{align*}
+Degrés de liberté : $df_{AB} = (p - 1)(q - 1) = (2 - 1)(3 - 1) = 1 \times 2 = \mathbf{2}$.
+\end{stepbox}
+
+\begin{stepbox}{Étape 5 : Somme des Carrés Résiduelle ($SCR$)}
+Pour chacune des 6 cases expérimentales, la variance intra-groupe sur les 3 répétitions donne :
+Dans chaque case, les 3 valeurs sont de la forme $m-1, m+1, m$ $\implies (-1)^2 + (+1)^2 + 0^2 = 2$.
+Comme il y a 6 cases :
+\begin{equation*}
+\mathbf{SCR} = 6 \times 2 = \mathbf{12.0} \quad \text{avec } df_{\text{res}} = p \cdot q(n - 1) = 2 \times 3 \times (3 - 1) = 6 \times 2 = \mathbf{12}
+\end{equation*}
+\textbf{Vérification totale :} $SCT = 450.0 + 192.0 + 48.0 + 12.0 = \mathbf{702.0}$ avec $df_{\text{total}} = 18 - 1 = \mathbf{17}$.
+\end{stepbox}
+
+\begin{stepbox}{Étape 6 : Tableau Final d'ANOVA \& Statistiques $F_{\text{obs}}$}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Source de Variation} & \textbf{ddl} & \textbf{SC} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{critique}}(5\%)$} & \textbf{Décision} \\
+\midrule
+\textbf{Facteur A (Polyphénol)} & 1 & 450.0 & $\frac{450.0}{1} = 450.0$ & $F_A = \frac{450.0}{1.0} = \mathbf{450.0}$ & $F_{0.05}(1, 12) = \mathbf{4.75}$ & $p < 0.0001$ (Signif.) \\
+\textbf{Facteur B (Stress $\text{H}_2\text{O}_2$)} & 2 & 192.0 & $\frac{192.0}{2} = 96.0$ & $F_B = \frac{96.0}{1.0} = \mathbf{96.0}$ & $F_{0.05}(2, 12) = \mathbf{3.89}$ & $p < 0.0001$ (Signif.) \\
+\textbf{Interaction $A \times B$} & 2 & 48.0 & $\frac{48.0}{2} = 24.0$ & $F_{AB} = \frac{24.0}{1.0} = \mathbf{24.0}$ & $F_{0.05}(2, 12) = \mathbf{3.89}$ & $p < 0.0001$ (Signif.) \\
+\textbf{Résiduelle} & 12 & 12.0 & $MS_R = \frac{12.0}{12} = \mathbf{1.0}$ & --- & --- & --- \\
+\midrule
+\textbf{Total} & 17 & 702.0 & & & & \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{stepbox}
+
+\begin{takeawaybox}{Conclusions Biologiques Rédigées}
+\begin{enumerate}[leftmargin=*, label=\faCheckCircle\ \textbf{\arabic*.}]
+  \item \textbf{Effet Principal du Polyphénol ($F_A = 450.0, p < 0.001$) :} Le traitement antioxydant augmente très significativement l'activité de la catalase (moyenne de $25.0\,\text{U/mg}$ avec polyphénol vs $15.0\,\text{U/mg}$ sans polyphénol).
+  \item \textbf{Effet Principal du Stress ($F_B = 96.0, p < 0.001$) :} L'exposition croissante au peroxyde d'hydrogène diminue significativement l'activité enzymatique ($24.0 \rightarrow 20.0 \rightarrow 16.0\,\text{U/mg}$).
+  \item \textbf{Interaction Significative $A \times B$ ($F_{AB} = 24.0, p < 0.001$) :} L'effet néfaste du stress oxydant est fortement atténué en présence du polyphénol :
+  \begin{itemize}
+    \item Sans polyphénol, l'activité s'effondre de $21.0$ à $9.0\,\text{U/mg}$ ($\Delta = -12\,\text{U/mg}$).
+    \item En présence de polyphénol, la chute n'est que de $27.0$ à $23.0\,\text{U/mg}$ ($\Delta = -4\,\text{U/mg}$).
+  \end{itemize}
+  \textbf{Conclusion biologique majeure :} Le polyphénol exerce un \textbf{effet protecteur hépatique direct} en prévenant l'inactivation de la catalase face au stress oxydatif.
+\end{enumerate}
+\end{takeawaybox}
+
+\section{Exercices d'Application avec Solutions Détaillées}
+
+\begin{exercicebox}{Exercice 1 : ANOVA à Un Facteur (Élimination Hépatique du Cadmium)}
+Un toxicologue teste l'effet d'un chélateur sur la concentration de cadmium (en $\mu\text{g/g}$ de foie) chez le rat. Trois doses sont administrées ($k = 3$) avec $n = 3$ rats indépendants par dose ($N = 9$) :
+\begin{itemize}
+  \item \textbf{Dose 0 (Véhicule) :} 14.0, 16.0, 15.0 $\implies \bar{x}_1 = 15.0\,\mu\text{g/g}$.
+  \item \textbf{Dose Faible ($10\,\text{mg/kg}$) :} 10.0, 12.0, 11.0 $\implies \bar{x}_2 = 11.0\,\mu\text{g/g}$.
+  \item \textbf{Dose Forte ($50\,\text{mg/kg}$) :} 6.0, 8.0, 7.0 $\implies \bar{x}_3 = 7.0\,\mu\text{g/g}$.
+\end{itemize}
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez la moyenne générale $\bar{X}$.
+  \item Calculez la somme des carrés expliquée ($SCE$) et la somme des carrés résiduelle ($SCR$).
+  \item Dressez le tableau complet d'ANOVA ($df, SC, MS, F_{\text{obs}}$).
+  \item Au seuil $\alpha = 5\%$ avec $F_{\text{critique}}(2, 6) = 5.14$, quelle est votre décision et la conclusion biologique ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution de l'Exercice 1}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Moyenne générale :}
+  \begin{equation*}
+    \bar{X} = \frac{15.0 + 11.0 + 7.0}{3} = \frac{33.0}{3} = \mathbf{11.0\,\mu\text{g/g}}
+  \end{equation*}
+  \item \textbf{Calcul des sommes de carrés :}
+  \begin{align*}
+    SCE &= 3 \times \left[ (15.0 - 11.0)^2 + (11.0 - 11.0)^2 + (7.0 - 11.0)^2 \right] \\
+    &= 3 \times \left[ 4^2 + 0^2 + (-4)^2 \right] = 3 \times [16 + 0 + 16] = 3 \times 32 = \mathbf{96.0} \quad (df = 3 - 1 = 2) \\[1mm]
+    SCR &= \sum_{i=1}^3 \left[ (m_i - 1 - m_i)^2 + (m_i + 1 - m_i)^2 + (m_i - m_i)^2 \right] \\
+    &= 3 \times [(-1)^2 + (+1)^2 + 0^2] = 3 \times [1 + 1 + 0] = 3 \times 2 = \mathbf{6.0} \quad (df = 9 - 3 = 6) \\[1mm]
+    SCT &= SCE + SCR = 96.0 + 6.0 = 102.0 \quad (df = 9 - 1 = 8)
+  \end{align*}
+  \item \textbf{Tableau d'ANOVA :}
+  \begin{center}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lccccc}
+  \toprule
+  \textbf{Source} & \textbf{ddl} & \textbf{SC} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{critique}}(2, 6)$} \\
+  \midrule
+  \textbf{Dose de Chélateur} & 2 & 96.0 & $MS_E = \frac{96.0}{2} = 48.0$ & \multirow{2}{*}{$\mathbf{\frac{48.0}{1.0} = 48.0}$} & \multirow{2}{*}{\textbf{5.14}} \\
+  \textbf{Résiduelle} & 6 & 6.0 & $MS_R = \frac{6.0}{6} = 1.0$ & & \\
+  \midrule
+  \textbf{Total} & 8 & 102.0 & & & \\
+  \bottomrule
+  \end{tabular}%
+  }
+  \end{center}
+  \item \textbf{Décision \& Conclusion :}
+  Puisque $F_{\text{obs}} = 48.0 \gg F_{\text{critique}} = 5.14$ ($p < 0.001$), \textbf{nous rejetons $H_0$}.\\
+  \textbf{Conclusion biologique :} Le chélateur induit une diminution dose-dépendante hautement significative de la charge hépatique en cadmium (de $15.0$ à $7.0\,\mu\text{g/g}$, soit $-53.3\%$).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{exercicebox}{Exercice 2 : ANOVA à Deux Facteurs Croisés (Génotype $\times$ Régime sur GLUT4)}
+On dose l'expression relative du transporteur de glucose GLUT4 dans le muscle chez des souris selon le Génotype (Facteur A, $p=2$ : Sauvage $A_1$ vs Knockout $A_2$) et le Régime (Facteur B, $q=2$ : Standard $B_1$ vs Hyperlipidique $B_2$), avec $n = 3$ souris par lot ($N = 12$) :
+\begin{itemize}
+  \item $A_1 B_1$ (Sauvage, Standard) : 19.0, 21.0, 20.0 $\implies \bar{x}_{11} = 20.0$
+  \item $A_1 B_2$ (Sauvage, Hyperlipidique) : 13.0, 15.0, 14.0 $\implies \bar{x}_{12} = 14.0$
+  \item $A_2 B_1$ (KO, Standard) : 11.0, 13.0, 12.0 $\implies \bar{x}_{21} = 12.0$
+  \item $A_2 B_2$ (KO, Hyperlipidique) : 9.0, 11.0, 10.0 $\implies \bar{x}_{22} = 10.0$
+\end{itemize}
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez les moyennes marginales de A, de B et la moyenne générale $\bar{X}$.
+  \item Calculez $SCA$, $SCB$, $SC_{\text{cases}}$, et déduisez $SCAB$ et $SCR$.
+  \item Complétez le tableau d'ANOVA et calculez les 3 ratios $F_A, F_B, F_{AB}$.
+  \item Concluez à $\alpha = 5\%$ avec $F_{\text{critique}}(1, 8) = 5.32$.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution de l'Exercice 2}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Moyennes :}
+  \begin{itemize}
+    \item Marginales A (Génotype) : $\bar{x}_{1\cdot} = \frac{20+14}{2} = 17.0$ (Sauvage) ; $\bar{x}_{2\cdot} = \frac{12+10}{2} = 11.0$ (KO).
+    \item Marginales B (Régime) : $\bar{x}_{\cdot 1} = \frac{20+12}{2} = 16.0$ (Standard) ; $\bar{x}_{\cdot 2} = \frac{14+10}{2} = 12.0$ (Hyperlipidique).
+    \item Moyenne générale : $\bar{X} = \frac{17.0 + 11.0}{2} = \mathbf{14.0}$.
+  \end{itemize}
+  \item \textbf{Sommes de carrés :}
+  \begin{align*}
+    SCA &= 2 \times 3 \times \left[ (17-14)^2 + (11-14)^2 \right] = 6 \times [9 + 9] = \mathbf{108.0} \quad (df = 1) \\
+    SCB &= 2 \times 3 \times \left[ (16-14)^2 + (12-14)^2 \right] = 6 \times [4 + 4] = \mathbf{48.0} \quad (df = 1) \\
+    SC_{\text{cases}} &= 3 \times \left[ (20-14)^2 + (14-14)^2 + (12-14)^2 + (10-14)^2 \right] \\
+    &= 3 \times [36 + 0 + 4 + 16] = 3 \times 56 = 168.0 \\
+    SCAB &= SC_{\text{cases}} - SCA - SCB = 168.0 - 108.0 - 48.0 = \mathbf{12.0} \quad (df = 1 \times 1 = 1) \\
+    SCR &= 4 \text{ cases} \times [(-1)^2 + (+1)^2 + 0^2] = 4 \times 2 = \mathbf{8.0} \quad (df = 2 \times 2 \times 2 = 8)
+  \end{align*}
+  \item \textbf{Tableau d'ANOVA \& Statistiques $F$ :}
+  \begin{center}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lcccccc}
+  \toprule
+  \textbf{Source} & \textbf{ddl} & \textbf{SC} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{critique}}(1, 8)$} & \textbf{Décision} \\
+  \midrule
+  \textbf{Génotype (A)} & 1 & 108.0 & 108.0 & $F_A = \frac{108.0}{1.0} = \mathbf{108.0}$ & 5.32 & Rejet $H_0$ ($p < 0.001$) \\
+  \textbf{Régime (B)} & 1 & 48.0 & 48.0 & $F_B = \frac{48.0}{1.0} = \mathbf{48.0}$ & 5.32 & Rejet $H_0$ ($p < 0.001$) \\
+  \textbf{Interaction $A \times B$} & 1 & 12.0 & 12.0 & $F_{AB} = \frac{12.0}{1.0} = \mathbf{12.0}$ & 5.32 & Rejet $H_0$ ($p = 0.008$) \\
+  \textbf{Résiduelle} & 8 & 8.0 & $MS_R = \frac{8.0}{8} = 1.0$ & --- & --- & --- \\
+  \midrule
+  \textbf{Total} & 11 & 176.0 & & & & \\
+  \bottomrule
+  \end{tabular}%
+  }
+  \end{center}
+  \item \textbf{Conclusions Biologiques :}
+  \begin{itemize}
+    \item \textbf{Effet Génotype ($F = 108.0, p < 0.001$) :} L'expression de GLUT4 est globalement effondrée chez les souris KO ($11.0$ vs $17.0$).
+    \item \textbf{Effet Régime ($F = 48.0, p < 0.001$) :} Le régime hyperlipidique réduit l'expression de GLUT4 ($12.0$ vs $16.0$).
+    \item \textbf{Interaction Significative ($F = 12.0, p < 0.01$) :} Chez les souris sauvages, le régime hyperlipidique fait chuter GLUT4 de $-6$ unités ($20 \rightarrow 14$), alors que chez les KO, l'expression est déjà tellement basse qu'elle ne baisse que de $-2$ unités ($12 \rightarrow 10$). Il y a une \textbf{perte de sensibilité nutritionnelle} chez le mutant.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\section*{Annexe : Extrait de la Table de Fisher-Snedecor ($F$ au seuil $\alpha = 0.05$)}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{cccccccccc}
+\toprule
+\textbf{ddl Résiduel ($df_2$)} & \textbf{$df_1 = 1$} & \textbf{$df_1 = 2$} & \textbf{$df_1 = 3$} & \textbf{$df_1 = 4$} & \textbf{$df_1 = 5$} & \textbf{$df_1 = 6$} & \textbf{$df_1 = 8$} & \textbf{$df_1 = 12$} \\
+\midrule
+6 & 5.99 & \textbf{5.14} & 4.76 & 4.53 & 4.39 & 4.28 & 4.15 & 4.00 \\
+\rowcolor{BioTealLight}
+\textbf{8 (Exercice 2)} & \textbf{5.32} & 4.46 & 4.07 & 3.84 & 3.69 & 3.58 & 3.44 & 3.28 \\
+\rowcolor{BioTealLight}
+\textbf{9 (One-Way Cours)} & 5.12 & \textbf{4.26} & 3.86 & 3.63 & 3.48 & 3.37 & 3.23 & 3.07 \\
+10 & 4.96 & 4.10 & 3.71 & 3.48 & 3.33 & 3.22 & 3.07 & 2.91 \\
+\rowcolor{BioTealLight}
+\textbf{12 (Two-Way Cours)} & \textbf{4.75} & \textbf{3.89} & 3.49 & 3.26 & 3.11 & 3.00 & 2.85 & 2.69 \\
+15 & 4.54 & 3.68 & 3.29 & 3.06 & 2.90 & 2.79 & 2.64 & 2.48 \\
+20 & 4.35 & 3.49 & 3.10 & 2.87 & 2.71 & 2.60 & 2.45 & 2.28 \\
+30 & 4.17 & 3.32 & 2.92 & 2.69 & 2.53 & 2.42 & 2.27 & 2.09 \\
+$\infty$ & 3.84 & 3.00 & 2.60 & 2.37 & 2.21 & 2.10 & 1.94 & 1.75 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\end{document}

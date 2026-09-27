@@ -1,0 +1,202 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{polycopie_style}[2026/09/27 Style Officiel Support de Cours Polycopie Biostatistiques UMBB]
+
+% --------------------------------------------------------
+% Packages Fondamentaux
+% --------------------------------------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage[a4paper, top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm]{geometry}
+\RequirePackage{microtype}
+\RequirePackage{amsmath, amssymb, amsfonts}
+\RequirePackage{booktabs, colortbl, array, multirow, tabularx}
+\RequirePackage{graphicx}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\RequirePackage{fontawesome5}
+\RequirePackage{hyperref}
+\RequirePackage{qrcode}
+\RequirePackage{xcolor}
+
+% --------------------------------------------------------
+% Palette de Couleurs Professionnelle BioStat
+% --------------------------------------------------------
+\definecolor{BioNavy}{HTML}{1A365D}       % Bleu nuit profond
+\definecolor{BioNavyLight}{HTML}{F0F4F8}
+\definecolor{BioTeal}{HTML}{0D9488}       % Vert sarcelle / canard
+\definecolor{BioTealLight}{HTML}{F0FDFA}
+\definecolor{BioGreen}{HTML}{10B981}      % Vert émeraude
+\definecolor{BioGreenLight}{HTML}{ECFDF5}
+\definecolor{BioAmber}{HTML}{D97706}      % Ambre / Attention
+\definecolor{BioAmberLight}{HTML}{FFFBEB}
+\definecolor{BioCrimson}{HTML}{B91C1C}    % Rouge carmin
+\definecolor{BioCrimsonLight}{HTML}{FEF2F2}
+\definecolor{BioDark}{HTML}{0F172A}       % Ardoise sombre
+\definecolor{BioBorder}{HTML}{CBD5E1}     % Bordure grise douce
+\definecolor{BioGray}{HTML}{64748B}       % Gris moyen
+
+% --------------------------------------------------------
+% Configuration Hyperref
+% --------------------------------------------------------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=BioNavy,
+  urlcolor=BioTeal,
+  citecolor=BioGreen
+}
+
+% --------------------------------------------------------
+% En-tête et Pied de Page
+% --------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small \textcolor{BioNavy}{\textbf{UMBB}} --- Faculté des Sciences | Dép. Biologie}
+\fancyhead[R]{\small \textcolor{BioTeal}{\textbf{Biostatistiques Appliquées}} --- Support de Cours M2}
+\fancyfoot[L]{\footnotesize \textcolor{gray}{\faUserTie\ \textbf{Dr. Sarra BENMOUMOU (Ph.D.)}}}
+\fancyfoot[C]{}
+\fancyfoot[R]{\footnotesize \textcolor{BioTeal}{\faGlobe\ \href{https://hosniadilemp-a11y.github.io/BioStat/}{\texttt{BioStat-UMBB}}} \quad \textcolor{BioBorder}{$\vert$} \quad \textbf{\textcolor{BioNavy}{Page \thepage}}}
+
+% --------------------------------------------------------
+% Macro d'En-tête Officielle du Polycopié avec QR Code
+% --------------------------------------------------------
+\newcommand{\makepolycopieheader}[3]{%
+  \begin{tcolorbox}[
+    colback=BioNavyLight,
+    colframe=BioNavy,
+    arc=4mm,
+    boxrule=1.2pt,
+    left=12pt, right=12pt, top=10pt, bottom=10pt
+  ]
+    \begin{minipage}[c]{0.65\textwidth}
+      {\footnotesize \textbf{Université M'Hamed Bougara de Boumerdès (UMBB)}}\\[1mm]
+      {\footnotesize Faculté des Sciences --- Département de Biologie}\\[1mm]
+      {\footnotesize \textbf{Master 2 :} Biochimie Appliquée (Semestre 3)}\\[1mm]
+      {\footnotesize Module : \textbf{Biostatistiques Appliquées \& Modélisation}}\\[1mm]
+      {\scriptsize \faUserTie\ Enseignante : \textbf{Dr. Sarra BENMOUMOU-HOSNI (Ph.D.)}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.32\textwidth}
+      \centering
+      \qrcode[height=1.75cm]{https://hosniadilemp-a11y.github.io/BioStat/}\\[1mm]
+      {\scriptsize \textcolor{BioNavy}{\textbf{\faMobile\ Portail Interactif Web}}}\\[-0.5mm]
+      {\tiny \textcolor{gray}{Scannez pour les simulateurs}}
+    \end{minipage}
+    
+    \vspace{2mm}
+    \hrule height 0.8pt color BioNavy
+    \vspace{3mm}
+    
+    \begin{center}
+      {\small \color{BioTeal}\textbf{\faBookOpen\ SUPPORT DE COURS \& GUIDE PRATIQUE RÉDIGÉ (#3)}}\\[1.5mm]
+      {\LARGE \color{BioNavy}\textbf{#1}}\\[1.5mm]
+      {\normalsize \color{BioDark}#2}
+    \end{center}
+  \end{tcolorbox}
+  \vspace{4mm}
+}
+
+% --------------------------------------------------------
+% Boîtes Pédagogiques Thématiques
+% --------------------------------------------------------
+\newtcolorbox{conceptbox}[1]{
+  enhanced,
+  breakable,
+  colback=BioNavyLight,
+  colframe=BioNavy,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioNavy,
+  title={\faLightbulb\ #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{biobox}[1]{
+  enhanced,
+  breakable,
+  colback=BioTealLight,
+  colframe=BioTeal,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioTeal,
+  title={\faVial\ Exemple \& Signification Biologique : #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{stepbox}[1]{
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=BioNavy,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioNavy,
+  title={\faCalculator\ Méthode \& Calculs Pas-à-Pas : #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{warnbox}[1]{
+  enhanced,
+  breakable,
+  colback=BioAmberLight,
+  colframe=BioAmber,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioAmber,
+  title={\faExclamationTriangle\ Piège à Éviter / Règle d'Or : #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{takeawaybox}[1]{
+  enhanced,
+  breakable,
+  colback=BioGreenLight,
+  colframe=BioGreen,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioGreen,
+  title={\faCheckCircle\ Synthèse \& Décision Biologique : #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{exercicebox}[1]{
+  enhanced,
+  breakable,
+  colback=BioNavyLight,
+  colframe=BioNavy,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioNavy,
+  title={\faPen\ Exercice d'Application : #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{solutionbox}[1]{
+  enhanced,
+  breakable,
+  colback=white,
+  colframe=BioTeal,
+  arc=3mm,
+  boxrule=0.9pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=BioTeal,
+  title={\faCheckCircle\ Solution Détaillée \& Calculs Pas-à-Pas : #1},
+  left=8pt, right=8pt, top=6pt, bottom=6pt
+}

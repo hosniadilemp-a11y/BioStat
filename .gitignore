@@ -13,6 +13,7 @@
 *.blg
 sources/**/*.pdf
 travaux_diriges/**/*.pdf
+polycopies/**/*.pdf
 
 # Python & Jupyter cache
 __pycache__/

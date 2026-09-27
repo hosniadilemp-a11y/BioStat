@@ -29,6 +29,12 @@ COURSES_MAP = {
     "07": ("sources/chapitre_07_interpretation_analyse", "chapitre_07_interpretation.tex", "Chapitre_07_Interpretation_Analyse.pdf"),
 }
 
+POLYCOPIES_MAP = {
+    "00": ("polycopies/sources", "polycopie_ch00_intro.tex", "Polycopie_Chapitre_00_Introduction_Biostatistiques.pdf"),
+    "01": ("polycopies/sources", "polycopie_ch01_anova_croisee.tex", "Polycopie_Chapitre_01_ANOVA_Croisee.pdf"),
+    "02": ("polycopies/sources", "polycopie_ch02_anova_hierarchisee.tex", "Polycopie_Chapitre_02_ANOVA_Hierarchisee.pdf"),
+}
+
 TD_MAP = [
     ("td_ch00_intro.tex", "TD_Chapitre_00_Introduction.pdf", "enonce"),
     ("corrige_td_ch00_intro.tex", "Corrige_TD_Chapitre_00_Introduction.pdf", "corrige"),
@@ -48,7 +54,7 @@ TD_MAP = [
     ("corrige_td_ch07_interpretation.tex", "Corrige_TD_Chapitre_07_Interpretation.pdf", "corrige"),
 ]
 
-def compile_latex(src_dir, tex_file, dest_pdf_name, is_course=True, is_enonce=True):
+def compile_latex(src_dir, tex_file, dest_pdf_name, is_course=True, is_enonce=True, is_polycopie=False):
     abs_src_dir = os.path.join(BASE_DIR, src_dir)
     pdf_base = os.path.splitext(tex_file)[0] + ".pdf"
     
@@ -61,7 +67,15 @@ def compile_latex(src_dir, tex_file, dest_pdf_name, is_course=True, is_enonce=Tr
         stdout_tail = (proc.stdout or "")[-500:]
         return False, f"Erreur de compilation pour {tex_file}:\n{stdout_tail}"
         
-    if is_course:
+    if is_polycopie:
+        target = os.path.join(BASE_DIR, "website", "downloads", "polycopies", dest_pdf_name)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(src_pdf_path, target)
+        try:
+            os.remove(src_pdf_path)
+        except OSError:
+            pass
+    elif is_course:
         target = os.path.join(BASE_DIR, "website", "downloads", "cours", dest_pdf_name)
         os.makedirs(os.path.dirname(target), exist_ok=True)
         shutil.copy2(src_pdf_path, target)
@@ -133,6 +147,30 @@ class CourseManagementHandler(SimpleHTTPRequestHandler):
                     }
                 else:
                     response_data = {"success": False, "message": f"Chapitre inconnu : {chap}"}
+
+            elif self.path == "/api/compile_polycopie":
+                chap = payload.get("chapter", "00")
+                if chap in POLYCOPIES_MAP:
+                    src_dir, tex_file, dest_pdf = POLYCOPIES_MAP[chap]
+                    ok, msg = compile_latex(src_dir, tex_file, dest_pdf, is_polycopie=True)
+                    response_data = {
+                        "success": ok,
+                        "message": f"Chapitre {chap} : Polycopié de cours A4 généré avec succès !",
+                        "details": msg
+                    }
+                else:
+                    response_data = {"success": False, "message": f"Polycopié inconnu : {chap}"}
+
+            elif self.path == "/api/compile_all_polycopies":
+                results = []
+                for chap, (src_dir, tex_file, dest_pdf) in POLYCOPIES_MAP.items():
+                    ok, msg = compile_latex(src_dir, tex_file, dest_pdf, is_polycopie=True)
+                    results.append(f"Polycopié Ch. {chap}: {'OK' if ok else 'ÉCHEC'}")
+                response_data = {
+                    "success": True,
+                    "message": "Les 3 polycopiés de cours rédigés ont été régénérés !",
+                    "details": "\n".join(results)
+                }
 
             elif self.path == "/api/compile_all_courses":
                 results = []

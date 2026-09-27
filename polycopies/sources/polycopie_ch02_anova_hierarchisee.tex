@@ -1,0 +1,340 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{../common/polycopie_style}
+
+\begin{document}
+
+\makepolycopieheader{Analyse de la Variance Hiérarchisée (Nested ANOVA)}{Facteurs Emboîtés, Lutte contre la Pseudoréplication \& Calculs Pas-à-Pas}{CHAPITRE 2}
+
+\section{Introduction : Pourquoi l'ANOVA Hiérarchisée ?}
+
+Dans la recherche biologique et biopharmaceutique, les protocoles expérimentaux présentent très souvent une organisation en \textbf{niveaux emboîtés (hiérarchiques)}. 
+
+\begin{warnbox}{Le Danger de la Pseudoréplication en Laboratoire}
+Considérons l'expérience suivante : un étudiant en Master souhaite tester deux milieux de culture sur la production d'anticorps monoclonaux. Il ensemence \textbf{une seule fiole de culture} avec le Milieu 1 et \textbf{une seule fiole} avec le Milieu 2. À la fin de la culture, il prélève \textbf{10 aliquotes de $100\,\mu\text{L}$} dans chaque fiole et les dose par spectrophotométrie.
+\begin{itemize}[leftmargin=*, label=\faTimes]
+  \item L'étudiant injecte ses $2 \times 10 = 20$ valeurs dans un logiciel et obtient un test de Student triomphant avec $p < 0.001$.
+  \item \textbf{C'est une erreur méthodologique gravissime !} L'étudiant a confondu $n=10$ mesures techniques avec 10 répétitions biologiques. En réalité, la taille biologique de son échantillon est \textbf{$N = 1$ fiole par condition}.
+  \item Si la fiole 1 a produit plus que la fiole 2, cela peut être dû au milieu, mais aussi à une légère contamination, une différence de température locale dans l'étuve, ou un défaut d'oxygénation. \textbf{L'effet du milieu est totalement confondu avec l'effet de la fiole !}
+\end{itemize}
+Cette erreur s'appelle la \textbf{pseudoréplication}. L'\textbf{ANOVA hiérarchisée} est précisément l'outil mathématique qui permet de traiter rigoureusement ces structures emboîtées.
+\end{warnbox}
+
+\begin{conceptbox}{Facteurs Croisés ($A \times B$) vs Facteurs Emboîtés ($B \subset A$)}
+Pour bien choisir entre ANOVA croisée (Chapitre 1) et ANOVA hiérarchisée (Chapitre 2), posez-vous une question simple : \textbf{« La modalité 1 du Facteur B a-t-elle la même signification biologique sous toutes les modalités du Facteur A ? »}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{p{7.5cm}p{7.5cm}}
+\toprule
+\textbf{Plan Croisé ($A \times B$)} & \textbf{Plan Hiérarchisé / Emboîté ($B \subset A$)} \\
+\midrule
+Chaque niveau de B est combiné avec chaque niveau de A. & Les niveaux de B sont \textbf{uniques et différents} pour chaque niveau de A. \\
+\textbf{Exemple :} Facteur A = Génotype (Sain vs Diabétique), Facteur B = Dose d'insuline ($0, 10, 50\,\text{nM}$). La dose $10\,\text{nM}$ est exactement la même pour les deux génotypes. & \textbf{Exemple :} Facteur A = Souche bactérienne (Souche 1 vs Souche 2), Facteur B = Cuve de bioréacteur (Cuves 1, 2, 3 sous Souche 1 ; Cuves 4, 5, 6 sous Souche 2). La cuve 1 de la Souche 1 n'a aucun rapport avec la cuve 1 de la Souche 2 ! \\
+\textbf{Test :} On teste l'effet A, l'effet B et l'\textbf{Interaction $A \times B$}. & \textbf{Test :} L'interaction n'a \textbf{aucun sens mathématique}. On teste l'effet principal A et l'\textbf{effet d'emboîtement $B(A)$}. \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{conceptbox}
+
+\section{Modèle Linéaire d'Emboîtement \& Décomposition de la Variance}
+
+\subsection{Équation du Modèle}
+Pour un plan hiérarchisé à deux niveaux équilibré :
+\begin{itemize}[leftmargin=*, label=\faAngleRight]
+  \item $a$ modalités du Facteur Principal A ($i = 1, 2, \dots, a$).
+  \item $b$ sous-unités du Facteur Emboîté B à l'intérieur de chaque modalité de A ($j = 1, 2, \dots, b$).
+  \item $n$ réplicats techniques ou aliquotes par sous-unité ($k = 1, 2, \dots, n$).
+  \item Nombre total de mesures : $N = a \times b \times n$.
+\end{itemize}
+
+Chaque mesure biologique $x_{ijk}$ s'écrit :
+\begin{equation*}
+x_{ijk} = \mu + \alpha_i + \beta_{j(i)} + \varepsilon_{ijk}
+\end{equation*}
+où :
+\begin{itemize}[leftmargin=*, label=\faCircle]
+  \item $\mu$ est la moyenne générale de référence.
+  \item $\alpha_i$ est l'effet du Facteur Principal A ($\sum \alpha_i = 0$).
+  \item $\beta_{j(i)}$ est l'effet de la sous-unité $j$ emboîtée dans la modalité $i$ de A.
+  \item $\varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)$ est l'erreur résiduelle aléatoire de mesure.
+\end{itemize}
+
+\subsection{Décomposition des Sommes de Carrés}
+La variabilité totale $SCT$ se décompose en trois composantes indépendantes :
+\begin{equation*}
+\mathbf{SCT = SCA + SCB(A) + SCR}
+\end{equation*}
+
+\begin{enumerate}[leftmargin=*, label=\faCalculator\ \textbf{\arabic*.}]
+  \item \textbf{Somme des Carrés du Facteur Principal ($SCA$) :}
+  Variabilité entre les moyennes des modalités du facteur principal :
+  \begin{equation*}
+    SCA = b \cdot n \sum_{i=1}^a (\bar{x}_{i\cdot\cdot} - \bar{X})^2 \quad \text{avec} \quad df_A = a - 1
+  \end{equation*}
+  \item \textbf{Somme des Carrés du Facteur Emboîté ($SCB(A)$) :}
+  Variabilité entre les sous-unités à l'intérieur d'une même modalité de A :
+  \begin{equation*}
+    SCB(A) = n \sum_{i=1}^a \sum_{j=1}^b (\bar{x}_{ij\cdot} - \bar{x}_{i\cdot\cdot})^2 \quad \text{avec} \quad df_{B(A)} = a(b - 1)
+  \end{equation*}
+  \item \textbf{Somme des Carrés Résiduelle ($SCR$) :}
+  Variabilité technique entre les réplicats au sein de chaque sous-unité :
+  \begin{equation*}
+    SCR = \sum_{i=1}^a \sum_{j=1}^b \sum_{k=1}^n (x_{ijk} - \bar{x}_{ij\cdot})^2 \quad \text{avec} \quad df_{\text{res}} = ab(n - 1)
+  \end{equation*}
+  \item \textbf{Somme des Carrés Totale ($SCT$) :}
+  \begin{equation*}
+    SCT = \sum_{i=1}^a \sum_{j=1}^b \sum_{k=1}^n (x_{ijk} - \bar{X})^2 \quad \text{avec} \quad df_{\text{total}} = N - 1
+  \end{equation*}
+\end{enumerate}
+
+\section{La Règle d'Or Cruciale du Test $F$ dans l'ANOVA Hiérarchisée}
+
+\begin{warnbox}{Attention au Dénominateur du Test $F$ pour le Facteur Principal A !}
+Dans une ANOVA standard, on divise toujours par le carré moyen résiduel $MS_R$. \textbf{Dans une ANOVA hiérarchisée, c'est formellement interdit pour le facteur principal !}
+\begin{itemize}[leftmargin=*, label=\faExclamationTriangle]
+  \item \textbf{Pour tester le Facteur Emboîté B ($B \subset A$) :}
+  \begin{equation*}
+    F_{B(A)} = \frac{MS_{B(A)}}{MS_R} \quad \text{avec} \quad df = [a(b-1), \, ab(n-1)]
+  \end{equation*}
+  On teste si les cuves/animaux diffèrent significativement entre eux par rapport à l'erreur de pipetage.
+  \item \textbf{Pour tester le Facteur Principal A :}
+  \begin{equation*}
+    \mathbf{F_A = \frac{MS_A}{MS_{B(A)}}} \quad \text{\textbf{(et NON }} \frac{MS_A}{MS_R} \text{\textbf{ !)}} \quad \text{avec} \quad df = [a-1, \, a(b-1)]
+  \end{equation*}
+  \textbf{Raison biologique fondamentale :} Pour prouver que le Facteur A (ex: Souche bactérienne) est réellement efficace, il faut que sa variabilité $MS_A$ domine la variabilité biologique naturelle entre les cuves $MS_{B(A)}$, et non pas seulement la précision du spectrophotomètre $MS_R$ ! Diviser par $MS_R$ gonflerait artificiellement $F$ et conduirait à de faux espoirs thérapeutiques ou industriels.
+\end{itemize}
+\end{warnbox}
+
+\subsection{Tableau Récapitulatif d'ANOVA Hiérarchisée}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Source de Variation} & \textbf{ddl} & \textbf{Somme des Carrés} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} & \textbf{Valeur Critique ($\alpha=5\%$)} \\
+\midrule
+\textbf{Facteur Principal A} & $a - 1$ & $SCA$ & $MS_A = \frac{SCA}{a - 1}$ & $\mathbf{F_A = \frac{MS_A}{MS_{B(A)}}}$ & $F_{0.05}(a-1, \, a(b-1))$ \\[1.5mm]
+\textbf{Facteur Emboîté B(A)} & $a(b - 1)$ & $SCB(A)$ & $MS_{B(A)} = \frac{SCB(A)}{a(b - 1)}$ & $\mathbf{F_{B(A)} = \frac{MS_{B(A)}}{MS_R}}$ & $F_{0.05}(a(b-1), \, ab(n-1))$ \\[1.5mm]
+\textbf{Résiduelle (Technique)} & $ab(n - 1)$ & $SCR$ & $MS_R = \frac{SCR}{ab(n - 1)}$ & --- & --- \\
+\midrule
+\textbf{Total} & $N - 1$ & $SCT$ & & & \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\section{Exemple Numérique Pas-à-Pas : Bioproduction en Bioréacteurs}
+
+\paragraph{Problématique Biologique :}
+Une équipe de bio-ingénierie optimise le rendement de production d'une protéine recombinante thérapeutique (en g/L de surnageant de fermentation) :
+\begin{itemize}[leftmargin=*, label=\faCheck]
+  \item \textbf{Facteur Principal A (Souche d'expression) :} $a = 2$ souches testées : Souche Sauvage ($A_1$) vs Souche Modifiée CRISPR ($A_2$).
+  \item \textbf{Facteur Emboîté B (Bioréacteurs / Cuves) :} Pour chaque souche, $b = 3$ cuves de culture indépendantes sont lancées en parallèle (Cuves 1, 2, 3 sous Souche 1 ; Cuves 4, 5, 6 sous Souche 2).
+  \item \textbf{Réplicats techniques de dosage :} Dans chaque cuve, $n = 3$ aliquotes indépendantes sont prélevées et dosées par HPLC ($N = 2 \times 3 \times 3 = 18$ dosages au total).
+\end{itemize}
+
+\begin{stepbox}{Tableau des Données Brutes \& Moyennes par Cuve ($n=3$)}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Souche (Facteur A)} & \textbf{Bioréacteur 1} & \textbf{Bioréacteur 2} & \textbf{Bioréacteur 3} & \textbf{Moyenne de la Souche ($\bar{x}_{i\cdot\cdot}$)} \\
+\midrule
+\textbf{Souche Sauvage ($A_1$)} & 10, 12, 11 $\implies \mathbf{11.0}$ & 11, 13, 12 $\implies \mathbf{12.0}$ & 9, 11, 10 $\implies \mathbf{10.0}$ & $\bar{x}_{1\cdot\cdot} = \frac{11+12+10}{3} = \mathbf{11.0\,\text{g/L}}$ \\[1mm]
+\textbf{Souche CRISPR ($A_2$)} & 18, 20, 19 $\implies \mathbf{19.0}$ & 20, 22, 21 $\implies \mathbf{21.0}$ & 19, 21, 20 $\implies \mathbf{20.0}$ & $\bar{x}_{2\cdot\cdot} = \frac{19+21+20}{3} = \mathbf{20.0\,\text{g/L}}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{stepbox}
+
+\begin{stepbox}{Étape 1 : Calcul de la Moyenne Générale ($\bar{X}$)}
+\begin{equation*}
+\bar{X} = \frac{11.0 + 20.0}{2} = \mathbf{15.5\,\text{g/L}}
+\end{equation*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 2 : Somme des Carrés du Facteur Principal (Souches - $SCA$)}
+$a = 2$, chaque souche totalise $b \times n = 3 \times 3 = 9$ observations :
+\begin{align*}
+\text{Souche Sauvage ($A_1$) :} \quad & 9 \times (11.0 - 15.5)^2 = 9 \times (-4.5)^2 = 9 \times 20.25 = 182.25 \\
+\text{Souche CRISPR ($A_2$) :} \quad & 9 \times (20.0 - 15.5)^2 = 9 \times (+4.5)^2 = 9 \times 20.25 = 182.25 \\[2mm]
+\mathbf{SCA} &= 182.25 + 182.25 = \mathbf{364.5} \quad \text{avec } df_A = a - 1 = 2 - 1 = \mathbf{1}
+\end{align*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 3 : Somme des Carrés du Facteur Emboîté (Cuves - $SCB(A)$)}
+On compare la moyenne de chaque cuve $\bar{x}_{ij\cdot}$ à la moyenne de sa propre souche $\bar{x}_{i\cdot\cdot}$ (pondérée par $n = 3$) :
+\begin{align*}
+\text{Souche 1 :} \quad & 3 \times \left[ (11.0 - 11.0)^2 + (12.0 - 11.0)^2 + (10.0 - 11.0)^2 \right] = 3 \times [0 + 1 + 1] = 6.0 \\[1mm]
+\text{Souche 2 :} \quad & 3 \times \left[ (19.0 - 20.0)^2 + (21.0 - 20.0)^2 + (20.0 - 20.0)^2 \right] = 3 \times [1 + 1 + 0] = 6.0 \\[2mm]
+\mathbf{SCB(A)} &= 6.0 + 6.0 = \mathbf{12.0} \quad \text{avec } df_{B(A)} = a(b - 1) = 2 \times (3 - 1) = 2 \times 2 = \mathbf{4}
+\end{align*}
+\end{stepbox}
+
+\begin{stepbox}{Étape 4 : Somme des Carrés Résiduelle (Erreur Technique - $SCR$)}
+Dans chacune des 6 cuves, les 3 aliquotes HPLC présentent des écarts par rapport à leur moyenne de cuve :
+Pour chaque cuve, les valeurs sont $(m-1, m+1, m) \implies (-1)^2 + (+1)^2 + 0^2 = 2.0$.
+Comme il y a 6 cuves indépendantes :
+\begin{equation*}
+\mathbf{SCR} = 6 \times 2.0 = \mathbf{12.0} \quad \text{avec } df_{\text{res}} = ab(n - 1) = 2 \times 3 \times (3 - 1) = 6 \times 2 = \mathbf{12}
+\end{equation*}
+\textbf{Vérification de la somme totale :} $SCT = 364.5 + 12.0 + 12.0 = \mathbf{388.5}$ avec $df_{\text{total}} = 18 - 1 = \mathbf{17}$.
+\end{stepbox}
+
+\begin{stepbox}{Étape 5 : Tableau d'ANOVA Hiérarchisée \& Calculs des Ratios $F_{\text{obs}}$}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Source de Variation} & \textbf{ddl} & \textbf{SC} & \textbf{Carré Moyen ($MS$)} & \textbf{Statistique $F_{\text{obs}}$} & \textbf{$F_{\text{critique}}(5\%)$} & \textbf{Décision} \\
+\midrule
+\textbf{Souches (Facteur A)} & 1 & 364.5 & $MS_A = \frac{364.5}{1} = \mathbf{364.5}$ & $\mathbf{F_A = \frac{MS_A}{MS_{B(A)}} = \frac{364.5}{3.0} = 121.5}$ & $F_{0.05}(1, 4) = \mathbf{7.71}$ & $p < 0.001$ (Signif.) \\[2mm]
+\textbf{Cuves(Souches) ($B \subset A$)} & 4 & 12.0 & $MS_{B(A)} = \frac{12.0}{4} = \mathbf{3.0}$ & $\mathbf{F_{B(A)} = \frac{MS_{B(A)}}{MS_R} = \frac{3.0}{1.0} = 3.00}$ & $F_{0.05}(4, 12) = \mathbf{3.26}$ & $p = 0.063$ (Non signif.) \\[2mm]
+\textbf{Résiduelle (HPLC)} & 12 & 12.0 & $MS_R = \frac{12.0}{12} = \mathbf{1.0}$ & --- & --- & --- \\
+\midrule
+\textbf{Total} & 17 & 388.5 & & & & \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+\end{stepbox}
+
+\begin{takeawaybox}{Décisions \& Conclusions Biologiques Rédigées}
+\begin{enumerate}[leftmargin=*, label=\faCheckCircle\ \textbf{\arabic*.}]
+  \item \textbf{Test de l'effet Cuves [$F_{B(A)} = 3.00 < F_{crit}(4, 12) = 3.26$, $p = 0.063$] :}
+  L'effet de la variabilité entre bioréacteurs n'est \textbf{pas statistiquement significatif au seuil de 5\%}. Cela démontre que les cuves de fermentation sont bien étalonnées et que le process de bioréaction est hautement reproductible.
+  \item \textbf{Test de l'effet Souche [$F_A = 121.5 \gg F_{crit}(1, 4) = 7.71$, $p < 0.001$] :}
+  Puisque $F_A$ a été rigoureusement testé par rapport à la variance inter-cuves ($MS_{B(A)} = 3.0$), nous avons la preuve mathématique formelle que \textbf{la Souche CRISPR surpasse la Souche Sauvage de façon hautement significative}.
+  \item \textbf{Impact industriel :} La souche modifiée produit en moyenne $\mathbf{20.0\,\text{g/L}}$ de protéine contre seulement $\mathbf{11.0\,\text{g/L}}$ pour la souche sauvage, soit un gain de rendement spectaculaire de \textbf{+81.8\%}, parfaitement exploitable à l'échelle pilote industrielle sans risque de biais de cuve.
+\end{enumerate}
+\end{takeawaybox}
+
+\section{Exercices d'Application avec Solutions Détaillées}
+
+\begin{exercicebox}{Exercice 1 : Audit Méthodologique \& Diagnostic de Pseudoréplication}
+Analysez les deux situations expérimentales suivantes rapportées par des stagiaires en laboratoire :
+\begin{itemize}
+  \item \textbf{Protocole 1 :} Pour évaluer un neuroprotecteur, un chercheur traite $2$ rats au placebo et $2$ rats au neuroprotecteur. Après sacrifice, il découpe $5$ coupes coronales de cerveau par rat et compte le nombre de neurones viables par coupe ($N = 2 \times 2 \times 5 = 20$ mesures). Il affirme que sa taille d'échantillon est $N = 10$ coupes par condition et applique un test de Student à $df = 18$.
+  \item \textbf{Protocole 2 :} Dans un essai agronomique, une biologiste compare $2$ types de biofertilisants ($a = 2$). Pour chaque fertilisant, elle prépare $3$ parcelles de serre indépendantes ($b = 3$). Dans chaque parcelle, elle mesure le rendement de $4$ plants ($n = 4$, $N = 24$ plants). Elle analyse les données par ANOVA hiérarchisée.
+\end{itemize}
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Le Protocole 1 présente-t-il une pseudoréplication ? Pourquoi ? Quel est le véritable nombre de réplicats biologiques ($N$) ?
+  \item Comment les données du Protocole 1 doivent-elles être correctement analysées ?
+  \item Dans le Protocole 2, identifiez le facteur principal et le facteur emboîté. Écrivez les degrés de liberté de chaque source ($SCA, SCB(A), SCR, SCT$).
+  \item Quel ratio $F$ testera la significativité du biofertilisant ?
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution de l'Exercice 1}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Diagnostic du Protocole 1 :}
+  \textbf{Oui, il y a pseudoréplication flagrante.} Les 5 coupes de cerveau issues d'un même animal ne sont pas des individus indépendants, mais des \textbf{réplicats techniques (aliquotes histologiques)} d'un seul animal. Le véritable échantillon biologique est de \textbf{$N = 2$ rats par lot} (taille d'échantillon dramatiquement insuffisante, $df = 2 + 2 - 2 = 2$).
+  \item \textbf{Correction méthodologique :}
+  Deux options rigoureuses :
+  \begin{itemize}
+    \item Soit faire la moyenne des 5 coupes pour chaque rat, et obtenir ainsi une seule valeur par rat ($n=2$ par groupe).
+    \item Soit appliquer une ANOVA hiérarchisée (Coupes emboîtées dans les Rats) où l'effet du traitement est testé par rapport à la variance inter-animale ($MS_{\text{Rats}}$), mais avec seulement 2 rats par lot, la puissance statistique reste trop faible ($df_{\text{dénominateur}} = 2(2-1) = 2$). Il faut augmenter le nombre de rats ($n \ge 6$).
+  \end{itemize}
+  \item \textbf{Analyse du Protocole 2 :}
+  \begin{itemize}
+    \item Facteur Principal A = Biofertilisant ($a = 2$ modalités).
+    \item Facteur Emboîté B = Parcelles ($b = 3$ parcelles par fertilisant, $B \subset A$).
+    \item Réplicats techniques = Plants par parcelle ($n = 4$).
+    \item Degrés de liberté :
+    \begin{align*}
+      df_A &= a - 1 = 2 - 1 = \mathbf{1} \\
+      df_{B(A)} &= a(b - 1) = 2 \times (3 - 1) = \mathbf{4} \\
+      df_{\text{res}} &= ab(n - 1) = 2 \times 3 \times (4 - 1) = 6 \times 3 = \mathbf{18} \\
+      df_{\text{total}} &= N - 1 = 24 - 1 = \mathbf{23}
+    \end{align*}
+  \end{itemize}
+  \item \textbf{Statistique de test valide :}
+  Pour le biofertilisant : $\mathbf{F_A = \frac{MS_A}{MS_{B(A)}}}$ comparé à $F_{0.05}(1, 4) = \mathbf{7.71}$ (et NON par rapport à $MS_R$ !).
+\end{enumerate}
+\end{solutionbox}
+
+\begin{exercicebox}{Exercice 2 : ANOVA Hiérarchisée Complète (Production d'un Vaccin Recombinant)}
+Un laboratoire biopharmaceutique compare deux Procédés de purification d'un vaccin recombinant (Facteur Principal A, $a = 2$ : Procédé Standard $A_1$ vs Procédé Optimisé $A_2$). Pour chaque procédé, $b = 2$ Lots industriels indépendants sont produits ($B \subset A$). Dans chaque lot, $n = 3$ ampoules sont dosées par chromatographie ($N = 2 \times 2 \times 3 = 12$ dosages) :
+\begin{itemize}
+  \item Procédé $A_1$, Lot 1 : 11.0, 13.0, 12.0 $\implies \bar{x}_{11} = 12.0\,\mu\text{g/mL}$.
+  \item Procédé $A_1$, Lot 2 : 9.0, 11.0, 10.0 $\implies \bar{x}_{12} = 10.0\,\mu\text{g/mL}$.
+  \item Procédé $A_2$, Lot 3 : 19.0, 21.0, 20.0 $\implies \bar{x}_{21} = 20.0\,\mu\text{g/mL}$.
+  \item Procédé $A_2$, Lot 4 : 17.0, 19.0, 18.0 $\implies \bar{x}_{22} = 18.0\,\mu\text{g/mL}$.
+\end{itemize}
+\textbf{Questions :}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item Calculez les moyennes de procédé $\bar{x}_{1\cdot\cdot}$, $\bar{x}_{2\cdot\cdot}$ et la moyenne générale $\bar{X}$.
+  \item Calculez $SCA$, $SCB(A)$ et $SCR$.
+  \item Complétez le tableau d'ANOVA hiérarchisée et déterminez $F_A$ et $F_{B(A)}$.
+  \item Au seuil $\alpha = 5\%$ avec $F_{\text{critique}}(1, 2) = 18.51$ et $F_{\text{critique}}(2, 8) = 4.46$, concluez pour le procédé et pour les lots.
+\end{enumerate}
+\end{exercicebox}
+
+\begin{solutionbox}{Solution de l'Exercice 2}
+\begin{enumerate}[label=\textbf{\alph*.}]
+  \item \textbf{Moyennes :}
+  $\bar{x}_{1\cdot\cdot} = \frac{12.0 + 10.0}{2} = 11.0\,\mu\text{g/mL}$ ; $\bar{x}_{2\cdot\cdot} = \frac{20.0 + 18.0}{2} = 19.0\,\mu\text{g/mL}$.\\
+  Moyenne générale : $\bar{X} = \frac{11.0 + 19.0}{2} = \mathbf{15.0\,\mu\text{g/mL}}$.
+  \item \textbf{Sommes des carrés :}
+  \begin{align*}
+    SCA &= b \cdot n \times \left[ (11.0 - 15.0)^2 + (19.0 - 15.0)^2 \right] \\
+    &= 6 \times [(-4)^2 + (+4)^2] = 6 \times 32 = \mathbf{192.0} \quad (df = 1) \\
+    SCB(A) &= n \times \sum \left[ (\bar{x}_{ij} - \bar{x}_i)^2 \right] \\
+    &= 3 \times \left[ (12-11)^2 + (10-11)^2 + (20-19)^2 + (18-19)^2 \right] \\
+    &= 3 \times [1 + 1 + 1 + 1] = 3 \times 4 = \mathbf{12.0} \quad (df = 2(2-1) = 2) \\
+    SCR &= 4 \text{ lots} \times [(-1)^2 + (+1)^2 + 0^2] = 4 \times 2 = \mathbf{8.0} \quad (df = 8) \\
+    SCT &= 192.0 + 12.0 + 8.0 = \mathbf{212.0} \quad (df = 12 - 1 = 11)
+  \end{align*}
+  \item \textbf{Tableau d'ANOVA Hiérarchisée :}
+  \begin{center}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lcccccc}
+  \toprule
+  \textbf{Source} & \textbf{ddl} & \textbf{SC} & \textbf{Carré Moyen ($MS$)} & \textbf{$F_{\text{obs}}$} & \textbf{$F_{\text{critique}}(5\%)$} & \textbf{Décision} \\
+  \midrule
+  \textbf{Procédé (A)} & 1 & 192.0 & $MS_A = \frac{192.0}{1} = 192.0$ & $F_A = \frac{MS_A}{MS_{B(A)}} = \frac{192.0}{6.0} = \mathbf{32.0}$ & $F_{0.05}(1, 2) = \mathbf{18.51}$ & Rejet $H_0$ ($p < 0.05$) \\
+  \textbf{Lots(Procédé) ($B \subset A$)} & 2 & 12.0 & $MS_{B(A)} = \frac{12.0}{2} = 6.0$ & $F_{B(A)} = \frac{MS_{B(A)}}{MS_R} = \frac{6.0}{1.0} = \mathbf{6.0}$ & $F_{0.05}(2, 8) = \mathbf{4.46}$ & Rejet $H_0$ ($p = 0.026$) \\
+  \textbf{Résiduelle (Ampoules)} & 8 & 8.0 & $MS_R = \frac{8.0}{8} = 1.0$ & --- & --- & --- \\
+  \midrule
+  \textbf{Total} & 11 & 212.0 & & & & \\
+  \bottomrule
+  \end{tabular}%
+  }
+  \end{center}
+  \item \textbf{Conclusions Biologiques \& Industrielles :}
+  \begin{itemize}
+    \item \textbf{Effet des Lots [$F_{B(A)} = 6.0 > 4.46$, $p < 0.05$] :} Il existe une variabilité inter-lots significative ($12.0$ vs $10.0$ dans le procédé A ; $20.0$ vs $18.0$ dans le B). Les conditions de fabrication varient légèrement d'une cuve à l'autre.
+    \item \textbf{Effet du Procédé [$F_A = 32.0 > 18.51$, $p = 0.030$] :} Même en tenant compte de cette instabilité inter-lots ($MS_{B(A)} = 6.0$), le Procédé Optimisé produit significativement plus d'antigène ($19.0\,\mu\text{g/mL}$ vs $11.0\,\mu\text{g/mL}$, gain de $+72.7\%$). Le changement de procédé est validé.
+  \end{itemize}
+\end{enumerate}
+\end{solutionbox}
+
+\section*{Annexe : Extrait de la Table de Fisher-Snedecor ($F$ au seuil $\alpha = 0.05$)}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{cccccccccc}
+\toprule
+\textbf{ddl Dénominateur ($df_2$)} & \textbf{$df_1 = 1$} & \textbf{$df_1 = 2$} & \textbf{$df_1 = 3$} & \textbf{$df_1 = 4$} & \textbf{$df_1 = 5$} & \textbf{$df_1 = 6$} & \textbf{$df_1 = 8$} & \textbf{$df_1 = 12$} \\
+\midrule
+1 & 161.45 & 199.50 & 215.71 & 224.58 & 230.16 & 233.99 & 238.88 & 243.91 \\
+\rowcolor{BioTealLight}
+\textbf{2 (Test Procédé Ex. 2)} & \textbf{18.51} & 19.00 & 19.16 & 19.25 & 19.30 & 19.33 & 19.37 & 19.41 \\
+3 & 10.13 & 9.55 & 9.28 & 9.12 & 9.01 & 8.94 & 8.85 & 8.74 \\
+\rowcolor{BioTealLight}
+\textbf{4 (Test Souches Cours)} & \textbf{7.71} & 6.94 & 6.59 & 6.39 & 6.26 & 6.16 & 6.04 & 5.91 \\
+5 & 6.61 & 5.79 & 5.41 & 5.19 & 5.05 & 4.95 & 4.82 & 4.68 \\
+6 & 5.99 & 5.14 & 4.76 & 4.53 & 4.39 & 4.28 & 4.15 & 4.00 \\
+\rowcolor{BioTealLight}
+\textbf{8 (Test Lots Ex. 2)} & 5.32 & \textbf{4.46} & 4.07 & 3.84 & 3.69 & 3.58 & 3.44 & 3.28 \\
+10 & 4.96 & 4.10 & 3.71 & 3.48 & 3.33 & 3.22 & 3.07 & 2.91 \\
+\rowcolor{BioTealLight}
+\textbf{12 (Test Cuves Cours)} & 4.75 & 3.89 & 3.49 & \textbf{3.26} & 3.11 & 3.00 & 2.85 & 2.69 \\
+20 & 4.35 & 3.49 & 3.10 & 2.87 & 2.71 & 2.60 & 2.45 & 2.28 \\
+$\infty$ & 3.84 & 3.00 & 2.60 & 2.37 & 2.21 & 2.10 & 1.94 & 1.75 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+\end{document}

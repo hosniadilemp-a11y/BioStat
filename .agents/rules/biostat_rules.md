@@ -9,6 +9,7 @@ Tous les documents PDF générés (compilation LaTeX Beamer ou fascicules A4) do
 ```
 website/downloads/
 ├── cours/          # Diapositives Beamer 16:9 de chaque chapitre (Chapitre_XX_....pdf)
+├── polycopies/     # Supports de cours rédigés A4 pas-à-pas (Polycopie_Chapitre_XX_....pdf)
 ├── td_enonces/     # Énoncés de Travaux Dirigés A4 pour les étudiants (TD_Chapitre_XX_....pdf)
 └── guide/          # Guide d'installation et guides pratiques (PDF)
 ```
